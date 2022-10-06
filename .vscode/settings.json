@@ -1,7 +1,7 @@
 {
     "liveServer.settings.port": 4500,
     "liveServer.settings.root": "/",
-    "liveServer.settings.CustomBrowser" : "chrome",
+    "liveServer.settings.CustomBrowser" : null, // браузер для открытия страницы, можно выбрать другой, выставлен дефолтный для системы
     "liveServer.settings.NoBrowser" : false,
     "liveServer.settings.ignoreFiles" : [
             ".vscode/**",
