@@ -1386,15 +1386,14 @@ components:
           - jobs_users
   securitySchemes:
     headerToken:
-      name: Authorization
-      type: apiKey
-      in: header
+      type: http
+      scheme: bearer
       description: |-
-        Токен компании, создается в Поток в разделе `Генерация токенов`. Может передаваться одним из двух способов: в заголовке (Header).                             
+        Токен компании, создается в Поток в разделе `Генерация токенов`. Может передаваться одним из двух способов: в заголовке (Header)                       
 
         Пример: Authorization: “Bearer `token`”
     queryToken:
-      name: Token
+      name: token
       type: apiKey
       in: query
       description: |-
