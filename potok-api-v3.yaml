@@ -469,7 +469,7 @@ paths:
           $ref: '#/components/responses/422'
       operationId: post-api-v3-jobs.json
       description: |-
-        Соаздние новой вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может принимать другой набор полей или иметь отличные от описанного валидации.
+        Создание новой вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может принимать другой набор полей или иметь отличные от описанного валидации.
         Метод возвращает данные созданной вакансии: статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии.
       requestBody:
         content:
@@ -805,7 +805,7 @@ paths:
                   '':
                     $ref: '#/components/schemas/resume_response'
               examples:
-                Пример ответа при добавлении резюме с параметрами:
+                Пример ответа:
                   value:
                     id: 1
                     cv_original: null
@@ -923,83 +923,12 @@ paths:
                         - id: '40'
                           name: Казахстан
                       social_link: []
-                Пример ответа при загрузке файла резюме:
-                  value:
-                    id: 1
-                    cv_original: 'https://app.potok.io/uploads/resume/cv_original/31622915/example.pdf'
-                    cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/example.html'
-                    cv_params:
-                      salary: {}
-                      title: null
-                      education: {}
-                      skills: null
-                      about_me: null
-                      travel_time: {}
-                      relocation: {}
-                      business_trip_readiness: {}
-                      beeline_fields: null
-                      danone_fields: {}
-                      daxtra_request_log_id: null
-                      ext_id: ''
-                      ext_applicant_id: null
-                      ext_source: null
-                      specialization: []
-                      employment: []
-                      schedule: []
-                      experience: []
-                      awards: []
-                      projects: []
-                      skill_set: []
-                      certificate: []
-                      recommendation: []
-                      languages: []
-                      citizenship: []
-                      work_ticket: []
-                      social_link: []
-        '422':
-          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
-          content:
-            application/json:
-              schema:
-                type: object
-                x-examples:
-                  example-1:
-                    errors:
-                      cv_original:
-                        - 'Слишком большой файл. Максимальный размер — 10,0 МБ'
-                properties:
-                  errors:
-                    type: object
-                required:
-                  - errors
-              examples:
-                Пример ответа:
-                  value:
-                    errors:
-                      cv_original:
-                        - 'Слишком большой файл. Максимальный размер — 10,0 МБ'
-                Пример ответа 2:
-                  value:
-                    errors:
-                      base:
-                        - Формат файла не поддерживается
-                      cv_original:
-                        - 'имеет неразрешенное расширение png. Корректные расширения: doc, docx, pdf, rtf, html.'
-                Пример ответа 3:
-                  value:
-                    errors:
-                      base:
-                        - прервана попытка загрузить зараженный файл
-                Пример ответа 4:
-                  value:
-                    errors:
-                      base:
-                        - Формат файла не поддерживается
+        '400':
+          description: Ошибка параметров запроса
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
       operationId: post-applicants-applicant_id-resumes.json
-      description: |-
-        Добавление резюме в карточку кандидата по конкретным параметрам. Метод возвращает только статические поля. 
-
-        Для cv_original допустимые расширения файлов - doc, docx, pdf, rtf, html. Размер файла резюме должен быть меньше 10 Мбайт.
+      description: 'Добавление резюме в карточку кандидата по конкретным параметрам. Метод возвращает только статические поля. '
       requestBody:
         content:
           application/json:
@@ -1114,14 +1043,6 @@ paths:
                     business_trip_readiness:
                       id: ready
                       name: готов к командировкам
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                cv_original:
-                  type: string
-                  format: binary
-                  description: Ссылка на файл резюме
         description: ''
       parameters: []
   '/applicants/{applicant_id}/resume_file.json':
@@ -1143,44 +1064,50 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  '':
-                    $ref: '#/components/schemas/resume_response'
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '':
+                      $ref: '#/components/schemas/resume_response'
               examples:
                 Пример ответа:
                   value:
-                    id: 1
-                    cv_original: 'https://app.potok.io/uploads/resume/cv_original/31622915/example.pdf'
-                    cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/example.html'
-                    cv_params:
-                      salary: {}
-                      title: null
-                      education: {}
-                      skills: null
-                      about_me: null
-                      travel_time: {}
-                      relocation: {}
-                      business_trip_readiness: {}
-                      beeline_fields: null
-                      danone_fields: {}
-                      daxtra_request_log_id: null
-                      ext_id: ''
-                      ext_applicant_id: null
-                      ext_source: null
-                      specialization: []
-                      employment: []
-                      schedule: []
-                      experience: []
-                      awards: []
-                      projects: []
-                      skill_set: []
-                      certificate: []
-                      recommendation: []
-                      languages: []
-                      citizenship: []
-                      work_ticket: []
-                      social_link: []
+                    - id: 1
+                      cv_original: 'https://app.potok.io/uploads/resume/cv_original/31622915/example.pdf'
+                      cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/example.html'
+                      cv_params:
+                        salary: {}
+                        title: null
+                        education: {}
+                        skills: null
+                        about_me: null
+                        travel_time: {}
+                        relocation: {}
+                        business_trip_readiness: {}
+                        beeline_fields: null
+                        danone_fields: {}
+                        daxtra_request_log_id: null
+                        ext_id: ''
+                        ext_applicant_id: null
+                        ext_source: null
+                        specialization: []
+                        employment: []
+                        schedule: []
+                        experience: []
+                        awards: []
+                        projects: []
+                        skill_set: []
+                        certificate: []
+                        recommendation: []
+                        languages: []
+                        citizenship: []
+                        work_ticket: []
+                        social_link: []
+        '400':
+          description: Ошибка параметров запроса
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
         '422':
           description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
           content:
@@ -1222,7 +1149,7 @@ paths:
                         - прервана попытка загрузить зараженный файл
       operationId: post-applicants-applicant_id-resume_file.json
       description: |-
-        Добавление файла резюме в карточку кандидата. Метод возвращает только статические поля. 
+        Добавление файла резюме в карточку кандидата. Метод возвращает массив всех резюме кандидата (возвращает только статические поля)
 
 
         Допустимые расширения файлов - doc, docx, pdf, rtf, html. Размер файла резюме должен быть меньше 10 Мбайт.
@@ -1236,6 +1163,8 @@ paths:
                   type: string
                   format: binary
                   description: Ссылка на файл резюме
+              required:
+                - cv_original
             examples: {}
 components:
   schemas:
@@ -2059,8 +1988,6 @@ components:
         cv_params:
           type: object
           description: 'Резюме кандидата, разбитое по блокам'
-          required:
-            - title
           properties:
             salary:
               type: object
@@ -2074,7 +2001,7 @@ components:
                   description: ID Валюты (словарь - `currency_type`)
             title:
               type: string
-              description: 'Название должности (Без данного параметра не будет отображаться данный раздел на странице кандидата на вакансии, даже если остальные поля раздела заполнены)'
+              description: Название должности
             education:
               type: object
               description: Образование кандидата
@@ -2094,7 +2021,7 @@ components:
                       description: Тип образования (к примеру `Высшее`)
                 primary:
                   type: array
-                  description: Массив образований кандидата
+                  description: Массив учебных заведений кандидата
                   items:
                     type: object
                     properties:
@@ -2652,7 +2579,7 @@ components:
                       description: Тип образования (к примеру `Высшее`)
                 primary:
                   type: array
-                  description: Массив образований кандидата
+                  description: Массив учебных заведений кандидата
                   items:
                     type: object
                     properties:
