@@ -2922,10 +2922,13 @@ components:
           type: 'null'
         ext_id:
           type: 'null'
+          description: Внешний ключ резюме
         ext_applicant_id:
           type: 'null'
+          description: Внешний ключ создателя резюме
         ext_source:
           type: 'null'
+          description: 'Источник внешнего резюме (может быть `null`, `potok`, `estaff`, `headhunter`, `superjob`, `avito`)'
         social_link:
           type: 'null'
       required:
