@@ -580,7 +580,7 @@ paths:
                     - стрессоустойчивость
                   job_type: point
                   is_draft: false
-                  company_department_id: ''
+                  company_department_id: 0 
                   demand: 1
                   private: false
                   closure_date: '2023-07-17'
@@ -1764,7 +1764,6 @@ paths:
         - $ref: '#/components/parameters/f-created_at'
         - $ref: '#/components/parameters/f-source_type_codes'
         - $ref: '#/components/parameters/f-statuses'
-        - $ref: '#/components/parameters/f[stage_statuses][]'
         - $ref: '#/components/parameters/f-all_documents'
         - $ref: '#/components/parameters/f-total_scores'
         - $ref: '#/components/parameters/f-added_at'
@@ -1782,6 +1781,7 @@ paths:
         - $ref: '#/components/parameters/f-total_experience-max'
         - $ref: '#/components/parameters/f-relocation_readiness'
         - $ref: '#/components/parameters/f-education_level'
+        - $ref: '#/components/parameters/f-stage_statuses'
     parameters: []
   '/api​/v3​/applicants​/{applicant_id}.json':
     parameters:
@@ -5383,12 +5383,15 @@ components:
           - depersonalized
       description: 'Фильтр по статусу кандидата, можно использовать несколько раз в одном запросе'
       allowEmptyValue: true
-    'f[stage_statuses][]':
+    f-stage_statuses:
       name: 'f[stage_statuses][]'
       in: query
       required: false
       schema:
         type: string
+        example: podgotovka_dokumentov
+      description: 'Фильтр по ID статуса на этапе вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
     f-all_documents:
       name: 'f[all_documents][]'
       in: query
