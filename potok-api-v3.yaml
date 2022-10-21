@@ -4413,7 +4413,7 @@ components:
           properties:
             title:
               type: string
-              description: Должность кандидата
+              description: Должность кандидата с последнего места работы
             first_name:
               type: string
               description: Имя
@@ -4968,7 +4968,7 @@ components:
           description: Почта кандидата
         title:
           type: string
-          description: Должность кандидата
+          description: Должность кандидата с последнего места работы
         salary:
           type: integer
           description: Ожидаемая ЗП
