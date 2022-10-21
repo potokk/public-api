@@ -580,7 +580,7 @@ paths:
                     - стрессоустойчивость
                   job_type: point
                   is_draft: false
-                  company_department_id: 0 
+                  company_department_id: 0
                   demand: 1
                   private: false
                   closure_date: '2023-07-17'
@@ -1366,6 +1366,7 @@ paths:
                           active_applicants: 10
                           declined_applicants: 2
                           stage_type: sourced
+                        responsible_user_id: 51293
         '401':
           description: Отказ в доступе. Неверная авторизация или аутентификация
         '402':
@@ -1552,202 +1553,223 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Applicant_response'
+                type: object
+                properties:
+                  '':
+                    $ref: '#/components/schemas/Applicant_response'
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                  pages:
+                    type: integer
+                    description: Количество страниц
+                  page:
+                    type: string
+                    description: Номер страницы списка вакансий
+                required:
+                  - per_page
+                  - pages
+                  - page
               examples:
                 Пример ответа:
                   value:
-                    id: 12345
-                    first_name: Иван
-                    last_name: Иванов
-                    middle_name: Иванович
-                    name: Иванов Иван Иванович
-                    address: Москва
-                    email: example@email.ru
-                    title: Строитель
-                    salary: 10000
-                    source_type: sourced
-                    source_url: 'https://icanchoose.ru'
-                    born: '2000-01-01'
-                    skype: ivan_skype
-                    phones:
-                      - '79997776655'
-                    accounts:
-                      - url: 'https://www.instagram.com/'
-                        icon_id: instagram
-                    tags:
-                      - id: 43536
-                        name: тег
-                        taggings_count: 1
-                    created_at: '2020-07-06T16:04:26.387+03:00'
-                    updated_at: '2020-07-06T16:04:26.982+03:00'
-                    another_emails:
-                      - ttt@mail.ru
-                    schedule:
-                      - {}
-                    gender: male
-                    city:
-                      id: '1'
-                      text: Москва
-                      name: Москва
-                      country_name: Россия
-                      subdivision_name: Москва
-                    states:
-                      - state_id: not_depersonalized
-                        updated_at: '2020-07-06T16:04:26.387+03:00'
-                        workflow_name: personal_data_depersonalization
-                        workflow_id: 3050
-                        init_by:
-                          id: 1234
-                          class: class
-                        additional_info:
+                    data:
+                      - id: 12345
+                        first_name: Иван
+                        last_name: Иванов
+                        middle_name: Иванович
+                        name: Иванов Иван Иванович
+                        address: Москва
+                        email: example@email.ru
+                        title: Строитель
+                        salary: 10000
+                        source_type: sourced
+                        source_url: 'https://icanchoose.ru'
+                        born: '2000-01-01'
+                        skype: ivan_skype
+                        phones:
+                          - '79997776655'
+                        accounts:
+                          - url: 'https://www.instagram.com/'
+                            icon_id: instagram
+                        tags:
+                          - id: 43536
+                            name: тег
+                            taggings_count: 1
+                        created_at: '2020-07-06T16:04:26.387+03:00'
+                        updated_at: '2020-07-06T16:04:26.982+03:00'
+                        another_emails:
+                          - ttt@mail.ru
+                        schedule:
                           - {}
-                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                    resumes:
-                      - id: 1
-                        cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
-                        cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
-                        cv_params:
-                          salary:
-                            amount: '90000'
-                            currency: RUR
-                          title: желаемая должность
-                          education:
-                            level:
-                              id: master
-                              name: Магистр
-                              parent: Высшее
-                            primary:
-                              - name: учебное заведение
-                                organization: факультет
-                                result: специализация
-                                course:
-                                  id: graduate
-                                  value: Выпускник/выпускница
-                                form:
-                                  id: full_time
-                                  value: Очная
-                                year: '2020'
-                                average_degree:
-                                  id: 4+
-                                  value: 'От 4 до 4,49'
-                            attestation:
-                              - name: название теста
-                                organization: Проводившая организация
-                                result: Специализация
-                                year: Год сдачи
-                            additional:
-                              - name: название курса
-                                year: год
-                                organization: Организация
-                                result: Результат
-                          skills: дополнительная информация
-                          about_me: обо мне
-                          travel_time:
-                            id: less_than_hour
-                            name: Не более часа
-                          relocation:
-                            area:
-                              - id: '1'
-                                name: Москва
-                            type:
-                              id: no_relocation
-                              name: не готов к переезду
-                          business_trip_readiness:
-                            id: ready
-                            name: готов к командировкам
-                          ext_id: '123124'
-                          ext_applicant_id: '123456'
-                          ext_source: headhunter
-                          specialization:
-                            - id: '1.420'
-                              name: Администратор баз данных
-                          employment:
-                            - id: full
-                              name: Полная занятость
-                          schedule:
-                            - id: fullDay
-                              name: Полный день
-                          experience:
-                            - start: '2020-06-25'
-                              end: '2020-06-25'
-                              now: false
-                              company: организация
-                              area:
-                                id: '1'
-                                name: Москва
-                              company_url: 'https://yandex.ru/maps'
-                              position: должность в опыте работы
-                              description: описание опыта работы
-                          awards:
-                            - date: '1961-04-12'
-                              name: Лётчик-космонавт СССР
-                              organization: СССР
-                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
-                          projects:
-                            - start: '2020-06-25'
-                              end: '2020-06-28'
-                              name: название проекта
-                              description: описание проекта
-                          skill_set:
-                            - Git
-                            - SQL
-                            - 1С программирование
-                            - Деловая коммуникация
-                          certificate:
-                            - title: сертификат
-                              url: ссылка
-                              company: Организация
-                              achieved_at: '2020-06-28'
-                          recommendation:
-                            - name: имя рекомендации
-                              contact: Контакт
-                              position: Должность
-                              organization: Организация
-                          languages:
-                            - id: eng
-                              name: Английский
-                              level:
-                                id: a1
-                                name: A1 — Начальный
-                          citizenship:
-                            - id: '113'
-                              name: Россия
-                          work_ticket:
-                            - id: '40'
-                              name: Казахстан
-                    source_name: icanchoose
-                    extra_events_present: false
-                    events:
-                      - id: 1
-                        subject: Тема письма
-                        body: комментарий
-                        applicant:
-                          id: 1
-                          first_name: Иван
-                          last_name: Иванов
-                          middle_name: Иванович
-                        job:
-                          id: 1234
-                          name: Название вакансии
-                        from: '2020-07-06T16:04:26.387+03:00'
-                        to: '2020-07-06T16:04:26.387+03:00'
-                        type: 'Event::Comment'
-                    ajs_joins:
-                      - id: 123
-                        job:
-                          id: 219134
-                          name: Директор
-                          job_type: '1723'
-                          stage_name: Добавлен
-                          active: true
-                        employee_ext_id: 0
-                        stage:
-                          id: 4314
-                          name: Добавлен
-                          serial: 2
-                          active_applicants: 10
-                          declined_applicants: 2
-                          stage_type: sourced
+                        gender: male
+                        city:
+                          id: '1'
+                          text: Москва
+                          name: Москва
+                          country_name: Россия
+                          subdivision_name: Москва
+                        states:
+                          - state_id: not_depersonalized
+                            updated_at: '2020-07-06T16:04:26.387+03:00'
+                            workflow_name: personal_data_depersonalization
+                            workflow_id: 3050
+                            init_by:
+                              id: 1234
+                              class: class
+                            additional_info:
+                              - {}
+                        avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        resumes:
+                          - id: 1
+                            cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+                            cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+                            cv_params:
+                              salary:
+                                amount: '90000'
+                                currency: RUR
+                              title: желаемая должность
+                              education:
+                                level:
+                                  id: master
+                                  name: Магистр
+                                  parent: Высшее
+                                primary:
+                                  - name: учебное заведение
+                                    organization: факультет
+                                    result: специализация
+                                    course:
+                                      id: graduate
+                                      value: Выпускник/выпускница
+                                    form:
+                                      id: full_time
+                                      value: Очная
+                                    year: '2020'
+                                    average_degree:
+                                      id: 4+
+                                      value: 'От 4 до 4,49'
+                                attestation:
+                                  - name: название теста
+                                    organization: Проводившая организация
+                                    result: Специализация
+                                    year: Год сдачи
+                                additional:
+                                  - name: название курса
+                                    year: год
+                                    organization: Организация
+                                    result: Результат
+                              skills: дополнительная информация
+                              about_me: обо мне
+                              travel_time:
+                                id: less_than_hour
+                                name: Не более часа
+                              relocation:
+                                area:
+                                  - id: '1'
+                                    name: Москва
+                                type:
+                                  id: no_relocation
+                                  name: не готов к переезду
+                              business_trip_readiness:
+                                id: ready
+                                name: готов к командировкам
+                              ext_id: '123124'
+                              ext_applicant_id: '123456'
+                              ext_source: headhunter
+                              specialization:
+                                - id: '1.420'
+                                  name: Администратор баз данных
+                              employment:
+                                - id: full
+                                  name: Полная занятость
+                              schedule:
+                                - id: fullDay
+                                  name: Полный день
+                              experience:
+                                - start: '2020-06-25'
+                                  end: '2020-06-25'
+                                  now: false
+                                  company: организация
+                                  area:
+                                    id: '1'
+                                    name: Москва
+                                  company_url: 'https://yandex.ru/maps'
+                                  position: должность в опыте работы
+                                  description: описание опыта работы
+                              awards:
+                                - date: '1961-04-12'
+                                  name: Лётчик-космонавт СССР
+                                  organization: СССР
+                                  description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                              projects:
+                                - start: '2020-06-25'
+                                  end: '2020-06-28'
+                                  name: название проекта
+                                  description: описание проекта
+                              skill_set:
+                                - Git
+                                - SQL
+                                - 1С программирование
+                                - Деловая коммуникация
+                              certificate:
+                                - title: сертификат
+                                  url: ссылка
+                                  company: Организация
+                                  achieved_at: '2020-06-28'
+                              recommendation:
+                                - name: имя рекомендации
+                                  contact: Контакт
+                                  position: Должность
+                                  organization: Организация
+                              languages:
+                                - id: eng
+                                  name: Английский
+                                  level:
+                                    id: a1
+                                    name: A1 — Начальный
+                              citizenship:
+                                - id: '113'
+                                  name: Россия
+                              work_ticket:
+                                - id: '40'
+                                  name: Казахстан
+                        source_name: icanchoose
+                        extra_events_present: false
+                        events:
+                          - id: 1
+                            subject: Тема письма
+                            body: комментарий
+                            applicant:
+                              id: 1
+                              first_name: Иван
+                              last_name: Иванов
+                              middle_name: Иванович
+                            job:
+                              id: 1234
+                              name: Название вакансии
+                            from: '2020-07-06T16:04:26.387+03:00'
+                            to: '2020-07-06T16:04:26.387+03:00'
+                            type: 'Event::Comment'
+                        ajs_joins:
+                          - id: 123
+                            job:
+                              id: 219134
+                              name: Директор
+                              job_type: '1723'
+                              stage_name: Добавлен
+                              active: true
+                            employee_ext_id: 0
+                            stage:
+                              id: 4314
+                              name: Добавлен
+                              serial: 2
+                              active_applicants: 10
+                              declined_applicants: 2
+                              stage_type: sourced
+                            responsible_user_id: 51293
+                    per_page: 1
+                    pages: 4
+                    page: '1'
         '401':
           description: Отказ в доступе. Неверная авторизация или аутентификация
         '402':
@@ -1998,6 +2020,7 @@ paths:
                           active_applicants: 10
                           declined_applicants: 2
                           stage_type: sourced
+                        responsible_user_id: 51293
         '401':
           description: Отказ в доступе. Неверная авторизация или аутентификация
         '402':
@@ -2381,6 +2404,7 @@ paths:
                           active_applicants: 10
                           declined_applicants: 2
                           stage_type: sourced
+                        responsible_user_id: 51293
         '401':
           description: Отказ в доступе. Неверная авторизация или аутентификация
         '402':
@@ -4919,6 +4943,7 @@ components:
                 active_applicants: 10
                 declined_applicants: 2
                 stage_type: sourced
+              responsible_user_id: 51293
       properties:
         id:
           type: integer
@@ -5193,6 +5218,9 @@ components:
                 description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
               stage:
                 $ref: '#/components/schemas/stages'
+              responsible_user_id:
+                type: integer
+                description: ID ответственного за кандидата на вакансии
       required:
         - id
         - first_name
