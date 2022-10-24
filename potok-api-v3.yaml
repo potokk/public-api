@@ -469,7 +469,7 @@ paths:
           $ref: '#/components/responses/422'
       operationId: post-api-v3-jobs.json
       description: |-
-        Соаздние новой вакансии.  Описание приведено для стандартной формы, в случае ее изменения метод может принимать другой набор полей или иметь отличные от описанного валидации.
+        Создание новой вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может принимать другой набор полей или иметь отличные от описанного валидации.
         Метод возвращает данные созданной вакансии: статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии.
       requestBody:
         content:
@@ -504,10 +504,7 @@ paths:
                   description: Описание вакансии
                 city:
                   type: number
-                  description: |-
-                    ID Города вакансии
-
-                    Источник - словарь cities
+                  description: ID Города вакансии (словарь `cities`)
                 salary_from:
                   type: number
                   description: Ожидаемая ЗП от
@@ -583,7 +580,7 @@ paths:
                     - стрессоустойчивость
                   job_type: point
                   is_draft: false
-                  company_department_id: ''
+                  company_department_id: 0
                   demand: 1
                   private: false
                   closure_date: '2023-07-17'
@@ -772,7 +769,7 @@ paths:
           description: Отказ в доступе. Неверная авторизация или аутентификация
       operationId: get-jobs-id-.json
       description: |-
-        Получение данных вакансию по ее ID. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.
+        Получение данных вакансии по ее ID. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.
 
         Если вакансия с указанным ID не найдена, Potok возвращает код 200 с телом `null`.
       parameters: []
@@ -784,6 +781,1662 @@ paths:
         in: path
         required: true
         description: ID Вакансии
+  '/applicants/{applicant_id}/resumes.json':
+    parameters:
+      - schema:
+          type: string
+          example: '12345'
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    post:
+      summary: Добавление резюме с параметрами
+      tags:
+        - резюме
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '':
+                    $ref: '#/components/schemas/resume_response'
+              examples:
+                Пример ответа:
+                  value:
+                    '':
+                      id: 1
+                      cv_original: null
+                      cv_html: null
+                      cv_params:
+                        salary:
+                          amount: '90000'
+                          currency: RUR
+                        title: желаемая должность
+                        education:
+                          level:
+                            id: master
+                            name: Магистр
+                            parent: Высшее
+                          primary:
+                            - name: учебное заведение
+                              organization: факультет
+                              result: специализация
+                              course:
+                                id: graduate
+                                value: Выпускник/выпускница
+                              form:
+                                id: full_time
+                                value: Очная
+                              year: '2020'
+                              average_degree:
+                                id: 4+
+                                value: 'От 4 до 4,49'
+                          attestation:
+                            - name: название теста
+                              organization: Проводившая организация
+                              result: Специализация
+                              year: Год сдачи
+                          additional:
+                            - name: название курса
+                              year: год
+                              organization: Организация
+                              result: Результат
+                        skills: дополнительная информация
+                        about_me: обо мне
+                        travel_time:
+                          id: less_than_hour
+                          name: Не более часа
+                        relocation:
+                          area:
+                            - id: '1'
+                              name: Москва
+                          type:
+                            id: no_relocation
+                            name: не готов к переезду
+                        business_trip_readiness:
+                          id: ready
+                          name: готов к командировкам
+                        ext_id: '12314'
+                        ext_applicant_id: '14124'
+                        ext_source: headhunter
+                        specialization:
+                          - id: '1.420'
+                            name: Администратор баз данных
+                        employment:
+                          - id: full
+                            name: Полная занятость
+                        schedule:
+                          - id: fullDay
+                            name: Полный день
+                        experience:
+                          - start: '2020-06-25'
+                            end: '2020-06-25'
+                            now: false
+                            company: организация
+                            area:
+                              id: '1'
+                              name: Москва
+                            company_url: 'https://yandex.ru/maps'
+                            position: должность в опыте работы
+                            description: описание опыта работы
+                        awards:
+                          - date: '1961-04-12'
+                            name: Лётчик-космонавт СССР
+                            organization: СССР
+                            description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                        projects:
+                          - start: '2020-06-25'
+                            end: '2020-06-28'
+                            name: название проекта
+                            description: описание проекта
+                        skill_set:
+                          - Git
+                          - SQL
+                          - 1С программирование
+                          - Деловая коммуникация
+                        certificate:
+                          - title: сертификат
+                            url: ссылка
+                            company: Организация
+                            achieved_at: '2020-06-28'
+                        recommendation:
+                          - name: имя рекомендации
+                            contact: Контакт
+                            position: Должность
+                            organization: Организация
+                        languages:
+                          - id: eng
+                            name: Английский
+                            level:
+                              id: a1
+                              name: A1 — Начальный
+                        citizenship:
+                          - id: '113'
+                            name: Россия
+                        work_ticket:
+                          - id: '40'
+                            name: Казахстан
+        '400':
+          description: Ошибка параметров запроса
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
+      operationId: post-applicants-applicant_id-resumes.json
+      description: 'Добавление резюме в карточку кандидата по конкретным параметрам. Метод возвращает только статические поля. '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cv_params_request'
+            examples:
+              Пример запроса:
+                value:
+                  cv_params:
+                    title: желаемая должность
+                    salary:
+                      amount: '90000'
+                      currency: RUR
+                    specialization:
+                      - id: '1.420'
+                        name: Администратор баз данных
+                    schedule:
+                      - id: fullDay
+                        name: Полный день
+                    employment:
+                      - id: full
+                        name: Полная занятость
+                    experience:
+                      - start: '2020-06-25'
+                        end: '2020-06-25'
+                        now: false
+                        company: организация
+                        area:
+                          id: '1'
+                          name: Москва
+                        company_url: 'https://yandex.ru/maps'
+                        position: должность в опыте работы
+                        description: описание опыта работы
+                    awards:
+                      - date: '1961-04-12'
+                        name: Лётчик-космонавт СССР
+                        organization: СССР
+                        description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                    projects:
+                      - start: '2020-06-25'
+                        end: '2020-06-28'
+                        name: название проекта
+                        description: описание проекта
+                    skill_set:
+                      - Git
+                      - SQL
+                      - 1С программирование
+                      - Деловая коммуникация
+                    education:
+                      level:
+                        id: master
+                        name: Магистр
+                        parent: Высшее
+                      primary:
+                        - name: учебное заведение
+                          organization: факультет
+                          result: специализация
+                          course:
+                            id: graduate
+                            value: Выпускник/выпускница
+                          form:
+                            id: full_time
+                            value: Очная
+                          year: '2020'
+                          average_degree:
+                            id: 4+
+                            value: 'От 4 до 4,49'
+                      attestation:
+                        - name: название теста
+                          organization: Проводившая организация
+                          result: Специализация
+                          year: Год сдачи
+                      additional:
+                        - name: название курса
+                          year: год
+                          organization: Организация
+                          result: Результат
+                    certificate:
+                      - title: сертификат
+                        url: ссылка
+                        company: Организация
+                        achieved_at: '2020-06-28'
+                    about_me: обо мне
+                    skills: доп информация
+                    recommendation:
+                      - name: имя рекомендации
+                        contact: Контакт
+                        position: Должность
+                        organization: Организация
+                    languages:
+                      - id: eng
+                        name: Английский
+                        level:
+                          id: a1
+                          name: A1 — Начальный
+                    travel_time:
+                      id: less_than_hour
+                      name: Не более часа
+                    citizenship:
+                      - id: '113'
+                        name: Россия
+                    work_ticket:
+                      - id: '40'
+                        name: Казахстан
+                    relocation:
+                      area:
+                        - id: '1'
+                          name: Москва
+                      type:
+                        id: no_relocation
+                        name: не готов к переезду
+                    business_trip_readiness:
+                      id: ready
+                      name: готов к командировкам
+        description: ''
+      parameters: []
+  '/applicants/{applicant_id}/resume_file.json':
+    parameters:
+      - schema:
+          type: string
+          example: '12345'
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    post:
+      summary: Добавление файла резюме
+      tags:
+        - резюме
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '':
+                      $ref: '#/components/schemas/resume_response'
+              examples:
+                Пример ответа:
+                  value:
+                    - id: 1
+                      cv_original: 'https://app.potok.io/uploads/resume/cv_original/31622915/example.pdf'
+                      cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/example.html'
+                      cv_params:
+                        salary: {}
+                        title: null
+                        education: {}
+                        skills: null
+                        about_me: null
+                        travel_time: {}
+                        relocation: {}
+                        business_trip_readiness: {}
+                        ext_id: ''
+                        ext_applicant_id: null
+                        ext_source: null
+                        specialization: []
+                        employment: []
+                        schedule: []
+                        experience: []
+                        awards: []
+                        projects: []
+                        skill_set: []
+                        certificate: []
+                        recommendation: []
+                        languages: []
+                        citizenship: []
+                        work_ticket: []
+        '400':
+          description: Ошибка параметров запроса
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      cv_original:
+                        - 'Слишком большой файл. Максимальный размер — 10,0 МБ'
+                properties:
+                  errors:
+                    type: object
+                required:
+                  - errors
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      cv_original:
+                        - 'Слишком большой файл. Максимальный размер — 10,0 МБ'
+                Пример ответа 2:
+                  value:
+                    errors:
+                      base:
+                        - Формат файла не поддерживается
+                      cv_original:
+                        - 'имеет неразрешенное расширение png. Корректные расширения: doc, docx, pdf, rtf, html.'
+                Пример ответа 3:
+                  value:
+                    errors:
+                      base:
+                        - Формат файла не поддерживается
+                Пример ответа 4:
+                  value:
+                    errors:
+                      base:
+                        - прервана попытка загрузить зараженный файл
+      operationId: post-applicants-applicant_id-resume_file.json
+      description: |-
+        Добавление файла резюме в карточку кандидата. Метод возвращает массив всех резюме кандидата (возвращает только статические поля)
+
+
+        Допустимые расширения файлов - doc, docx, pdf, rtf, html. Размер файла резюме должен быть меньше 10 Мбайт.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                cv_original:
+                  type: string
+                  format: binary
+                  description: Ссылка на файл резюме
+              required:
+                - cv_original
+            examples: {}
+  /api/v3/applicants.json:
+    post:
+      summary: Создание кандидата (отклика)
+      tags:
+        - кандидаты
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Applicant_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 12345
+                    first_name: Иван
+                    last_name: Иванов
+                    middle_name: Иванович
+                    name: Иванов Иван Иванович
+                    address: Москва
+                    email: example@email.ru
+                    title: Строитель
+                    salary: 10000
+                    source_type: sourced
+                    source_url: 'https://icanchoose.ru'
+                    born: '2000-01-01'
+                    skype: ivan_skype
+                    phones:
+                      - '79997776655'
+                    accounts:
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
+                    tags:
+                      - id: 43536
+                        name: тег
+                        taggings_count: 1
+                    created_at: '2020-07-06T16:04:26.387+03:00'
+                    updated_at: '2020-07-06T16:04:26.982+03:00'
+                    another_emails:
+                      - ttt@mail.ru
+                    schedule:
+                      - id: fullDay
+                        name: Полный день
+                    gender: male
+                    city:
+                      id: '1'
+                      text: Москва
+                      name: Москва
+                      country_name: Россия
+                      subdivision_name: Москва
+                    states:
+                      - state_id: not_depersonalized
+                        updated_at: '2020-07-06T16:04:26.387+03:00'
+                        workflow_name: personal_data_depersonalization
+                        workflow_id: 3050
+                        init_by:
+                          id: 1234
+                          class: class
+                        additional_info:
+                          - {}
+                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                    resumes:
+                      - id: 1
+                        cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+                        cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+                        cv_params:
+                          salary:
+                            amount: '90000'
+                            currency: RUR
+                          title: желаемая должность
+                          education:
+                            level:
+                              id: master
+                              name: Магистр
+                              parent: Высшее
+                            primary:
+                              - name: учебное заведение
+                                organization: факультет
+                                result: специализация
+                                course:
+                                  id: graduate
+                                  value: Выпускник/выпускница
+                                form:
+                                  id: full_time
+                                  value: Очная
+                                year: '2020'
+                                average_degree:
+                                  id: 4+
+                                  value: 'От 4 до 4,49'
+                            attestation:
+                              - name: название теста
+                                organization: Проводившая организация
+                                result: Специализация
+                                year: Год сдачи
+                            additional:
+                              - name: название курса
+                                year: год
+                                organization: Организация
+                                result: Результат
+                          skills: дополнительная информация
+                          about_me: обо мне
+                          travel_time:
+                            id: less_than_hour
+                            name: Не более часа
+                          relocation:
+                            area:
+                              - id: '1'
+                                name: Москва
+                            type:
+                              id: no_relocation
+                              name: не готов к переезду
+                          business_trip_readiness:
+                            id: ready
+                            name: готов к командировкам
+                          ext_id: '123124'
+                          ext_applicant_id: '123456'
+                          ext_source: headhunter
+                          specialization:
+                            - id: '1.420'
+                              name: Администратор баз данных
+                          employment:
+                            - id: full
+                              name: Полная занятость
+                          schedule:
+                            - id: fullDay
+                              name: Полный день
+                          experience:
+                            - start: '2020-06-25'
+                              end: '2020-06-25'
+                              now: false
+                              company: организация
+                              area:
+                                id: '1'
+                                name: Москва
+                              company_url: 'https://yandex.ru/maps'
+                              position: должность в опыте работы
+                              description: описание опыта работы
+                          awards:
+                            - date: '1961-04-12'
+                              name: Лётчик-космонавт СССР
+                              organization: СССР
+                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                          projects:
+                            - start: '2020-06-25'
+                              end: '2020-06-28'
+                              name: название проекта
+                              description: описание проекта
+                          skill_set:
+                            - Git
+                            - SQL
+                            - 1С программирование
+                            - Деловая коммуникация
+                          certificate:
+                            - title: сертификат
+                              url: ссылка
+                              company: Организация
+                              achieved_at: '2020-06-28'
+                          recommendation:
+                            - name: имя рекомендации
+                              contact: Контакт
+                              position: Должность
+                              organization: Организация
+                          languages:
+                            - id: eng
+                              name: Английский
+                              level:
+                                id: a1
+                                name: A1 — Начальный
+                          citizenship:
+                            - id: '113'
+                              name: Россия
+                          work_ticket:
+                            - id: '40'
+                              name: Казахстан
+                    source_name: icanchoose
+                    extra_events_present: false
+                    events:
+                      - id: 1
+                        subject: Тема письма
+                        body: комментарий
+                        applicant:
+                          id: 1
+                          first_name: Иван
+                          last_name: Иванов
+                          middle_name: Иванович
+                        job:
+                          id: 1234
+                          name: Название вакансии
+                        from: '2020-07-06T16:04:26.387+03:00'
+                        to: '2020-07-06T16:04:26.387+03:00'
+                        type: 'Event::Comment'
+                    ajs_joins:
+                      - id: 123
+                        job:
+                          id: 219134
+                          name: Директор
+                          job_type: '1723'
+                          stage_name: Добавлен
+                          active: true
+                        employee_ext_id: 0
+                        stage:
+                          id: 4314
+                          name: Добавлен
+                          serial: 2
+                          active_applicants: 10
+                          declined_applicants: 2
+                          stage_type: sourced
+                        responsible_user_id: 51293
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
+        '402':
+          description: Подписка компании просрочена
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      emails:
+                        - имеет неверное значение
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      emails:
+                        - имеет неверное значение
+      operationId: post-api-v3-applicants.json
+      description: 'Создание кандидата по заданным параметрам. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Applicant_request'
+            examples:
+              Пример запроса:
+                value:
+                  applicant:
+                    first_name: Иван
+                    last_name: Иванов
+                    middle_name: Иванович
+                    emails:
+                      - example@email.ru
+                    phones:
+                      - '79997776655'
+                    born: '2000-01-01'
+                    source_type: sourced
+                    source_url: 'https://icanchoose.ru'
+                    salary: 100000
+                    salary_currency: RUR
+                    skype: ivan_skype
+                    gender: male
+                    city: '1'
+                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                    accounts:
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
+                    resumes:
+                      - cv_params:
+                          title: желаемая должность
+                          salary:
+                            amount: '90000'
+                            currency: RUR
+                          specialization:
+                            - id: '1.420'
+                              name: Администратор баз данных
+                          schedule:
+                            - id: fullDay
+                              name: Полный день
+                          employment:
+                            - id: full
+                              name: Полная занятость
+                          experience:
+                            - start: '2020-06-25'
+                              end: '2020-06-25'
+                              now: false
+                              company: организация
+                              area:
+                                id: '1'
+                                name: Москва
+                              company_url: 'https://yandex.ru/maps'
+                              position: должность в опыте работы
+                              description: описание опыта работы
+                          awards:
+                            - date: '1961-04-12'
+                              name: Лётчик-космонавт СССР
+                              organization: СССР
+                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                          projects:
+                            - start: '2020-06-25'
+                              end: '2020-06-28'
+                              name: название проекта
+                              description: описание проекта
+                          skill_set:
+                            - Git
+                            - SQL
+                            - 1С программирование
+                            - Деловая коммуникация
+                          education:
+                            level:
+                              id: master
+                              name: Магистр
+                              parent: Высшее
+                            primary:
+                              - name: учебное заведение
+                                organization: факультет
+                                result: специализация
+                                course:
+                                  id: graduate
+                                  value: Выпускник/выпускница
+                                form:
+                                  id: full_time
+                                  value: Очная
+                                year: '2020'
+                                average_degree:
+                                  id: 4+
+                                  value: 'От 4 до 4,49'
+                            attestation:
+                              - name: название теста
+                                organization: Проводившая организация
+                                result: Специализация
+                                year: Год сдачи
+                            additional:
+                              - name: название курса
+                                year: год
+                                organization: Организация
+                                result: Результат
+                          certificate:
+                            - title: сертификат
+                              url: ссылка
+                              company: Организация
+                              achieved_at: '2020-06-28'
+                          about_me: обо мне
+                          skills: доп информация
+                          recommendation:
+                            - name: имя рекомендации
+                              contact: Контакт
+                              position: Должность
+                              organization: Организация
+                          languages:
+                            - id: eng
+                              name: Английский
+                              level:
+                                id: a1
+                                name: A1 — Начальный
+                          travel_time:
+                            id: less_than_hour
+                            name: Не более часа
+                          citizenship:
+                            - id: '113'
+                              name: Россия
+                          work_ticket:
+                            - id: '40'
+                              name: Казахстан
+                          relocation:
+                            area:
+                              - id: '1'
+                                name: Москва
+                            type:
+                              id: no_relocation
+                              name: не готов к переезду
+                          business_trip_readiness:
+                            id: ready
+                            name: готов к командировкам
+                    workflows:
+                      personal_data_agreement: personal_data_depersonalization
+                    events:
+                      body: комментарий
+                      type: 'Event::Comment'
+                    ajs_joins:
+                      - job_id: 220694
+                        employee_ext_id: 12345
+                        responsible_user_id: 54321
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: Ссылка на аватар кандидата
+    get:
+      summary: Просмотр кандидатов (откликов)
+      tags:
+        - кандидаты
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '':
+                    $ref: '#/components/schemas/Applicant_response'
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                  pages:
+                    type: integer
+                    description: Количество страниц
+                  page:
+                    type: string
+                    description: Номер страницы списка вакансий
+                required:
+                  - per_page
+                  - pages
+                  - page
+              examples:
+                Пример ответа:
+                  value:
+                    data:
+                      - id: 12345
+                        first_name: Иван
+                        last_name: Иванов
+                        middle_name: Иванович
+                        name: Иванов Иван Иванович
+                        address: Москва
+                        email: example@email.ru
+                        title: Строитель
+                        salary: 10000
+                        source_type: sourced
+                        source_url: 'https://icanchoose.ru'
+                        born: '2000-01-01'
+                        skype: ivan_skype
+                        phones:
+                          - '79997776655'
+                        accounts:
+                          - url: 'https://www.t.me/account'
+                            icon_id: telegram
+                        tags:
+                          - id: 43536
+                            name: тег
+                            taggings_count: 1
+                        created_at: '2020-07-06T16:04:26.387+03:00'
+                        updated_at: '2020-07-06T16:04:26.982+03:00'
+                        another_emails:
+                          - ttt@mail.ru
+                        schedule:
+                          - {}
+                        gender: male
+                        city:
+                          id: '1'
+                          text: Москва
+                          name: Москва
+                          country_name: Россия
+                          subdivision_name: Москва
+                        states:
+                          - state_id: not_depersonalized
+                            updated_at: '2020-07-06T16:04:26.387+03:00'
+                            workflow_name: personal_data_depersonalization
+                            workflow_id: 3050
+                            init_by:
+                              id: 1234
+                              class: class
+                            additional_info:
+                              - {}
+                        avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        resumes:
+                          - id: 1
+                            cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+                            cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+                            cv_params:
+                              salary:
+                                amount: '90000'
+                                currency: RUR
+                              title: желаемая должность
+                              education:
+                                level:
+                                  id: master
+                                  name: Магистр
+                                  parent: Высшее
+                                primary:
+                                  - name: учебное заведение
+                                    organization: факультет
+                                    result: специализация
+                                    course:
+                                      id: graduate
+                                      value: Выпускник/выпускница
+                                    form:
+                                      id: full_time
+                                      value: Очная
+                                    year: '2020'
+                                    average_degree:
+                                      id: 4+
+                                      value: 'От 4 до 4,49'
+                                attestation:
+                                  - name: название теста
+                                    organization: Проводившая организация
+                                    result: Специализация
+                                    year: Год сдачи
+                                additional:
+                                  - name: название курса
+                                    year: год
+                                    organization: Организация
+                                    result: Результат
+                              skills: дополнительная информация
+                              about_me: обо мне
+                              travel_time:
+                                id: less_than_hour
+                                name: Не более часа
+                              relocation:
+                                area:
+                                  - id: '1'
+                                    name: Москва
+                                type:
+                                  id: no_relocation
+                                  name: не готов к переезду
+                              business_trip_readiness:
+                                id: ready
+                                name: готов к командировкам
+                              ext_id: '123124'
+                              ext_applicant_id: '123456'
+                              ext_source: headhunter
+                              specialization:
+                                - id: '1.420'
+                                  name: Администратор баз данных
+                              employment:
+                                - id: full
+                                  name: Полная занятость
+                              schedule:
+                                - id: fullDay
+                                  name: Полный день
+                              experience:
+                                - start: '2020-06-25'
+                                  end: '2020-06-25'
+                                  now: false
+                                  company: организация
+                                  area:
+                                    id: '1'
+                                    name: Москва
+                                  company_url: 'https://yandex.ru/maps'
+                                  position: должность в опыте работы
+                                  description: описание опыта работы
+                              awards:
+                                - date: '1961-04-12'
+                                  name: Лётчик-космонавт СССР
+                                  organization: СССР
+                                  description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                              projects:
+                                - start: '2020-06-25'
+                                  end: '2020-06-28'
+                                  name: название проекта
+                                  description: описание проекта
+                              skill_set:
+                                - Git
+                                - SQL
+                                - 1С программирование
+                                - Деловая коммуникация
+                              certificate:
+                                - title: сертификат
+                                  url: ссылка
+                                  company: Организация
+                                  achieved_at: '2020-06-28'
+                              recommendation:
+                                - name: имя рекомендации
+                                  contact: Контакт
+                                  position: Должность
+                                  organization: Организация
+                              languages:
+                                - id: eng
+                                  name: Английский
+                                  level:
+                                    id: a1
+                                    name: A1 — Начальный
+                              citizenship:
+                                - id: '113'
+                                  name: Россия
+                              work_ticket:
+                                - id: '40'
+                                  name: Казахстан
+                        source_name: icanchoose
+                        extra_events_present: false
+                        events:
+                          - id: 1
+                            subject: Тема письма
+                            body: комментарий
+                            applicant:
+                              id: 1
+                              first_name: Иван
+                              last_name: Иванов
+                              middle_name: Иванович
+                            job:
+                              id: 1234
+                              name: Название вакансии
+                            from: '2020-07-06T16:04:26.387+03:00'
+                            to: '2020-07-06T16:04:26.387+03:00'
+                            type: 'Event::Comment'
+                        ajs_joins:
+                          - id: 123
+                            job:
+                              id: 219134
+                              name: Директор
+                              job_type: '1723'
+                              stage_name: Добавлен
+                              active: true
+                            employee_ext_id: 0
+                            stage:
+                              id: 4314
+                              name: Добавлен
+                              serial: 2
+                              active_applicants: 10
+                              declined_applicants: 2
+                              stage_type: sourced
+                            responsible_user_id: 51293
+                    per_page: 1
+                    pages: 4
+                    page: '1'
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
+        '402':
+          description: Подписка компании просрочена
+      operationId: get-api-v3-applicants.json
+      description: 'Получение данных по кандидатам, с возможностью фильтрации выдачи. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.'
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        - $ref: '#/components/parameters/f-jobs'
+        - $ref: '#/components/parameters/f-stage_type_names'
+        - $ref: '#/components/parameters/f-stage_types'
+        - $ref: '#/components/parameters/f-job_types'
+        - $ref: '#/components/parameters/f-created_at'
+        - $ref: '#/components/parameters/f-source_type_codes'
+        - $ref: '#/components/parameters/f-statuses'
+        - $ref: '#/components/parameters/f-total_scores'
+        - $ref: '#/components/parameters/f-added_at'
+        - $ref: '#/components/parameters/f-declination_reasons'
+        - $ref: '#/components/parameters/f-agreement'
+        - $ref: '#/components/parameters/f-cities'
+        - $ref: '#/components/parameters/f-company_departments'
+        - $ref: '#/components/parameters/f-born-min'
+        - $ref: '#/components/parameters/f-born-max'
+        - $ref: '#/components/parameters/f-salary-min'
+        - $ref: '#/components/parameters/f-salary-max'
+        - $ref: '#/components/parameters/f-total_experience-min'
+        - $ref: '#/components/parameters/f-total_experience-max'
+        - $ref: '#/components/parameters/f-relocation_readiness'
+        - $ref: '#/components/parameters/f-education_level'
+        - $ref: '#/components/parameters/f-stage_statuses'
+    parameters: []
+  '/api​/v3​/applicants​/{applicant_id}.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 12345
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    put:
+      summary: Обновление кандидата (отклика)
+      tags:
+        - кандидаты
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Applicant_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 12345
+                    first_name: Иван
+                    last_name: Иванов
+                    middle_name: Иванович
+                    name: Иванов Иван Иванович
+                    address: Москва
+                    email: example@email.ru
+                    title: Строитель
+                    salary: 10000
+                    source_type: sourced
+                    source_url: 'https://icanchoose.ru'
+                    born: '2000-01-01'
+                    skype: ivan_skype
+                    phones:
+                      - '79997776655'
+                    accounts:
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
+                    tags:
+                      - id: 43536
+                        name: тег
+                        taggings_count: 1
+                    created_at: '2020-07-06T16:04:26.387+03:00'
+                    updated_at: '2020-07-06T16:04:26.982+03:00'
+                    another_emails:
+                      - ttt@mail.ru
+                    schedule:
+                      - {}
+                    gender: male
+                    city:
+                      id: '1'
+                      text: Москва
+                      name: Москва
+                      country_name: Россия
+                      subdivision_name: Москва
+                    states:
+                      - state_id: not_depersonalized
+                        updated_at: '2020-07-06T16:04:26.387+03:00'
+                        workflow_name: personal_data_depersonalization
+                        workflow_id: 3050
+                        init_by:
+                          id: 1234
+                          class: class
+                        additional_info:
+                          - {}
+                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                    resumes:
+                      - id: 1
+                        cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+                        cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+                        cv_params:
+                          salary:
+                            amount: '90000'
+                            currency: RUR
+                          title: желаемая должность
+                          education:
+                            level:
+                              id: master
+                              name: Магистр
+                              parent: Высшее
+                            primary:
+                              - name: учебное заведение
+                                organization: факультет
+                                result: специализация
+                                course:
+                                  id: graduate
+                                  value: Выпускник/выпускница
+                                form:
+                                  id: full_time
+                                  value: Очная
+                                year: '2020'
+                                average_degree:
+                                  id: 4+
+                                  value: 'От 4 до 4,49'
+                            attestation:
+                              - name: название теста
+                                organization: Проводившая организация
+                                result: Специализация
+                                year: Год сдачи
+                            additional:
+                              - name: название курса
+                                year: год
+                                organization: Организация
+                                result: Результат
+                          skills: дополнительная информация
+                          about_me: обо мне
+                          travel_time:
+                            id: less_than_hour
+                            name: Не более часа
+                          relocation:
+                            area:
+                              - id: '1'
+                                name: Москва
+                            type:
+                              id: no_relocation
+                              name: не готов к переезду
+                          business_trip_readiness:
+                            id: ready
+                            name: готов к командировкам
+                          ext_id: '123124'
+                          ext_applicant_id: '123456'
+                          ext_source: headhunter
+                          specialization:
+                            - id: '1.420'
+                              name: Администратор баз данных
+                          employment:
+                            - id: full
+                              name: Полная занятость
+                          schedule:
+                            - id: fullDay
+                              name: Полный день
+                          experience:
+                            - start: '2020-06-25'
+                              end: '2020-06-25'
+                              now: false
+                              company: организация
+                              area:
+                                id: '1'
+                                name: Москва
+                              company_url: 'https://yandex.ru/maps'
+                              position: должность в опыте работы
+                              description: описание опыта работы
+                          awards:
+                            - date: '1961-04-12'
+                              name: Лётчик-космонавт СССР
+                              organization: СССР
+                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                          projects:
+                            - start: '2020-06-25'
+                              end: '2020-06-28'
+                              name: название проекта
+                              description: описание проекта
+                          skill_set:
+                            - Git
+                            - SQL
+                            - 1С программирование
+                            - Деловая коммуникация
+                          certificate:
+                            - title: сертификат
+                              url: ссылка
+                              company: Организация
+                              achieved_at: '2020-06-28'
+                          recommendation:
+                            - name: имя рекомендации
+                              contact: Контакт
+                              position: Должность
+                              organization: Организация
+                          languages:
+                            - id: eng
+                              name: Английский
+                              level:
+                                id: a1
+                                name: A1 — Начальный
+                          citizenship:
+                            - id: '113'
+                              name: Россия
+                          work_ticket:
+                            - id: '40'
+                              name: Казахстан
+                    source_name: icanchoose
+                    extra_events_present: false
+                    events:
+                      - id: 1
+                        subject: Тема письма
+                        body: комментарий
+                        applicant:
+                          id: 1
+                          first_name: Иван
+                          last_name: Иванов
+                          middle_name: Иванович
+                        job:
+                          id: 1234
+                          name: Название вакансии
+                        from: '2020-07-06T16:04:26.387+03:00'
+                        to: '2020-07-06T16:04:26.387+03:00'
+                        type: 'Event::Comment'
+                    ajs_joins:
+                      - id: 123
+                        job:
+                          id: 219134
+                          name: Директор
+                          job_type: '1723'
+                          stage_name: Добавлен
+                          active: true
+                        employee_ext_id: 0
+                        stage:
+                          id: 4314
+                          name: Добавлен
+                          serial: 2
+                          active_applicants: 10
+                          declined_applicants: 2
+                          stage_type: sourced
+                        responsible_user_id: 51293
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
+        '402':
+          description: Подписка компании просрочена
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      emails:
+                        - имеет неверное значение
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      emails:
+                        - имеет неверное значение
+      operationId: put-api-v3-applicants-applicant_id-.json
+      description: 'Обновление данных кандидата по его ID . Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Applicant_request'
+            examples:
+              Пример запроса:
+                value:
+                  applicant:
+                    first_name: Иван
+                    last_name: Иванов
+                    middle_name: Иванович
+                    emails:
+                      - example@email.ru
+                    phones:
+                      - '79997776655'
+                    born: '2000-01-01'
+                    source_type: sourced
+                    source_url: 'https://icanchoose.ru'
+                    salary: 100000
+                    salary_currency: RUR
+                    skype: ivan_skype
+                    gender: male
+                    city: '1'
+                    accounts:
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
+                    resumes:
+                      - cv_params:
+                          title: желаемая должность
+                          salary:
+                            amount: '90000'
+                            currency: RUR
+                          specialization:
+                            - id: '1.420'
+                              name: Администратор баз данных
+                          schedule:
+                            - id: fullDay
+                              name: Полный день
+                          employment:
+                            - id: full
+                              name: Полная занятость
+                          experience:
+                            - start: '2020-06-25'
+                              end: '2020-06-25'
+                              now: false
+                              company: организация
+                              area:
+                                id: '1'
+                                name: Москва
+                              company_url: 'https://yandex.ru/maps'
+                              position: должность в опыте работы
+                              description: описание опыта работы
+                          awards:
+                            - date: '1961-04-12'
+                              name: Лётчик-космонавт СССР
+                              organization: СССР
+                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                          projects:
+                            - start: '2020-06-25'
+                              end: '2020-06-28'
+                              name: название проекта
+                              description: описание проекта
+                          skill_set:
+                            - Git
+                            - SQL
+                            - 1С программирование
+                            - Деловая коммуникация
+                          education:
+                            level:
+                              id: master
+                              name: Магистр
+                              parent: Высшее
+                            primary:
+                              - name: учебное заведение
+                                organization: факультет
+                                result: специализация
+                                course:
+                                  id: graduate
+                                  value: Выпускник/выпускница
+                                form:
+                                  id: full_time
+                                  value: Очная
+                                year: '2020'
+                                average_degree:
+                                  id: 4+
+                                  value: 'От 4 до 4,49'
+                            attestation:
+                              - name: название теста
+                                organization: Проводившая организация
+                                result: Специализация
+                                year: Год сдачи
+                            additional:
+                              - name: название курса
+                                year: год
+                                organization: Организация
+                                result: Результат
+                          certificate:
+                            - title: сертификат
+                              url: ссылка
+                              company: Организация
+                              achieved_at: '2020-06-28'
+                          about_me: обо мне
+                          skills: доп информация
+                          recommendation:
+                            - name: имя рекомендации
+                              contact: Контакт
+                              position: Должность
+                              organization: Организация
+                          languages:
+                            - id: eng
+                              name: Английский
+                              level:
+                                id: a1
+                                name: A1 — Начальный
+                          travel_time:
+                            id: less_than_hour
+                            name: Не более часа
+                          citizenship:
+                            - id: '113'
+                              name: Россия
+                          work_ticket:
+                            - id: '40'
+                              name: Казахстан
+                          relocation:
+                            area:
+                              - id: '1'
+                                name: Москва
+                            type:
+                              id: no_relocation
+                              name: не готов к переезду
+                          business_trip_readiness:
+                            id: ready
+                            name: готов к командировкам
+                    workflows:
+                      personal_data_agreement: personal_data_depersonalization
+                    events:
+                      body: комментарий
+                      type: 'Event::Comment'
+                    ajs_joins:
+                      - job_id: 220694
+                        employee_ext_id: 12345
+                        responsible_user_id: 54321
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  description: Ссылка на аватар кандидата
+                  format: binary
+        description: ''
+    get:
+      summary: Просмотр кандидата (отклика)
+      tags:
+        - кандидаты
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Applicant_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 12345
+                    first_name: Иван
+                    last_name: Иванов
+                    middle_name: Иванович
+                    name: Иванов Иван Иванович
+                    address: Москва
+                    email: example@email.ru
+                    title: Строитель
+                    salary: 10000
+                    source_type: sourced
+                    source_url: 'https://icanchoose.ru'
+                    born: '2000-01-01'
+                    skype: ivan_skype
+                    phones:
+                      - '79997776655'
+                    accounts:
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
+                    tags:
+                      - id: 43536
+                        name: тег
+                        taggings_count: 1
+                    created_at: '2020-07-06T16:04:26.387+03:00'
+                    updated_at: '2020-07-06T16:04:26.982+03:00'
+                    another_emails:
+                      - ttt@mail.ru
+                    schedule:
+                      - {}
+                    gender: male
+                    city:
+                      id: '1'
+                      text: Москва
+                      name: Москва
+                      country_name: Россия
+                      subdivision_name: Москва
+                    states:
+                      - state_id: not_depersonalized
+                        updated_at: '2020-07-06T16:04:26.387+03:00'
+                        workflow_name: personal_data_depersonalization
+                        workflow_id: 3050
+                        init_by:
+                          id: 1234
+                          class: class
+                        additional_info:
+                          - {}
+                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                    resumes:
+                      - id: 1
+                        cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+                        cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+                        cv_params:
+                          salary:
+                            amount: '90000'
+                            currency: RUR
+                          title: желаемая должность
+                          education:
+                            level:
+                              id: master
+                              name: Магистр
+                              parent: Высшее
+                            primary:
+                              - name: учебное заведение
+                                organization: факультет
+                                result: специализация
+                                course:
+                                  id: graduate
+                                  value: Выпускник/выпускница
+                                form:
+                                  id: full_time
+                                  value: Очная
+                                year: '2020'
+                                average_degree:
+                                  id: 4+
+                                  value: 'От 4 до 4,49'
+                            attestation:
+                              - name: название теста
+                                organization: Проводившая организация
+                                result: Специализация
+                                year: Год сдачи
+                            additional:
+                              - name: название курса
+                                year: год
+                                organization: Организация
+                                result: Результат
+                          skills: дополнительная информация
+                          about_me: обо мне
+                          travel_time:
+                            id: less_than_hour
+                            name: Не более часа
+                          relocation:
+                            area:
+                              - id: '1'
+                                name: Москва
+                            type:
+                              id: no_relocation
+                              name: не готов к переезду
+                          business_trip_readiness:
+                            id: ready
+                            name: готов к командировкам
+                          ext_id: '123124'
+                          ext_applicant_id: '123456'
+                          ext_source: headhunter
+                          specialization:
+                            - id: '1.420'
+                              name: Администратор баз данных
+                          employment:
+                            - id: full
+                              name: Полная занятость
+                          schedule:
+                            - id: fullDay
+                              name: Полный день
+                          experience:
+                            - start: '2020-06-25'
+                              end: '2020-06-25'
+                              now: false
+                              company: организация
+                              area:
+                                id: '1'
+                                name: Москва
+                              company_url: 'https://yandex.ru/maps'
+                              position: должность в опыте работы
+                              description: описание опыта работы
+                          awards:
+                            - date: '1961-04-12'
+                              name: Лётчик-космонавт СССР
+                              organization: СССР
+                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                          projects:
+                            - start: '2020-06-25'
+                              end: '2020-06-28'
+                              name: название проекта
+                              description: описание проекта
+                          skill_set:
+                            - Git
+                            - SQL
+                            - 1С программирование
+                            - Деловая коммуникация
+                          certificate:
+                            - title: сертификат
+                              url: ссылка
+                              company: Организация
+                              achieved_at: '2020-06-28'
+                          recommendation:
+                            - name: имя рекомендации
+                              contact: Контакт
+                              position: Должность
+                              organization: Организация
+                          languages:
+                            - id: eng
+                              name: Английский
+                              level:
+                                id: a1
+                                name: A1 — Начальный
+                          citizenship:
+                            - id: '113'
+                              name: Россия
+                          work_ticket:
+                            - id: '40'
+                              name: Казахстан
+                    source_name: icanchoose
+                    extra_events_present: false
+                    events:
+                      - id: 1
+                        subject: Тема письма
+                        body: комментарий
+                        applicant:
+                          id: 1
+                          first_name: Иван
+                          last_name: Иванов
+                          middle_name: Иванович
+                        job:
+                          id: 1234
+                          name: Название вакансии
+                        from: '2020-07-06T16:04:26.387+03:00'
+                        to: '2020-07-06T16:04:26.387+03:00'
+                        type: 'Event::Comment'
+                    ajs_joins:
+                      - id: 123
+                        job:
+                          id: 219134
+                          name: Директор
+                          job_type: '1723'
+                          stage_name: Добавлен
+                          active: true
+                        employee_ext_id: 0
+                        stage:
+                          id: 4314
+                          name: Добавлен
+                          serial: 2
+                          active_applicants: 10
+                          declined_applicants: 2
+                          stage_type: sourced
+                        responsible_user_id: 51293
+        '401':
+          description: Отказ в доступе. Неверная авторизация или аутентификация
+        '402':
+          description: Подписка компании просрочена
+        '404':
+          description: Данные не найдены. Если в компании нет пользователя по-умолчанию и нет пользователя с правами `company_update` будет получен другой ответ (Пример ответа 2)
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      id:
+                        - does not belong to the company
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      id:
+                        - does not belong to the company
+                Пример ответа 2:
+                  value:
+                    errors:
+                      default_user:
+                        - is not exists
+      operationId: get-api-v3-applicants-applicant_id-.json
+      description: 'Получение данных кандидата по его ID . Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.'
 components:
   schemas:
     author:
@@ -1384,6 +3037,2191 @@ components:
           - author
           - executive_recruiter
           - jobs_users
+    cv_params_request:
+      type: object
+      x-examples:
+        example-1:
+          cv_params:
+            title: желаемая должность
+            salary:
+              amount: '90000'
+              currency: RUR
+            specialization:
+              - id: '1.420'
+                name: Администратор баз данных
+            schedule:
+              - id: fullDay
+                name: Полный день
+            employment:
+              - id: full
+                name: Полная занятость
+            experience:
+              - start: '2020-06-25'
+                end: '2020-06-25'
+                now: false
+                company: организация
+                area:
+                  id: '1'
+                  name: Москва
+                company_url: 'https://yandex.ru/maps'
+                position: должность в опыте работы
+                description: описание опыта работы
+            awards:
+              - date: '1961-04-12'
+                name: Лётчик-космонавт СССР
+                organization: СССР
+                description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+            projects:
+              - start: '2020-06-25'
+                end: '2020-06-28'
+                name: название проекта
+                description: описание проекта
+            skill_set:
+              - Git
+              - SQL
+              - 1С программирование
+              - Деловая коммуникация
+            education:
+              level:
+                id: master
+                name: Магистр
+                parent: Высшее
+              primary:
+                - name: учебное заведение
+                  organization: факультет
+                  result: специализация
+                  course:
+                    id: graduate
+                    value: Выпускник/выпускница
+                  form:
+                    id: full_time
+                    value: Очная
+                  year: '2020'
+                  average_degree:
+                    id: 4+
+                    value: 'От 4 до 4,49'
+              attestation:
+                - name: название теста
+                  organization: Проводившая организация
+                  result: Специализация
+                  year: Год сдачи
+              additional:
+                - name: название курса
+                  year: год
+                  organization: Организация
+                  result: Результат
+            certificate:
+              - title: сертификат
+                url: ссылка
+                company: Организация
+                achieved_at: '2020-06-28'
+            about_me: обо мне
+            skills: доп информация
+            recommendation:
+              - name: имя рекомендации
+                contact: Контакт
+                position: Должность
+                organization: Организация
+            languages:
+              - id: eng
+                name: Английский
+                level:
+                  id: a1
+                  name: A1 — Начальный
+            travel_time:
+              id: less_than_hour
+              name: Не более часа
+            citizenship:
+              - id: '113'
+                name: Россия
+            work_ticket:
+              - id: '40'
+                name: Казахстан
+            relocation:
+              area:
+                - id: '1'
+                  name: Москва
+              type:
+                id: no_relocation
+                name: не готов к переезду
+            business_trip_readiness:
+              id: ready
+              name: готов к командировкам
+      examples:
+        - cv_params:
+            title: желаемая должность
+            salary:
+              amount: '90000'
+              currency: RUR
+            specialization:
+              - id: '1.420'
+                name: Администратор баз данных
+            schedule:
+              - id: fullDay
+                name: Полный день
+            employment:
+              - id: full
+                name: Полная занятость
+            experience:
+              - start: '2020-06-25'
+                end: '2020-06-25'
+                now: false
+                company: организация
+                area:
+                  id: '1'
+                  name: Москва
+                company_url: 'https://yandex.ru/maps'
+                position: должность в опыте работы
+                description: описание опыта работы
+            awards:
+              - date: '1961-04-12'
+                name: Лётчик-космонавт СССР
+                organization: СССР
+                description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+            projects:
+              - start: '2020-06-25'
+                end: '2020-06-28'
+                name: название проекта
+                description: описание проекта
+            skill_set:
+              - Git
+              - SQL
+              - 1С программирование
+              - Деловая коммуникация
+            education:
+              level:
+                id: master
+                name: Магистр
+                parent: Высшее
+              primary:
+                - name: учебное заведение
+                  organization: факультет
+                  result: специализация
+                  course:
+                    id: graduate
+                    value: Выпускник/выпускница
+                  form:
+                    id: full_time
+                    value: Очная
+                  year: '2020'
+                  average_degree:
+                    id: 4+
+                    value: 'От 4 до 4,49'
+              attestation:
+                - name: название теста
+                  organization: Проводившая организация
+                  result: Специализация
+                  year: Год сдачи
+              additional:
+                - name: название курса
+                  year: год
+                  organization: Организация
+                  result: Результат
+            certificate:
+              - title: сертификат
+                url: ссылка
+                company: Организация
+                achieved_at: '2020-06-28'
+            about_me: обо мне
+            skills: доп информация
+            recommendation:
+              - name: имя рекомендации
+                contact: Контакт
+                position: Должность
+                organization: Организация
+            languages:
+              - id: eng
+                name: Английский
+                level:
+                  id: a1
+                  name: A1 — Начальный
+            travel_time:
+              id: less_than_hour
+              name: Не более часа
+            citizenship:
+              - id: '113'
+                name: Россия
+            work_ticket:
+              - id: '40'
+                name: Казахстан
+            relocation:
+              area:
+                - id: '1'
+                  name: Москва
+              type:
+                id: no_relocation
+                name: не готов к переезду
+            business_trip_readiness:
+              id: ready
+              name: готов к командировкам
+      title: ''
+      properties:
+        cv_params:
+          type: object
+          description: 'Резюме кандидата, разбитое по блокам'
+          properties:
+            salary:
+              type: object
+              description: Ожидаемая ЗП
+              properties:
+                amount:
+                  type: string
+                  description: Зарплата в числовом эквиваленте
+                currency:
+                  type: string
+                  description: ID Валюты (словарь - `currency_type`)
+            title:
+              type: string
+              description: Должность кандидата с последнего места работы
+            education:
+              type: object
+              description: Образование кандидата
+              properties:
+                level:
+                  type: object
+                  description: Уровень образования (словарь - `education_level`)
+                  properties:
+                    id:
+                      type: string
+                      description: ID уровня образования
+                    name:
+                      type: string
+                      description: Название уровня образования
+                    parent:
+                      type: string
+                      description: Тип образования (к примеру `Высшее`)
+                primary:
+                  type: array
+                  description: Массив учебных заведений кандидата
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Название учебного заведения
+                      organization:
+                        type: string
+                        description: 'Факультет '
+                      result:
+                        type: string
+                        description: Специализация
+                      course:
+                        type: object
+                        description: Курс кандидата (словарь - `education_course`)
+                        properties:
+                          id:
+                            type: string
+                            description: ID курса
+                          value:
+                            type: string
+                            description: Форма обучения
+                      form:
+                        type: object
+                        description: Форма обучения (словарь - `education_form`)
+                        properties:
+                          id:
+                            type: string
+                            description: ID формы обучения
+                          value:
+                            type: string
+                            description: Форма обучения
+                      year:
+                        type: string
+                        description: Год окончания (в формате `YYYY`)
+                      average_degree:
+                        type: object
+                        description: Средний балл кандидата (словарь - `education_average_degree`)
+                        properties:
+                          id:
+                            type: string
+                            description: ID среднего балла
+                          value:
+                            type: string
+                            description: Значение среднего балла
+                attestation:
+                  type: array
+                  description: Массив тестов и экзаменов кандидата
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Название теста (экзамена)
+                      organization:
+                        type: string
+                        description: 'Организация, проводившая тест (экзамен)'
+                      result:
+                        type: string
+                        description: Резлуьтат теста (экзамена)
+                      year:
+                        type: string
+                        description: Год прохождения теста (экзамена)
+                additional:
+                  type: array
+                  description: Курсы повышения квалификации
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Название курса
+                      year:
+                        type: string
+                        description: Год прохождения курса
+                      organization:
+                        type: string
+                        description: 'Организация, проводившая курс'
+                      result:
+                        type: string
+                        description: Результат прохождения курса
+            skills:
+              type: string
+              description: Дополнительная информация
+            about_me:
+              type: string
+              description: Раздел `Обо мне`
+            travel_time:
+              type: object
+              description: Желательное время пути до работы (словарь - `travel_time`)
+              properties:
+                id:
+                  type: string
+                  description: ID времени пути
+                name:
+                  type: string
+                  description: Название времени пути
+            relocation:
+              type: object
+              description: Готовность к переезду (командировкам)
+              properties:
+                area:
+                  type: array
+                  description: Массив городов для переезда (словарь `cities`)
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID города
+                      name:
+                        type: string
+                        description: Название города
+                type:
+                  type: object
+                  description: Готовность к переезду (словарь - `relocation_type`)
+                  properties:
+                    id:
+                      type: string
+                      description: ID признака готовности к переезду
+                    name:
+                      type: string
+                      description: Название признака готовности к переезду
+            business_trip_readiness:
+              type: object
+              description: Готовность к командировкам (словарь - `business_trip_readiness`)
+              properties:
+                id:
+                  type: string
+                  description: ID признака готовности к коман
+                name:
+                  type: string
+                  description: Название признака готовности к командировкам
+            specialization:
+              type: array
+              description: Массив специализаций кандидата (словарь - `specializations`
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID специализации
+                  name:
+                    type: string
+                    description: Название специализации
+            employment:
+              type: array
+              description: Массив занятости кандидата (словарь - `employment_type`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID занятости
+                  name:
+                    type: string
+                    description: Название занятости
+            schedule:
+              type: array
+              description: Массив графиков работы кандидата (словарь - `applicant_schedule`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID графика работы
+                  name:
+                    type: string
+                    description: Название графика работы
+            experience:
+              type: array
+              description: Массив опытов работы кандидата
+              items:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    description: Дата начала работы (в формате `YYYY-MM-DD`)
+                  end:
+                    type: string
+                    description: Дата окончания работы (в формате `YYYY-MM-DD`)
+                  now:
+                    type: boolean
+                    description: |-
+                      Признак текущей работы
+
+                      `true` - работает в настоящий момент
+
+                      `false` - в настоящий момент не работает
+                  company:
+                    type: string
+                    description: Название организации
+                  area:
+                    type: object
+                    description: Город кандидата (словарь `cities`)
+                    properties:
+                      id:
+                        type: string
+                        description: 'ID города '
+                      name:
+                        type: string
+                        description: Название города
+                  company_url:
+                    type: string
+                    description: Веб-сайт организации
+                  position:
+                    type: string
+                    description: Должность в организации
+                  description:
+                    type: string
+                    description: Описание опыта работы
+            awards:
+              type: array
+              description: Массив достижений кандидата
+              items:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    description: Дата получения достижения (в формате `YYYY-MM-DD`)
+                  name:
+                    type: string
+                    description: Название достижения
+                  organization:
+                    type: string
+                    description: 'Организация, в которой получено достижение'
+                  description:
+                    type: string
+                    description: Описание достижения
+            projects:
+              type: array
+              description: Массив проектов кандидата
+              items:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    description: Дата начала проекта (в формате `YYYY-MM-DD`)
+                  end:
+                    type: string
+                    description: Дата окончания проекта (в формате `YYYY-MM-DD`)
+                  name:
+                    type: string
+                    description: Название проекта
+                  description:
+                    type: string
+                    description: Описание проекта
+            skill_set:
+              type: array
+              description: Массив ключевых навыков кандидата
+              items:
+                type: string
+            certificate:
+              type: array
+              description: Массив сертификатов кандидата
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: Название сертификата
+                  url:
+                    type: string
+                    description: URL сертификата
+                  company:
+                    type: string
+                    description: 'Организация, выдавшая сертификат'
+                  achieved_at:
+                    type: string
+                    description: Дата получения сертификата (в формате `YYYY-MM-DD`)
+            recommendation:
+              type: array
+              description: Массив рекомендаций кандидата
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Название рекомендации
+                  contact:
+                    type: string
+                    description: Контакты рекомендателя
+                  position:
+                    type: string
+                    description: Должность рекомендателя
+                  organization:
+                    type: string
+                    description: Организация рекомендателя
+            languages:
+              type: array
+              description: Массив языков кандидата (словарь - `languages`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID языка
+                  name:
+                    type: string
+                    description: Название языка
+                  level:
+                    type: object
+                    description: Уровень владения языком (словарь - `language_level`)
+                    properties:
+                      id:
+                        type: string
+                        description: ID уровня владения
+                      name:
+                        type: string
+                        description: Название уровня владения
+            citizenship:
+              type: array
+              description: Массив гражданств кандидата (словарь - `citizenship`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID города гражданства
+                  name:
+                    type: string
+                    description: Город гражданства
+            work_ticket:
+              type: array
+              description: Массив разрешений на работу (словарь - `citizenship`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: 'ID города '
+                  name:
+                    type: string
+                    description: Название города
+      required:
+        - cv_params
+    resume_response:
+      type: object
+      x-examples:
+        example-1:
+          id: 1
+          cv_original: null
+          cv_html: null
+          cv_params:
+            salary: {}
+            title: null
+            education: {}
+            skills: null
+            about_me: null
+            travel_time: {}
+            relocation: {}
+            business_trip_readiness: {}
+            beeline_fields: null
+            danone_fields: {}
+            daxtra_request_log_id: null
+            ext_id: ''
+            ext_applicant_id: null
+            ext_source: null
+            total_experience: null
+            experience_started_at: null
+            specialization: []
+            employment: []
+            schedule: []
+            experience: []
+            awards: []
+            projects: []
+            skill_set: []
+            certificate: []
+            recommendation: []
+            languages: []
+            citizenship: []
+            work_ticket: []
+            social_link: []
+      examples:
+        - id: 1
+          cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+          cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+          cv_params:
+            salary:
+              amount: '90000'
+              currency: RUR
+            title: желаемая должность
+            education:
+              level:
+                id: master
+                name: Магистр
+                parent: Высшее
+              primary:
+                - name: учебное заведение
+                  organization: факультет
+                  result: специализация
+                  course:
+                    id: graduate
+                    value: Выпускник/выпускница
+                  form:
+                    id: full_time
+                    value: Очная
+                  year: '2020'
+                  average_degree:
+                    id: 4+
+                    value: 'От 4 до 4,49'
+              attestation:
+                - name: название теста
+                  organization: Проводившая организация
+                  result: Специализация
+                  year: Год сдачи
+              additional:
+                - name: название курса
+                  year: год
+                  organization: Организация
+                  result: Результат
+            skills: дополнительная информация
+            about_me: обо мне
+            travel_time:
+              id: less_than_hour
+              name: Не более часа
+            relocation:
+              area:
+                - id: '1'
+                  name: Москва
+              type:
+                id: no_relocation
+                name: не готов к переезду
+            business_trip_readiness:
+              id: ready
+              name: готов к командировкам
+            ext_id: '12345'
+            ext_applicant_id: '54321'
+            ext_source: heandhunter
+            specialization:
+              - id: '1.420'
+                name: Администратор баз данных
+            employment:
+              - id: full
+                name: Полная занятость
+            schedule:
+              - id: fullDay
+                name: Полный день
+            experience:
+              - start: '2020-06-25'
+                end: '2020-06-25'
+                now: false
+                company: организация
+                area:
+                  id: '1'
+                  name: Москва
+                company_url: 'https://yandex.ru/maps'
+                position: должность в опыте работы
+                description: описание опыта работы
+            awards:
+              - date: '1961-04-12'
+                name: Лётчик-космонавт СССР
+                organization: СССР
+                description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+            projects:
+              - start: '2020-06-25'
+                end: '2020-06-28'
+                name: название проекта
+                description: описание проекта
+            skill_set:
+              - Git
+              - SQL
+              - 1С программирование
+              - Деловая коммуникация
+            certificate:
+              - title: сертификат
+                url: ссылка
+                company: Организация
+                achieved_at: '2020-06-28'
+            recommendation:
+              - name: имя рекомендации
+                contact: Контакт
+                position: Должность
+                organization: Организация
+            languages:
+              - id: eng
+                name: Английский
+                level:
+                  id: a1
+                  name: A1 — Начальный
+            citizenship:
+              - id: '113'
+                name: Россия
+            work_ticket:
+              - id: '40'
+                name: Казахстан
+      properties:
+        id:
+          type: integer
+          description: ID резюме
+        cv_original:
+          description: Ссылка на оригинальный файл
+          type:
+            - string
+            - 'null'
+        cv_html:
+          type:
+            - string
+            - 'null'
+          description: Ссылка на html версию оригинального файла
+        cv_params:
+          type: object
+          description: 'Резюме кандидата, разбитое по блокам'
+          required:
+            - salary
+            - title
+            - education
+            - skills
+            - about_me
+            - travel_time
+            - relocation
+            - business_trip_readiness
+            - ext_id
+            - ext_applicant_id
+            - ext_source
+            - specialization
+            - employment
+            - schedule
+            - experience
+            - awards
+            - projects
+            - skill_set
+            - certificate
+            - recommendation
+            - languages
+            - citizenship
+            - work_ticket
+          properties:
+            salary:
+              type: object
+              description: Ожидаемая ЗП
+              properties:
+                amount:
+                  type: string
+                  description: Зарплата в числовом эквиваленте
+                currency:
+                  type: string
+                  description: ID Валюты (словарь - `currency_type`)
+            title:
+              type: string
+              description: Должность кандидата с последнего места работы
+            education:
+              type: object
+              description: Образование кандидата
+              properties:
+                level:
+                  type: object
+                  description: Уровень образования (словарь - `education_level`)
+                  properties:
+                    id:
+                      type: string
+                      description: ID уровня образования
+                    name:
+                      type: string
+                      description: Название уровня образования
+                    parent:
+                      type: string
+                      description: Тип образования (к примеру `Высшее`)
+                primary:
+                  type: array
+                  description: Массив учебных заведений кандидата
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Название учебного заведения
+                      organization:
+                        type: string
+                        description: 'Факультет '
+                      result:
+                        type: string
+                        description: Специализация
+                      course:
+                        type: object
+                        description: Курс кандидата (словарь - `education_course`)
+                        properties:
+                          id:
+                            type: string
+                            description: ID курса
+                          value:
+                            type: string
+                            description: Форма обучения
+                      form:
+                        type: object
+                        description: Форма обучения (словарь - `education_form`)
+                        properties:
+                          id:
+                            type: string
+                            description: ID формы обучения
+                          value:
+                            type: string
+                            description: Форма обучения
+                      year:
+                        type: string
+                        description: Год окончания (в формате `YYYY`)
+                      average_degree:
+                        type: object
+                        description: Средний балл кандидата (словарь - `education_average_degree`)
+                        properties:
+                          id:
+                            type: string
+                            description: ID среднего балла
+                          value:
+                            type: string
+                            description: Значение среднего балла
+                attestation:
+                  type: array
+                  description: Массив тестов и экзаменов кандидата
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Название теста (экзамена)
+                      organization:
+                        type: string
+                        description: 'Организация, проводившая тест (экзамен)'
+                      result:
+                        type: string
+                        description: Резлуьтат теста (экзамена)
+                      year:
+                        type: string
+                        description: Год прохождения теста (экзамена)
+                additional:
+                  type: array
+                  description: Курсы повышения квалификации
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Название курса
+                      year:
+                        type: string
+                        description: Год прохождения курса
+                      organization:
+                        type: string
+                        description: 'Организация, проводившая курс'
+                      result:
+                        type: string
+                        description: Результат прохождения курса
+            skills:
+              type: string
+              description: Дополнительная информация
+            about_me:
+              type: string
+              description: Раздел `Обо мне`
+            travel_time:
+              type: object
+              description: Желательное время пути до работы (словарь - `travel_time`)
+              properties:
+                id:
+                  type: string
+                  description: ID времени пути
+                name:
+                  type: string
+                  description: Название времени пути
+            relocation:
+              type: object
+              description: Готовность к переезду (командировкам)
+              properties:
+                area:
+                  type: array
+                  description: Массив городов для переезда (словарь `cities`)
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID города
+                      name:
+                        type: string
+                        description: Название города
+                type:
+                  type: object
+                  description: Готовность к переезду (словарь - `relocation_type`)
+                  properties:
+                    id:
+                      type: string
+                      description: ID признака готовности к переезду
+                    name:
+                      type: string
+                      description: Название признака готовности к переезду
+            business_trip_readiness:
+              type: object
+              description: Готовность к командировкам (словарь - `business_trip_readiness`)
+              properties:
+                id:
+                  type: string
+                  description: ID признака готовности к коман
+                name:
+                  type: string
+                  description: Название признака готовности к командировкам
+            ext_id:
+              type: string
+              description: Внешний ключ резюме
+            ext_applicant_id:
+              type: string
+              description: Внешний ключ создателя резюме
+            ext_source:
+              description: 'Источник внешнего резюме (Возможнные значения - `null`, `potok`, `estaff`, `headhunter`, `superjob`, `avito`)'
+              type: string
+            specialization:
+              type: array
+              description: Массив специализаций кандидата (словарь - `specializations`
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID специализации
+                  name:
+                    type: string
+                    description: Название специализации
+            employment:
+              type: array
+              description: Массив занятости кандидата (словарь - `employment_type`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID занятости
+                  name:
+                    type: string
+                    description: Название занятости
+            schedule:
+              type: array
+              description: Массив графиков работы кандидата (словарь - `applicant_schedule`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID графика работы
+                  name:
+                    type: string
+                    description: Название графика работы
+            experience:
+              type: array
+              description: Массив опытов работы кандидата
+              items:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    description: Дата начала работы (в формате `YYYY-MM-DD`)
+                  end:
+                    type: string
+                    description: Дата окончания работы (в формате `YYYY-MM-DD`)
+                  now:
+                    type: boolean
+                    description: |-
+                      Признак текущей работы
+
+                      `true` - работает в настоящий момент
+
+                      `false` - в настоящий момент не работает
+                  company:
+                    type: string
+                    description: Название организации
+                  area:
+                    type: object
+                    description: Город кандидата (словарь `cities`)
+                    properties:
+                      id:
+                        type: string
+                        description: 'ID города '
+                      name:
+                        type: string
+                        description: Название города
+                  company_url:
+                    type: string
+                    description: Веб-сайт организации
+                  position:
+                    type: string
+                    description: Должность в организации
+                  description:
+                    type: string
+                    description: Описание опыта работы
+            awards:
+              type: array
+              description: Массив достижений кандидата
+              items:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    description: Дата получения достижения (в формате `YYYY-MM-DD`)
+                  name:
+                    type: string
+                    description: Название достижения
+                  organization:
+                    type: string
+                    description: 'Организация, в которой получено достижение'
+                  description:
+                    type: string
+                    description: Описание достижения
+            projects:
+              type: array
+              description: Массив проектов кандидата
+              items:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    description: Дата начала проекта (в формате `YYYY-MM-DD`)
+                  end:
+                    type: string
+                    description: Дата окончания проекта (в формате `YYYY-MM-DD`)
+                  name:
+                    type: string
+                    description: Название проекта
+                  description:
+                    type: string
+                    description: Описание проекта
+            skill_set:
+              type: array
+              description: Массив ключевых навыков кандидата
+              items:
+                type: string
+            certificate:
+              type: array
+              description: Массив сертификатов кандидата
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: Название сертификата
+                  url:
+                    type: string
+                    description: URL сертификата
+                  company:
+                    type: string
+                    description: 'Организация, выдавшая сертификат'
+                  achieved_at:
+                    type: string
+                    description: Дата получения сертификата (в формате `YYYY-MM-DD`)
+            recommendation:
+              type: array
+              description: Массив рекомендаций кандидата
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Название рекомендации
+                  contact:
+                    type: string
+                    description: Контакты рекомендателя
+                  position:
+                    type: string
+                    description: Должность рекомендателя
+                  organization:
+                    type: string
+                    description: Организация рекомендателя
+            languages:
+              type: array
+              description: Массив языков кандидата (словарь - `languages`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID языка
+                  name:
+                    type: string
+                    description: Название языка
+                  level:
+                    type: object
+                    description: Уровень владения языком (словарь - `language_level`)
+                    properties:
+                      id:
+                        type: string
+                        description: ID уровня владения
+                      name:
+                        type: string
+                        description: Название уровня владения
+            citizenship:
+              type: array
+              description: Массив гражданств кандидата (словарь - `citizenship`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID города гражданства
+                  name:
+                    type: string
+                    description: Город гражданства
+            work_ticket:
+              type: array
+              description: Массив разрешений на работу (словарь - `citizenship`)
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: 'ID города '
+                  name:
+                    type: string
+                    description: Название города
+      required:
+        - id
+        - cv_original
+        - cv_html
+        - cv_params
+    Applicant_request:
+      type: object
+      x-examples:
+        example-1:
+          applicant:
+            title: string
+            first_name: string
+            last_name: string
+            middle_name: string
+            emails:
+              - string
+            phones:
+              - string
+            born: string
+            address: string
+            source_type: string
+            source_url: string
+            salary: integer
+            salary_currency: string
+            skype: string
+            gender: string
+            city: string
+            avatar: file
+            accounts:
+              - url: string
+                icon_id: string
+            schedule:
+              - id: string
+                name: string
+            with_contacts: boolean
+            resumes:
+              - cv_params:
+                  title: string
+                  citizenship:
+                    - name: string
+                  about_me: string
+                  education:
+                    level:
+                      name: string
+                    primary:
+                      - name: string
+                        id: string
+                  experience:
+                    - company: string
+                      start: string
+                      end: string
+                      position: string
+                      description: string
+                  languages:
+                    - name: string
+                      level:
+                        id: string
+                  skills: string
+                  ext_id: string
+                  ext_source: string
+            workflows:
+              personal_data_agreement: string
+            ajs_joins:
+              - job_id: integer
+                employee_ext_id: integer
+                responsible_user_id: integer
+      examples:
+        - applicant:
+            first_name: Иван
+            last_name: Иванов
+            middle_name: Иванович
+            emails:
+              - example@email.ru
+            phones:
+              - '79997776655'
+            born: '2000-01-01'
+            source_type: sourced
+            source_url: 'https://icanchoose.ru'
+            salary: 100000
+            salary_currency: RUR
+            skype: ivan_skype
+            gender: male
+            city: '1'
+            accounts:
+              - url: 'https://www.t.me/account'
+                icon_id: telegram
+            resumes:
+              - cv_params:
+                  title: желаемая должность
+                  salary:
+                    amount: '90000'
+                    currency: RUR
+                  specialization:
+                    - id: '1.420'
+                      name: Администратор баз данных
+                  schedule:
+                    - id: fullDay
+                      name: Полный день
+                  employment:
+                    - id: full
+                      name: Полная занятость
+                  experience:
+                    - start: '2020-06-25'
+                      end: '2020-06-25'
+                      now: false
+                      company: организация
+                      area:
+                        id: '1'
+                        name: Москва
+                      company_url: 'https://yandex.ru/maps'
+                      position: должность в опыте работы
+                      description: описание опыта работы
+                  awards:
+                    - date: '1961-04-12'
+                      name: Лётчик-космонавт СССР
+                      organization: СССР
+                      description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                  projects:
+                    - start: '2020-06-25'
+                      end: '2020-06-28'
+                      name: название проекта
+                      description: описание проекта
+                  skill_set:
+                    - Git
+                    - SQL
+                    - 1С программирование
+                    - Деловая коммуникация
+                  education:
+                    level:
+                      id: master
+                      name: Магистр
+                      parent: Высшее
+                    primary:
+                      - name: учебное заведение
+                        organization: факультет
+                        result: специализация
+                        course:
+                          id: graduate
+                          value: Выпускник/выпускница
+                        form:
+                          id: full_time
+                          value: Очная
+                        year: '2020'
+                        average_degree:
+                          id: 4+
+                          value: 'От 4 до 4,49'
+                    attestation:
+                      - name: название теста
+                        organization: Проводившая организация
+                        result: Специализация
+                        year: Год сдачи
+                    additional:
+                      - name: название курса
+                        year: год
+                        organization: Организация
+                        result: Результат
+                  certificate:
+                    - title: сертификат
+                      url: ссылка
+                      company: Организация
+                      achieved_at: '2020-06-28'
+                  about_me: обо мне
+                  skills: доп информация
+                  recommendation:
+                    - name: имя рекомендации
+                      contact: Контакт
+                      position: Должность
+                      organization: Организация
+                  languages:
+                    - id: eng
+                      name: Английский
+                      level:
+                        id: a1
+                        name: A1 — Начальный
+                  travel_time:
+                    id: less_than_hour
+                    name: Не более часа
+                  citizenship:
+                    - id: '113'
+                      name: Россия
+                  work_ticket:
+                    - id: '40'
+                      name: Казахстан
+                  relocation:
+                    area:
+                      - id: '1'
+                        name: Москва
+                    type:
+                      id: no_relocation
+                      name: не готов к переезду
+                  business_trip_readiness:
+                    id: ready
+                    name: готов к командировкам
+            workflows:
+              personal_data_agreement: personal_data_depersonalization
+            events:
+              body: комментарий
+              type: 'Event::Comment'
+            ajs_joins:
+              - job_id: 220694
+                employee_ext_id: 12345
+                responsible_user_id: 54321
+      title: ''
+      properties:
+        applicant:
+          type: object
+          description: Информация о кандидате
+          properties:
+            first_name:
+              type: string
+              description: Имя
+            last_name:
+              type: string
+              description: Фамилия
+            middle_name:
+              type: string
+              description: Отчество
+            emails:
+              type: array
+              description: Массив почт кандидата
+              items:
+                type: string
+            phones:
+              type: array
+              description: Массив телефонов кандидата
+              items:
+                type: string
+            born:
+              type: string
+              description: Дата рождения (в формате `YYYY-MM-DD`)
+            source_type:
+              type: string
+              description: |-
+                Тип источника
+
+                `sourced` - добавлен
+
+                `applied` - откликнулся
+            source_url:
+              type: string
+              description: 'Ссылка на источник (URL в формате `http://` или `https://`). URL источника берется из справочника `Источники кандидатов` в настройках компании в Potok. Если в справочнике нет указанного URL, то проставиться источник `Другие`'
+            salary:
+              type: integer
+              description: Ожидаемая ЗП
+            salary_currency:
+              type: string
+              description: ID Валюты (словарь - `currency_type`)
+            skype:
+              type: string
+              description: Ссылка на аккаунт skype
+            gender:
+              type: string
+              description: Пол (словарь - `genders`)
+            city:
+              type: string
+              description: ID Города проживания (словарь - `cities`)
+            accounts:
+              type: array
+              description: Массив аккаунтов в социальных сетях
+              items:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: URL аккаунта кандидата в социальной сети
+                  icon_id:
+                    type: string
+                    description: Название социальной сети (используется для отображения иконки)
+            resumes:
+              type: array
+              description: Массив всех резюме кандидата
+              items:
+                $ref: '#/components/schemas/cv_params_request'
+            workflows:
+              type: object
+              description: Статус запроса согласия на обработку Персональных данных
+              properties:
+                personal_data_agreement:
+                  type: string
+                  description: "Запрос на обработку персональных данных\n\nЕсли кандидат уже дал согласие на обработку ПДн. Необходимо передавать в данном поле `accepted` - \"Дал согласие на обработку ПДн\"\n\nЕсли поле пустое, то в \_Potok будет передаваться \"Запрос на обработку ПДн еще не отправлен\""
+            events:
+              type: object
+              description: События
+              properties:
+                body:
+                  type: string
+                  description: Тело события
+                type:
+                  type: string
+                  description: |-
+                    Тип события
+
+                    `Event::Comment` - Комментарий по кандидату
+                    `Event::Response` - Кандидат прислал письмо
+                    `Event::CoverLetter` - Сопроводительное письмо
+            ajs_joins:
+              type: array
+              description: Массив связей кандидата с вакансией
+              items:
+                type: object
+                properties:
+                  job_id:
+                    type: integer
+                    description: ID Вакансии
+                  employee_ext_id:
+                    type: integer
+                    description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+                  responsible_user_id:
+                    type: integer
+                    description: 'ID пользователя, принявшего кандидата на вакансию'
+    Applicant_response:
+      type: object
+      x-examples:
+        example-1:
+          id: 7276921
+          first_name: Иван
+          last_name: Петров
+          middle_name: Владимирович
+          name: Петров Иван Владимирович
+          address: Москва
+          email: test123@mail.ru
+          title: ''
+          salary: 80000
+          source_type: sourced
+          source_url: 'https://icanchoose.ru'
+          born: '2020-07-01'
+          skype: ivan_skype
+          phones:
+            - '79999999999'
+            - '78888888888'
+          accounts:
+            - url: 'https://instagram.com/'
+              icon_id: instagram
+          tags: []
+          created_at: '2020-07-06T16:04:26.387+03:00'
+          updated_at: '2020-07-06T16:04:26.982+03:00'
+          another_emails:
+            - ttt@mail.ru
+          states:
+            - state_id: pending
+              updated_at: '2020-07-06T16:04:26.953+03:00'
+              workflow_name: personal_data_agreement
+              workflow_id: 3408
+              init_by: {}
+              additional_info: []
+            - state_id: not_depersonalized
+              updated_at: '2020-07-06T16:04:26.979+03:00'
+              workflow_name: personal_data_depersonalization
+              workflow_id: 3050
+              init_by: {}
+              additional_info: []
+          schedule: []
+          city:
+            id: '1'
+            text: Москва
+            name: Москва
+            country_name: Россия
+            subdivision_name: Москва
+          avatar: null
+          resumes:
+            - id: 11516416
+              cv_original: null
+              cv_html: null
+              cv_params:
+                salary:
+                  amount: '90000'
+                  currency: RUR
+                title: Должность в желаемой позиции
+                education:
+                  level:
+                    id: bachelor
+                    name: Бакалавр
+                    parent: Высшее
+                  primary:
+                    - form:
+                        id: full_time
+                        value: Очная
+                      name: учебное заведение
+                      year: '2020'
+                      course:
+                        id: fourth
+                        value: 4 курс
+                      result: специализация
+                      organization: факультет
+                      average_degree:
+                        id: 4+
+                        value: 'От 4 до 4,49'
+                  additional:
+                    - name: название курсов повышения квалификации
+                      year: '2019'
+                      result: 'Результат '
+                      organization: орга-я
+                  attestation:
+                    - name: 'название теста,экзамена'
+                      year: '2020'
+                      result: спец-я
+                      organization: 'Проводившая организация '
+                skills: <p>доп инфо</p>
+                about_me: <p>обо мне</p>
+                travel_time:
+                  id: less_than_hour
+                  name: Не более часа
+                relocation:
+                  area:
+                    - id: '1'
+                      name: Москва
+                  type:
+                    id: relocation_possible
+                    name: готов к переезду
+                business_trip_readiness:
+                  id: ready
+                  name: готов к командировкам
+                beeline_fields: null
+                danone_fields: {}
+                daxtra_request_log_id: null
+                specialization:
+                  - name: Аналитик
+                    profarea_name: 'Информационные технологии, интернет, телеком'
+                  - name: Администратор баз данных
+                    profarea_name: 'Информационные технологии, интернет, телеком'
+                employment:
+                  - id: full
+                    name: Полная занятость
+                  - id: project
+                    name: Проектная работа
+                schedule:
+                  - id: fullDay
+                    name: Полный день
+                  - id: flexible
+                    name: Гибкий график
+                experience:
+                  - end: '2020-07-23'
+                    now: null
+                    area:
+                      name: Москва
+                    start: '2020-07-01'
+                    company: организация
+                    position: должность
+                    company_url: 'https://yandex.ru/maps'
+                    description: <p>описание</p>
+                awards:
+                  - date: '2020-07-01'
+                    name: название награды
+                    description: описание
+                    organization: организация
+                projects:
+                  - end: '2020-06-17'
+                    name: название проекта
+                    start: '2020-06-01'
+                    description: <p>описание</p>
+                skill_set:
+                  - 1С программирование
+                  - Административная поддержка иностранного сотрудника
+                certificate:
+                  - url: ссылка
+                    title: название сертификата
+                    company: орга-я
+                    achieved_at: '2020-07-02'
+                recommendation:
+                  - name: 'имя, кто рекомендовал'
+                    contact: 'Контакт '
+                    position: 'Должность '
+                    organization: орг-я
+                languages:
+                  - name: Аварский
+                    level:
+                      id: a1
+                citizenship:
+                  - name: Россия
+                work_ticket:
+                  - name: Россия
+                social_link: []
+          source_name: icanchoose
+          events:
+            - id: 29857529
+              subject: null
+              body: комментарий
+              applicant:
+                id: 7276921
+                first_name: Иван
+                last_name: Петров
+                middle_name: Владимирович
+              job: null
+              from: null
+              to: null
+              type: 'Event::Comment'
+          ajs_joins:
+            - id: 7698026
+              job:
+                id: 219665
+                name: Директор супермаркета
+                job_type: '1723'
+                stage_name: Добавлен
+                active: true
+              employee_ext_id: null
+              stage:
+                id: 1825481
+                name: Добавлен
+                serial: 2
+                active_applicants: 13
+                declined_applicants: 0
+                stage_type: sourced
+            - id: 7698025
+              job:
+                id: 220694
+                name: Товаровед
+                job_type: '1723'
+                stage_name: Добавлен
+                active: true
+              employee_ext_id: null
+              stage:
+                id: 1836395
+                name: Добавлен
+                serial: 2
+                active_applicants: 16
+                declined_applicants: 0
+                stage_type: sourced
+      examples:
+        - id: 12345
+          first_name: Иван
+          last_name: Иванов
+          middle_name: Иванович
+          name: Иванов Иван Иванович
+          address: Москва
+          email: example@email.ru
+          title: Строитель
+          salary: 10000
+          source_type: sourced
+          source_url: 'https://icanchoose.ru'
+          born: '2000-01-01'
+          skype: ivan_skype
+          phones:
+            - '79997776655'
+          accounts:
+            - url: 'https://www.t.me/account'
+              icon_id: telegram
+          tags:
+            - id: 43536
+              name: тег
+              taggings_count: 1
+          created_at: '2020-07-06T16:04:26.387+03:00'
+          updated_at: '2020-07-06T16:04:26.982+03:00'
+          another_emails:
+            - ttt@mail.ru
+          schedule:
+            - id: fullDay
+              name: Полный день
+          gender: male
+          city:
+            id: '1'
+            text: Москва
+            name: Москва
+            country_name: Россия
+            subdivision_name: Москва
+          states:
+            - state_id: not_depersonalized
+              updated_at: '2020-07-06T16:04:26.387+03:00'
+              workflow_name: personal_data_depersonalization
+              workflow_id: 3050
+              init_by:
+                id: 1234
+                class: class
+              additional_info:
+                - {}
+          avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+          resumes:
+            - id: 1
+              cv_original: 'https://app.potok.io/uploads/resume/cv_original/example.pdf'
+              cv_html: 'https://app.potok.io/uploads/resume/cv_html/1/exapmle.html'
+              cv_params:
+                salary:
+                  amount: '90000'
+                  currency: RUR
+                title: желаемая должность
+                education:
+                  level:
+                    id: master
+                    name: Магистр
+                    parent: Высшее
+                  primary:
+                    - name: учебное заведение
+                      organization: факультет
+                      result: специализация
+                      course:
+                        id: graduate
+                        value: Выпускник/выпускница
+                      form:
+                        id: full_time
+                        value: Очная
+                      year: '2020'
+                      average_degree:
+                        id: 4+
+                        value: 'От 4 до 4,49'
+                  attestation:
+                    - name: название теста
+                      organization: Проводившая организация
+                      result: Специализация
+                      year: Год сдачи
+                  additional:
+                    - name: название курса
+                      year: год
+                      organization: Организация
+                      result: Результат
+                skills: дополнительная информация
+                about_me: обо мне
+                travel_time:
+                  id: less_than_hour
+                  name: Не более часа
+                relocation:
+                  area:
+                    - id: '1'
+                      name: Москва
+                  type:
+                    id: no_relocation
+                    name: не готов к переезду
+                business_trip_readiness:
+                  id: ready
+                  name: готов к командировкам
+                ext_id: '123124'
+                ext_applicant_id: '123456'
+                ext_source: headhunter
+                specialization:
+                  - id: '1.420'
+                    name: Администратор баз данных
+                employment:
+                  - id: full
+                    name: Полная занятость
+                schedule:
+                  - id: fullDay
+                    name: Полный день
+                experience:
+                  - start: '2020-06-25'
+                    end: '2020-06-25'
+                    now: false
+                    company: организация
+                    area:
+                      id: '1'
+                      name: Москва
+                    company_url: 'https://yandex.ru/maps'
+                    position: должность в опыте работы
+                    description: описание опыта работы
+                awards:
+                  - date: '1961-04-12'
+                    name: Лётчик-космонавт СССР
+                    organization: СССР
+                    description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
+                projects:
+                  - start: '2020-06-25'
+                    end: '2020-06-28'
+                    name: название проекта
+                    description: описание проекта
+                skill_set:
+                  - Git
+                  - SQL
+                  - 1С программирование
+                  - Деловая коммуникация
+                certificate:
+                  - title: сертификат
+                    url: ссылка
+                    company: Организация
+                    achieved_at: '2020-06-28'
+                recommendation:
+                  - name: имя рекомендации
+                    contact: Контакт
+                    position: Должность
+                    organization: Организация
+                languages:
+                  - id: eng
+                    name: Английский
+                    level:
+                      id: a1
+                      name: A1 — Начальный
+                citizenship:
+                  - id: '113'
+                    name: Россия
+                work_ticket:
+                  - id: '40'
+                    name: Казахстан
+          source_name: icanchoose
+          extra_events_present: false
+          events:
+            - id: 1
+              subject: Тема письма
+              body: комментарий
+              applicant:
+                id: 1
+                first_name: Иван
+                last_name: Иванов
+                middle_name: Иванович
+              job:
+                id: 1234
+                name: Название вакансии
+              from: '2020-07-06T16:04:26.387+03:00'
+              to: '2020-07-06T16:04:26.387+03:00'
+              type: 'Event::Comment'
+          ajs_joins:
+            - id: 123
+              job:
+                id: 219134
+                name: Директор
+                job_type: '1723'
+                stage_name: Добавлен
+                active: true
+              employee_ext_id: 0
+              stage:
+                id: 4314
+                name: Добавлен
+                serial: 2
+                active_applicants: 10
+                declined_applicants: 2
+                stage_type: sourced
+              responsible_user_id: 51293
+      properties:
+        id:
+          type: integer
+          description: ID Кандидата
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        name:
+          type: string
+          description: ФИО
+        address:
+          type: string
+          description: Город из раздела “Контактные данные”
+        email:
+          type: string
+          description: Почта кандидата
+        title:
+          type: string
+          description: Должность кандидата с последнего места работы
+        salary:
+          type: integer
+          description: Ожидаемая ЗП
+        source_type:
+          type: string
+          description: |-
+            Тип источника
+
+            `sourced` - добавлен
+
+            `applied` - откликнулся
+        source_url:
+          type: string
+          description: 'Ссылка на источник (URL в формате `http://` или `https://`). URL источника берется из справочника `Источники кандидатов` в настройках компании в Potok. Если в справочнике нет указанного URL, то проставиться источник `Другие`'
+        born:
+          type: string
+          description: Дата рождения (в формате `YYYY-MM-DD`)
+        skype:
+          type: string
+          description: Ссылка на аккаунт skype
+        phones:
+          type: array
+          description: 'Массив телефонов кандидата '
+          items:
+            type: string
+        accounts:
+          type: array
+          description: Массив аккаунтов в социальных сетях
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: URL аккаунта кандидата в социальной сети
+              icon_id:
+                type: string
+                description: Название социальной сети (используется для отображения иконки)
+        tags:
+          type: array
+          description: Массив тегов кандидата
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: ID тега
+              name:
+                type: string
+                description: Название тега
+              taggings_count:
+                type: integer
+                description: Количество кандидатов с данным тегом
+        created_at:
+          type: string
+          description: 'Время создания кандидата (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+        updated_at:
+          type: string
+          description: 'Время обновления кандидата (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+        another_emails:
+          type: array
+          description: Массив других почт кандидата
+          items:
+            type: string
+        schedule:
+          type: array
+          description: Массив графиков работы кандидата
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID графика работы (словарь - `schedule_type`)
+              name:
+                type: string
+                description: Название графика работы
+        gender:
+          type: string
+          description: Пол
+        city:
+          type: object
+          description: Город кандидата
+          properties:
+            id:
+              type: string
+              description: ID Города проживания (словарь - `cities`)
+            text:
+              type: string
+              description: Название населенного пункта
+            name:
+              type: string
+              description: Название города
+            country_name:
+              type: string
+              description: Название страны
+            subdivision_name:
+              type: string
+              description: 'Название региона, области или города федерального значения, в котором находится населенный пункт'
+        states:
+          type: array
+          description: Массив статусов Workflow
+          items:
+            type: object
+            properties:
+              state_id:
+                type: string
+                description: ID Статуса кандидата
+              updated_at:
+                type: string
+                description: 'Время обновления Workflow (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+              workflow_name:
+                type: string
+                description: Название Workflow
+              workflow_id:
+                type: integer
+                description: ID Workflow
+              init_by:
+                type: object
+                description: Каким объектом системы было инициировано выставление статуса
+                properties:
+                  id:
+                    type: integer
+                    description: ID объекта
+                  class:
+                    type: string
+                    description: Класс объекта
+              additional_info:
+                type: array
+                description: 'Дополнительная информация о действия, касающихся Workflow'
+                items:
+                  type: object
+            required:
+              - state_id
+              - updated_at
+              - workflow_name
+              - workflow_id
+              - init_by
+              - additional_info
+        avatar:
+          type: string
+          description: Ссылка на аватар кандидата
+        resumes:
+          type: array
+          description: Массив всех резюме кандидата
+          items:
+            $ref: '#/components/schemas/resume_response'
+        source_name:
+          type: string
+          description: 'Название ресурса, откуда пришел кандидат'
+        extra_events_present:
+          type: boolean
+          description: 'Признак того, есть ли события у кандидата сверх лимита. Лимит - `500` событий'
+        events:
+          type: array
+          description: Массив типов событий
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: ID События
+              subject:
+                type: string
+                description: Тема письма
+              body:
+                type: string
+                description: Тело события
+              applicant:
+                type: object
+                description: 'Кандидат '
+                required:
+                  - id
+                  - first_name
+                  - last_name
+                  - middle_name
+                properties:
+                  id:
+                    type: integer
+                    description: ID Кандидата
+                  first_name:
+                    type: string
+                    description: Имя
+                  last_name:
+                    type: string
+                    description: Фамилия
+                  middle_name:
+                    type: string
+                    description: Отчество
+              job:
+                type: object
+                description: Вакансия
+                properties:
+                  id:
+                    type: integer
+                    description: ID Вакансии
+                  name:
+                    type: string
+                    description: Название вакансии
+              from:
+                type: string
+                description: 'Время начала события (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+              to:
+                description: 'Время окончания события (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                type: string
+              type:
+                type: string
+                description: Тип события
+            required:
+              - id
+              - subject
+              - body
+              - applicant
+              - job
+              - from
+              - to
+              - type
+        ajs_joins:
+          type: array
+          description: Массив связей кандидата с вакансией
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: ID кандидата на вакансии
+              job:
+                type: object
+                description: Вакансия
+                properties:
+                  id:
+                    type: integer
+                    description: ID Вакансии
+                  name:
+                    type: string
+                    description: Название вакансии
+                  job_type:
+                    type: string
+                    description: |-
+                      ID воронки подбора (в компании могут быть добавлены дополнительные воронки)
+
+                      `point` - точечный подбор
+                  stage_name:
+                    type: string
+                    description: Название этапа
+                  active:
+                    type: boolean
+                    description: |-
+                      Признак активности вакансии
+
+                      `True` - активная вакансия
+
+                      `False` - вакансия неактивна
+              employee_ext_id:
+                type: integer
+                description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+              stage:
+                $ref: '#/components/schemas/stages'
+              responsible_user_id:
+                type: integer
+                description: ID ответственного за кандидата на вакансии
+      required:
+        - id
+        - first_name
+        - last_name
+        - middle_name
+        - name
+        - address
+        - email
+        - title
+        - salary
+        - source_type
+        - source_url
+        - born
+        - skype
+        - phones
+        - accounts
+        - tags
+        - created_at
+        - updated_at
+        - another_emails
+        - schedule
+        - city
+        - states
+        - avatar
+        - resumes
+        - source_name
+        - extra_events_present
+        - events
+        - ajs_joins
   securitySchemes:
     headerToken:
       type: http
@@ -1452,8 +5290,272 @@ components:
                     - Код не может быть задан вручную
                   company_department_id:
                     - Не найден отдел с таким id
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: number
+        example: 1
+        default: 1
+      description: Номер страницы списка вакансий (начиная с 1)
+      allowEmptyValue: true
+    per_page:
+      name: per_page
+      in: query
+      required: false
+      schema:
+        type: number
+        minimum: 1
+        maximum: 100
+        example: 50
+        default: 50
+      description: Количество элементов на странице (по умолчанию 50)
+      allowEmptyValue: true
+    f-jobs:
+      name: 'f[jobs][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 186237
+      description: 'Фильтр по ID вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-stage_type_names:
+      name: 'f[stage_type_names][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: Принят
+      description: 'Фильтр по названию статуса этапа на вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-stage_types:
+      name: 'f[stage_types][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: accepted
+      description: 'Фильтр по типу статуса этапа на вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-job_types:
+      name: 'f[job_types][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: mass
+      description: 'Фильтр по типу вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-created_at:
+      name: 'f[created_at][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2022-08-16'
+      description: 'Фильтр по дате создания кандидата, можно использовать интервал'
+      allowEmptyValue: true
+    f-source_type_codes:
+      name: 'f[source_type_codes][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: applied
+        enum:
+          - sourced
+          - applied
+          - autoimported
+      description: 'Фильтр по типу источника кандидата, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-statuses:
+      name: 'f[statuses][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: depersonalized
+        enum:
+          - archived
+          - depersonalized
+      description: 'Фильтр по статусу кандидата, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-stage_statuses:
+      name: 'f[stage_statuses][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: podgotovka_dokumentov
+      description: 'Фильтр по ID статуса на этапе вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-all_documents:
+      name: 'f[all_documents][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: t
+        enum:
+          - t
+          - f
+      description: 'Фильтрует кандидатов по наличию всех документы (паспорт и соглашение). `t` - есть документы, `f` - нет документов'
+      allowEmptyValue: true
+    f-total_scores:
+      name: 'f[total_scores][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: 1-10
+      description: 'Фильтрует по количеству баллов в карточках оценок кандидата на вакансии, указывается диапазон'
+      allowEmptyValue: true
+    f-added_at:
+      name: 'f[added_at][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2022-01-01'
+      description: 'ильтр по дате добавления кандидата на вакансию, можно использовать интервал'
+    f-declination_reasons:
+      name: 'f[declination_reasons][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 342
+      description: 'Фильтр по ID причины отклонения кандидата на вакансии в рамках компании, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-agreement:
+      name: 'f[agreement][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: not_sent
+      description: 'Фильтр по статусу запроса согласия на обработку ПДн , можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-cities:
+      name: 'f[cities][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 1
+      description: 'Фильтр по ID города, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-company_partners:
+      name: 'f[company_partners][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 2
+      description: 'Фильтр по ID партнёра компании кандидата, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-company_departments:
+      name: 'f[company_departments][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 386
+      description: 'Фильтр по ID отдела компании, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-born-min:
+      name: 'f[born][min]'
+      in: query
+      required: false
+      schema:
+        type: number
+        example: 18
+      description: 'Фильтр по возрасту, используется в качестве диапазона. Используется вместе с f[born][max]. Использование по отдельности не предусмотрено'
+      allowEmptyValue: true
+    f-born-max:
+      name: 'f[born][max]'
+      in: query
+      required: false
+      schema:
+        type: number
+        example: 30
+      description: 'Фильтр по возрасту, используется в качестве диапазона. Используется вместе с f[born][min]. Использование по отдельности не предусмотрено'
+      allowEmptyValue: true
+    f-salary-min:
+      name: 'f[salary][min]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 10000
+      description: 'Фильтр по зарплате, можно использовать как вместе c f[salary][max] , так и по отдельности'
+      allowEmptyValue: true
+    f-salary-max:
+      name: 'f[salary][max]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 20000
+      description: 'Фильтр по зарплате, можно использовать как вместе c f[salary][min] , так и по отдельности'
+      allowEmptyValue: true
+    f-responsible_users:
+      name: 'f[responsible_users][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 2046
+      description: 'Фильтр по ID ответственного за кандидата на вакансии, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-total_experience-min:
+      name: 'f[total_experience][min]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 1
+      description: 'Фильтр по опыту работы (в годах), можно использовать как вместе c f[total_experience][max] , так и по отдельности'
+      allowEmptyValue: true
+    f-total_experience-max:
+      name: 'f[total_experience][max]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 3
+      description: 'Фильтр по опыту работы (в годах), можно использовать как вместе c f[total_experience][min] , так и по отдельности'
+      allowEmptyValue: true
+    f-relocation_readiness:
+      name: 'f[relocation_readiness][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: relocation_possible
+        enum:
+          - relocation_possible
+          - no_relocation
+          - relocation_desirable
+      description: 'Фильтр по полю "готов к переезду", можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
+    f-education_level:
+      name: 'f[education_level][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: higher
+      description: 'Фильтр по типу образования кандидата, можно использовать несколько раз в одном запросе'
+      allowEmptyValue: true
 security:
   - headerToken: []
   - queryToken: []
 tags:
   - name: вакансии
+  - name: кандидаты
+  - name: резюме
