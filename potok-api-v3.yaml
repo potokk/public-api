@@ -1190,8 +1190,8 @@ paths:
                     phones:
                       - '79997776655'
                     accounts:
-                      - url: 'https://www.instagram.com/'
-                        icon_id: instagram
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
                     tags:
                       - id: 43536
                         name: тег
@@ -1201,7 +1201,8 @@ paths:
                     another_emails:
                       - ttt@mail.ru
                     schedule:
-                      - {}
+                      - id: fullDay
+                        name: Полный день
                     gender: male
                     city:
                       id: '1'
@@ -1402,7 +1403,6 @@ paths:
               Пример запроса:
                 value:
                   applicant:
-                    title: Строитель
                     first_name: Иван
                     last_name: Иванов
                     middle_name: Иванович
@@ -1411,7 +1411,6 @@ paths:
                     phones:
                       - '79997776655'
                     born: '2000-01-01'
-                    address: Москва
                     source_type: sourced
                     source_url: 'https://icanchoose.ru'
                     salary: 100000
@@ -1421,12 +1420,8 @@ paths:
                     city: '1'
                     avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
                     accounts:
-                      - url: 'https://www.instagram.com/'
-                        icon_id: instagram
-                    schedule:
-                      - id: fullDay
-                        name: Полный день
-                    with_contacts: true
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
                     resumes:
                       - cv_params:
                           title: желаемая должность
@@ -1543,6 +1538,14 @@ paths:
                       - job_id: 220694
                         employee_ext_id: 12345
                         responsible_user_id: 54321
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: Ссылка на аватар кандидата
     get:
       summary: Просмотр кандидатов (откликов)
       tags:
@@ -1590,8 +1593,8 @@ paths:
                         phones:
                           - '79997776655'
                         accounts:
-                          - url: 'https://www.instagram.com/'
-                            icon_id: instagram
+                          - url: 'https://www.t.me/account'
+                            icon_id: telegram
                         tags:
                           - id: 43536
                             name: тег
@@ -1786,19 +1789,16 @@ paths:
         - $ref: '#/components/parameters/f-created_at'
         - $ref: '#/components/parameters/f-source_type_codes'
         - $ref: '#/components/parameters/f-statuses'
-        - $ref: '#/components/parameters/f-all_documents'
         - $ref: '#/components/parameters/f-total_scores'
         - $ref: '#/components/parameters/f-added_at'
         - $ref: '#/components/parameters/f-declination_reasons'
         - $ref: '#/components/parameters/f-agreement'
         - $ref: '#/components/parameters/f-cities'
-        - $ref: '#/components/parameters/f-company_partners'
         - $ref: '#/components/parameters/f-company_departments'
         - $ref: '#/components/parameters/f-born-min'
         - $ref: '#/components/parameters/f-born-max'
         - $ref: '#/components/parameters/f-salary-min'
         - $ref: '#/components/parameters/f-salary-max'
-        - $ref: '#/components/parameters/f-responsible_users'
         - $ref: '#/components/parameters/f-total_experience-min'
         - $ref: '#/components/parameters/f-total_experience-max'
         - $ref: '#/components/parameters/f-relocation_readiness'
@@ -1844,8 +1844,8 @@ paths:
                     phones:
                       - '79997776655'
                     accounts:
-                      - url: 'https://www.instagram.com/'
-                        icon_id: instagram
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
                     tags:
                       - id: 43536
                         name: тег
@@ -2056,7 +2056,6 @@ paths:
               Пример запроса:
                 value:
                   applicant:
-                    title: Строитель
                     first_name: Иван
                     last_name: Иванов
                     middle_name: Иванович
@@ -2065,7 +2064,6 @@ paths:
                     phones:
                       - '79997776655'
                     born: '2000-01-01'
-                    address: Москва
                     source_type: sourced
                     source_url: 'https://icanchoose.ru'
                     salary: 100000
@@ -2073,14 +2071,9 @@ paths:
                     skype: ivan_skype
                     gender: male
                     city: '1'
-                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
                     accounts:
-                      - url: 'https://www.instagram.com/'
-                        icon_id: instagram
-                    schedule:
-                      - id: fullDay
-                        name: Полный день
-                    with_contacts: true
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
                     resumes:
                       - cv_params:
                           title: желаемая должность
@@ -2197,6 +2190,14 @@ paths:
                       - job_id: 220694
                         employee_ext_id: 12345
                         responsible_user_id: 54321
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  description: Ссылка на аватар кандидата
+                  format: binary
         description: ''
     get:
       summary: Просмотр кандидата (отклика)
@@ -2228,8 +2229,8 @@ paths:
                     phones:
                       - '79997776655'
                     accounts:
-                      - url: 'https://www.instagram.com/'
-                        icon_id: instagram
+                      - url: 'https://www.t.me/account'
+                        icon_id: telegram
                     tags:
                       - id: 43536
                         name: тег
@@ -3271,7 +3272,7 @@ components:
                   description: ID Валюты (словарь - `currency_type`)
             title:
               type: string
-              description: Название должности
+              description: Должность кандидата с последнего места работы
             education:
               type: object
               description: Образование кандидата
@@ -3832,7 +3833,7 @@ components:
                   description: ID Валюты (словарь - `currency_type`)
             title:
               type: string
-              description: Название должности
+              description: Должность кандидата с последнего места работы
             education:
               type: object
               description: Образование кандидата
@@ -4264,7 +4265,6 @@ components:
                 responsible_user_id: integer
       examples:
         - applicant:
-            title: Строитель
             first_name: Иван
             last_name: Иванов
             middle_name: Иванович
@@ -4273,7 +4273,6 @@ components:
             phones:
               - '79997776655'
             born: '2000-01-01'
-            address: Москва
             source_type: sourced
             source_url: 'https://icanchoose.ru'
             salary: 100000
@@ -4281,14 +4280,9 @@ components:
             skype: ivan_skype
             gender: male
             city: '1'
-            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
             accounts:
-              - url: 'https://www.instagram.com/'
-                icon_id: instagram
-            schedule:
-              - id: fullDay
-                name: Полный день
-            with_contacts: true
+              - url: 'https://www.t.me/account'
+                icon_id: telegram
             resumes:
               - cv_params:
                   title: желаемая должность
@@ -4411,9 +4405,6 @@ components:
           type: object
           description: Информация о кандидате
           properties:
-            title:
-              type: string
-              description: Должность кандидата с последнего места работы
             first_name:
               type: string
               description: Имя
@@ -4436,9 +4427,6 @@ components:
             born:
               type: string
               description: Дата рождения (в формате `YYYY-MM-DD`)
-            address:
-              type: string
-              description: Город из раздела “Контактные данные”
             source_type:
               type: string
               description: |-
@@ -4449,7 +4437,7 @@ components:
                 `applied` - откликнулся
             source_url:
               type: string
-              description: 'Ссылка на источник (URL в формате `http://` или `https://`)'
+              description: 'Ссылка на источник (URL в формате `http://` или `https://`). URL источника берется из справочника `Источники кандидатов` в настройках компании в Potok. Если в справочнике нет указанного URL, то проставиться источник `Другие`'
             salary:
               type: integer
               description: Ожидаемая ЗП
@@ -4464,10 +4452,7 @@ components:
               description: Пол (словарь - `genders`)
             city:
               type: string
-              description: ID Города вакансии (словарь - `cities`)
-            avatar:
-              type: string
-              description: Ссылка на аватар кандидата
+              description: ID Города проживания (словарь - `cities`)
             accounts:
               type: array
               description: Массив аккаунтов в социальных сетях
@@ -4476,30 +4461,10 @@ components:
                 properties:
                   url:
                     type: string
-                    description: URL социальной сети
+                    description: URL аккаунта кандидата в социальной сети
                   icon_id:
                     type: string
                     description: Название социальной сети (используется для отображения иконки)
-            schedule:
-              type: array
-              description: Массив графиков работы
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    description: ID графика работы (словарь - `schedule_type`)
-                  name:
-                    type: string
-                    description: Название графика работы
-            with_contacts:
-              type: boolean
-              description: |-
-                Признак отображения контактов (телефон, почта)
-
-                `True` - контакты отображаются
-
-                `False` - контакты не отображаются
             resumes:
               type: array
               description: Массив всех резюме кандидата
@@ -4507,11 +4472,11 @@ components:
                 $ref: '#/components/schemas/cv_params_request'
             workflows:
               type: object
-              description: Workflow
+              description: Статус запроса согласия на обработку Персональных данных
               properties:
                 personal_data_agreement:
                   type: string
-                  description: Название воркфолу
+                  description: "Запрос на обработку персональных данных\n\nЕсли кандидат уже дал согласие на обработку ПДн. Необходимо передавать в данном поле `accepted` - \"Дал согласие на обработку ПДн\"\n\nЕсли поле пустое, то в \_Potok будет передаваться \"Запрос на обработку ПДн еще не отправлен\""
             events:
               type: object
               description: События
@@ -4524,10 +4489,9 @@ components:
                   description: |-
                     Тип события
 
-                    `Event::Comment` - комментарий по кандидату
-                    `Event::Response` - Ответ кандидата
+                    `Event::Comment` - Комментарий по кандидату
+                    `Event::Response` - Кандидат прислал письмо
                     `Event::CoverLetter` - Сопроводительное письмо
-                    `Event::System` - Системное уведомление
             ajs_joins:
               type: array
               description: Массив связей кандидата с вакансией
@@ -4767,8 +4731,8 @@ components:
           phones:
             - '79997776655'
           accounts:
-            - url: 'https://www.instagram.com/'
-              icon_id: instagram
+            - url: 'https://www.t.me/account'
+              icon_id: telegram
           tags:
             - id: 43536
               name: тег
@@ -4778,7 +4742,8 @@ components:
           another_emails:
             - ttt@mail.ru
           schedule:
-            - {}
+            - id: fullDay
+              name: Полный день
           gender: male
           city:
             id: '1'
@@ -4982,7 +4947,7 @@ components:
             `applied` - откликнулся
         source_url:
           type: string
-          description: 'Ссылка на источник (URL в формате `http://` или `https://`)'
+          description: 'Ссылка на источник (URL в формате `http://` или `https://`). URL источника берется из справочника `Источники кандидатов` в настройках компании в Potok. Если в справочнике нет указанного URL, то проставиться источник `Другие`'
         born:
           type: string
           description: Дата рождения (в формате `YYYY-MM-DD`)
@@ -5002,7 +4967,7 @@ components:
             properties:
               url:
                 type: string
-                description: URL социальной сети
+                description: URL аккаунта кандидата в социальной сети
               icon_id:
                 type: string
                 description: Название социальной сети (используется для отображения иконки)
@@ -5037,6 +5002,13 @@ components:
           description: Массив графиков работы кандидата
           items:
             type: object
+            properties:
+              id:
+                type: string
+                description: ID графика работы (словарь - `schedule_type`)
+              name:
+                type: string
+                description: Название графика работы
         gender:
           type: string
           description: Пол
@@ -5046,7 +5018,7 @@ components:
           properties:
             id:
               type: string
-              description: ID Города вакансии (словарь - `cities`)
+              description: ID Города проживания (словарь - `cities`)
             text:
               type: string
               description: Название населенного пункта
@@ -5439,7 +5411,7 @@ components:
       schema:
         type: string
         example: 1-10
-      description: 'Фильтрует по количеству баллов кандидата на вакансии, указывается диапазон'
+      description: 'Фильтрует по количеству баллов в карточках оценок кандидата на вакансии, указывается диапазон'
       allowEmptyValue: true
     f-added_at:
       name: 'f[added_at][]'
@@ -5466,7 +5438,7 @@ components:
       schema:
         type: string
         example: not_sent
-      description: 'Фильтр по статусу воркфлоу personal_data_agreement, можно использовать несколько раз в одном запросе'
+      description: 'Фильтр по статусу запроса согласия на обработку ПДн , можно использовать несколько раз в одном запросе'
       allowEmptyValue: true
     f-cities:
       name: 'f[cities][]'
