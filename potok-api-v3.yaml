@@ -4956,7 +4956,7 @@ components:
           description: Ссылка на аккаунт skype
         phones:
           type: array
-          description: Массив телефонов кандидата
+          description: 'Массив телефонов кандидата '
           items:
             type: string
         accounts:
