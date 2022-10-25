@@ -31,6 +31,7 @@ info:
     |:-------:|:------------:|
     |400| Ошибка параметров запроса
     |401 | Отказ в доступе. Неверная авторизация или аутентификация|
+    |402| Подписка компании просрочена|
     |403| Объект есть и доступ к нему запрещён
     |404| Сервер не может найти запрашиваемый объект
     |422 | Ошибки при заполнении полей: не заполнено поле, неверный формат и ошибки валидации|
@@ -57,7 +58,7 @@ paths:
       operationId: get-api-v3-jobs.json
       description: |-
         Получение списка вакансий компании. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.
-        Сотрировка вакансий в ответе по дате создания по убыванию.
+        Сортировка вакансий в ответе по дате создания по убыванию.
       parameters:
         - schema:
             type: string
@@ -524,7 +525,7 @@ paths:
                   type: string
                   description: ID Валюты (словарь - `currency_type`)
                 key_skills:
-                  description: Массив ключевых навыков
+                  description: Ключевые навыков
                   type: array
                   items:
                     type: string
@@ -1159,7 +1160,7 @@ paths:
               required:
                 - cv_original
             examples: {}
-  /api/v3/applicants.json:
+  /applicants.json:
     post:
       summary: Создание кандидата (отклика)
       tags:
@@ -1558,8 +1559,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  '':
-                    $ref: '#/components/schemas/Applicant_response'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Applicant_response'
                   per_page:
                     type: integer
                     description: Количество элементов на странице
@@ -1567,7 +1570,7 @@ paths:
                     type: integer
                     description: Количество страниц
                   page:
-                    type: string
+                    type: integer
                     description: Номер страницы списка вакансий
                 required:
                   - per_page
@@ -1772,7 +1775,7 @@ paths:
                             responsible_user_id: 51293
                     per_page: 1
                     pages: 4
-                    page: '1'
+                    page: 1
         '401':
           description: Отказ в доступе. Неверная авторизация или аутентификация
         '402':
@@ -1805,7 +1808,7 @@ paths:
         - $ref: '#/components/parameters/f-education_level'
         - $ref: '#/components/parameters/f-stage_statuses'
     parameters: []
-  '/api​/v3​/applicants​/{applicant_id}.json':
+  '/applicants​/{applicant_id}.json':
     parameters:
       - schema:
           type: integer
@@ -2437,6 +2440,442 @@ paths:
                         - is not exists
       operationId: get-api-v3-applicants-applicant_id-.json
       description: 'Получение данных кандидата по его ID . Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.'
+  '/ajs_joins/{ajs_join_id}/assessment_items.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: ajs_join_id
+        in: path
+        required: true
+        description: ID кандидата на вакансии
+    get:
+      summary: Получение данных карточек оценки кандидата
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - id: 190683
+                        name: ИЗЬЫ
+                        weight: 3
+                        total_score: 100
+                        comment: ''
+                        created_at: '2022-10-25T11:48:10.805+03:00'
+                        fields:
+                          - id: kki5J-hVkNuB
+                            name: ''
+                            score: 100
+                            comment: ''
+                            without_score: false
+                        user:
+                          id: 96657
+                          name: Даниил Саетов
+                          email: d.saetov@potok.io
+                          avatar: null
+                          phones: []
+                        scale: 0to100
+                        html_comment: ''
+                    per_page: 50
+                    pages: 1
+                    page: 1
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID оценки кандидата по конкретной карточке
+                        name:
+                          type: string
+                          description: Название карточки оценки
+                        weight:
+                          type: integer
+                          description: Вес карточки
+                        total_score:
+                          type: integer
+                          description: Общая оценка
+                        comment:
+                          type: string
+                          description: Комментарий к оценке
+                        created_at:
+                          type: string
+                          description: 'Время оценивания кандидата (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                        fields:
+                          type: array
+                          description: Критерии оценки в карточке кандидата
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: ID критерия оценки
+                              name:
+                                type: string
+                                description: Название критерия оценки
+                              score:
+                                type: integer
+                                description: Оценка по критерию
+                              comment:
+                                type: string
+                                description: Комментарий к оценке
+                              without_score:
+                                type: boolean
+                                description: |-
+                                  Признак участия критерия в подсчете очков
+
+                                  `True` - критерий не участвует в общем подсчете очков
+
+                                  `False` - критерий участвует в общем подсчете очков
+                        user:
+                          type: object
+                          description: 'Пользователь, оценивший кандидата'
+                          properties:
+                            '':
+                              $ref: '#/components/schemas/User'
+                        scale:
+                          type: string
+                          description: Шкала оценки (словарь - `assessment_scale_types`)
+                        html_comment:
+                          type: string
+                          description: Комментарий к оценке в html формате
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                  pages:
+                    type: integer
+                    description: Количество страниц
+                  page:
+                    type: integer
+                    description: Номер страницы списка вакансий
+                required:
+                  - data
+                  - per_page
+                  - pages
+                  - page
+              examples:
+                Пример ответа:
+                  value:
+                    data:
+                      - id: 12345
+                        name: Английский язык
+                        weight: 1
+                        total_score: 75
+                        comment: комментарий
+                        created_at: '2022-10-25T12:27:44.963+03:00'
+                        fields:
+                          - id: kki5J-hVkNuB
+                            name: Знание времен
+                            score: 75
+                            comment: комментарий
+                            without_score: false
+                        user:
+                          '':
+                            id: 123456
+                            name: Иван Иванов
+                            email: ivanov@ivan.ru
+                            avatar: 'https://app.potok.io/uploads/user/avatar/96657/example.jpg'
+                            phones:
+                              - '79007006050'
+                        scale: 0to100
+                        html_comment: '<p style="margin: 4px 0;">комментарий</p>'
+                    per_page: 50
+                    pages: 1
+                    page: 1
+        '404':
+          description: ' Передан несуществующий `ajs_join_id`'
+      operationId: get-ajs_joins-ajs_join_id-assessment_items.json
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+      description: Получение данных карточек оценки кандидадта по ID кандидата на вакансии
+  '/ajs_joins/{ajs_join_id}/assessment_items.pdf':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: ajs_join_id
+        in: path
+        required: true
+        description: ID кандидата на вакансии
+    get:
+      summary: Получение данных карточек оценки в виде PDF-файла
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: ' Передан несуществующий `ajs_join_id`'
+      operationId: get-ajs_joins-ajs_join_id-assessment_items.pdf
+      description: Получение данных карточек оценки кандидадта по ID кандидата на вакансии. Метод возвращает PDF-файл со всеми карточками оценки кандидата
+      parameters: []
+  '/ajs_joins/{ajs_join_id}/move_to_stage_type':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: ajs_join_id
+        in: path
+        required: true
+        description: ID кандидата на вакансии
+    post:
+      summary: Перевод кандидата на тип этапа
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move_to_stage_type_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 23617786
+                    stage_id: 1022678
+                    applicant_id: 19634103
+                    job_id: 138416
+                    responsible_user_id: 51293
+                    stage_type: applied
+                    state_id: not_sent
+        '404':
+          description: ' Передан несуществующий `ajs_join_id` или `to_stage_type`'
+        '422':
+          description: Не передан параметр `to_stage_type`
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-examples:
+                  example-1:
+                    - Этап не определен
+              examples:
+                Пример ответа:
+                  value:
+                    - Этап не определен
+      operationId: post-ajs_joins-ajs_join_id-move_to_stage_type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  to_stage_type: applied
+              properties:
+                to_stage_type:
+                  type: string
+                  description: Тип этапа
+              required:
+                - to_stage_type
+            examples:
+              Пример запроса:
+                value:
+                  to_stage_type: applied
+      description: Перевод кандидата на первый этап указанного типа этапа
+  '/ajs_joins/{ajs_join_id}/move_to_next_stage':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: ajs_join_id
+        in: path
+        required: true
+        description: ID кандидата на вакансии
+    post:
+      summary: Перевод кандидата на следующий этап
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move_to_stage_type_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 23617786
+                    stage_id: 1022678
+                    applicant_id: 19634103
+                    job_id: 138416
+                    responsible_user_id: 51293
+                    stage_type: applied
+                    state_id: not_sent
+        '404':
+          description: ' Передан несуществующий `ajs_join_id`'
+      operationId: post-ajs_joins-ajs_join_id-move_to_next_stage
+      description: Перевод кандидата на следующий этап в воронке
+  '/ajs_joins/{ajs_join_id}/change_stage':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: ajs_join_id
+        in: path
+        required: true
+        description: ID кандидата на вакансии
+    post:
+      summary: Перевод кандидата на произвольный этап
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move_to_stage_type_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 23617786
+                    stage_id: 1022678
+                    applicant_id: 19634103
+                    job_id: 138416
+                    responsible_user_id: 51293
+                    stage_type: applied
+                    state_id: not_sent
+        '404':
+          description: ' Передан несуществующий `ajs_join_id`'
+        '422':
+          description: Не передан параметр `stage_id`
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-examples:
+                  example-1:
+                    - Этап не определен
+              examples:
+                Пример ответа:
+                  value:
+                    - Этап не определен
+      operationId: post-ajs_joins-ajs_join_id-change_stage
+      description: Перевод кандидата на указанный этап в воронке
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  stage_id: 1022678
+              properties:
+                stage_id:
+                  type: integer
+                  description: ID этапа
+              required:
+                - stage_id
+            examples:
+              Пример запроса:
+                value:
+                  stage_id: 1022678
+  '/ajs_joins/{ajs_join_id}/change_state.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: ajs_join_id
+        in: path
+        required: true
+        description: ID кандидата на вакансии
+    post:
+      summary: Изменение статуса кандидата на этапе
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move_to_stage_type_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 23617786
+                    stage_id: 1022678
+                    applicant_id: 19634103
+                    job_id: 138416
+                    responsible_user_id: 51293
+                    stage_type: applied
+                    state_id: offer_prinyat
+        '404':
+          description: Not Found
+        '422':
+          description: Не передан параметр `state_id`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hierarchy_path:
+                    type: string
+                  default_form_error_enabled:
+                    type: boolean
+                  errors:
+                    type: object
+                    properties:
+                      params:
+                        type: object
+                        properties:
+                          state_id:
+                            type: array
+                            items:
+                              type: string
+                x-examples:
+                  example-1:
+                    hierarchy_path: services.ajs_join.change_state_service
+                    default_form_error_enabled: true
+                    errors:
+                      params:
+                        state_id:
+                          - не указан параметр
+              examples:
+                Пример ответа:
+                  value:
+                    hierarchy_path: services.ajs_join.change_state_service
+                    default_form_error_enabled: true
+                    errors:
+                      params:
+                        state_id:
+                          - не указан параметр
+      operationId: post-ajs_joins-ajs_join_id-change_state.json
+      description: Изменение статуса кандидата на текущем этапе
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  state_id: offer_prinyat
+              properties:
+                state_id:
+                  type: string
+                  description: ID статуса на этапе
+              required:
+                - state_id
+            examples:
+              Пример запроса:
+                value:
+                  state_id: offer_prinyat
 components:
   schemas:
     author:
@@ -2734,7 +3173,7 @@ components:
             description: ID Валюты (словарь - `currency_type`)
           key_skills:
             type: array
-            description: Массив ключевых навыков
+            description: Ключевые навыки
             items:
               type: string
           city:
@@ -3292,7 +3731,7 @@ components:
                       description: Тип образования (к примеру `Высшее`)
                 primary:
                   type: array
-                  description: Массив учебных заведений кандидата
+                  description: Учебные заведенеия кандидата
                   items:
                     type: object
                     properties:
@@ -3340,7 +3779,7 @@ components:
                             description: Значение среднего балла
                 attestation:
                   type: array
-                  description: Массив тестов и экзаменов кандидата
+                  description: Тесты и экзамены кандидата
                   items:
                     type: object
                     properties:
@@ -3396,7 +3835,7 @@ components:
               properties:
                 area:
                   type: array
-                  description: Массив городов для переезда (словарь `cities`)
+                  description: Города для переезда (словарь `cities`)
                   items:
                     type: object
                     properties:
@@ -3428,7 +3867,7 @@ components:
                   description: Название признака готовности к командировкам
             specialization:
               type: array
-              description: Массив специализаций кандидата (словарь - `specializations`
+              description: Специализации кандидата (словарь - `specializations`
               items:
                 type: object
                 properties:
@@ -3440,7 +3879,7 @@ components:
                     description: Название специализации
             employment:
               type: array
-              description: Массив занятости кандидата (словарь - `employment_type`)
+              description: Занятость кандидата (словарь - `employment_type`)
               items:
                 type: object
                 properties:
@@ -3452,7 +3891,7 @@ components:
                     description: Название занятости
             schedule:
               type: array
-              description: Массив графиков работы кандидата (словарь - `applicant_schedule`)
+              description: Графики работы кандидата (словарь - `applicant_schedule`)
               items:
                 type: object
                 properties:
@@ -3464,7 +3903,7 @@ components:
                     description: Название графика работы
             experience:
               type: array
-              description: Массив опытов работы кандидата
+              description: Опыт работы кандидата
               items:
                 type: object
                 properties:
@@ -3506,7 +3945,7 @@ components:
                     description: Описание опыта работы
             awards:
               type: array
-              description: Массив достижений кандидата
+              description: Достижения кандидата
               items:
                 type: object
                 properties:
@@ -3524,7 +3963,7 @@ components:
                     description: Описание достижения
             projects:
               type: array
-              description: Массив проектов кандидата
+              description: Проекты кандидата
               items:
                 type: object
                 properties:
@@ -3542,12 +3981,12 @@ components:
                     description: Описание проекта
             skill_set:
               type: array
-              description: Массив ключевых навыков кандидата
+              description: Ключевые навыки кандидата
               items:
                 type: string
             certificate:
               type: array
-              description: Массив сертификатов кандидата
+              description: Сертификаты кандидата
               items:
                 type: object
                 properties:
@@ -3565,7 +4004,7 @@ components:
                     description: Дата получения сертификата (в формате `YYYY-MM-DD`)
             recommendation:
               type: array
-              description: Массив рекомендаций кандидата
+              description: Рекомендации кандидата
               items:
                 type: object
                 properties:
@@ -3583,7 +4022,7 @@ components:
                     description: Организация рекомендателя
             languages:
               type: array
-              description: Массив языков кандидата (словарь - `languages`)
+              description: 'Языки, которыми владеет кандидат (словарь - `languages`)'
               items:
                 type: object
                 properties:
@@ -3605,7 +4044,7 @@ components:
                         description: Название уровня владения
             citizenship:
               type: array
-              description: Массив гражданств кандидата (словарь - `citizenship`)
+              description: Гражданства кандидата (словарь - `citizenship`)
               items:
                 type: object
                 properties:
@@ -3617,7 +4056,7 @@ components:
                     description: Город гражданства
             work_ticket:
               type: array
-              description: Массив разрешений на работу (словарь - `citizenship`)
+              description: Разрешения на работу (словарь - `citizenship`)
               items:
                 type: object
                 properties:
@@ -3853,7 +4292,7 @@ components:
                       description: Тип образования (к примеру `Высшее`)
                 primary:
                   type: array
-                  description: Массив учебных заведений кандидата
+                  description: Учебные заведения кандидата
                   items:
                     type: object
                     properties:
@@ -3901,7 +4340,7 @@ components:
                             description: Значение среднего балла
                 attestation:
                   type: array
-                  description: Массив тестов и экзаменов кандидата
+                  description: Тесты и экзамены кандидата
                   items:
                     type: object
                     properties:
@@ -3957,7 +4396,7 @@ components:
               properties:
                 area:
                   type: array
-                  description: Массив городов для переезда (словарь `cities`)
+                  description: Города для переезда (словарь `cities`)
                   items:
                     type: object
                     properties:
@@ -3998,7 +4437,7 @@ components:
               type: string
             specialization:
               type: array
-              description: Массив специализаций кандидата (словарь - `specializations`
+              description: Специализации кандидата (словарь - `specializations`
               items:
                 type: object
                 properties:
@@ -4010,7 +4449,7 @@ components:
                     description: Название специализации
             employment:
               type: array
-              description: Массив занятости кандидата (словарь - `employment_type`)
+              description: Занятость кандидата (словарь - `employment_type`)
               items:
                 type: object
                 properties:
@@ -4022,7 +4461,7 @@ components:
                     description: Название занятости
             schedule:
               type: array
-              description: Массив графиков работы кандидата (словарь - `applicant_schedule`)
+              description: Графики работы кандидата (словарь - `applicant_schedule`)
               items:
                 type: object
                 properties:
@@ -4034,7 +4473,7 @@ components:
                     description: Название графика работы
             experience:
               type: array
-              description: Массив опытов работы кандидата
+              description: Опыт работы кандидата
               items:
                 type: object
                 properties:
@@ -4076,7 +4515,7 @@ components:
                     description: Описание опыта работы
             awards:
               type: array
-              description: Массив достижений кандидата
+              description: Достижения кандидата
               items:
                 type: object
                 properties:
@@ -4094,7 +4533,7 @@ components:
                     description: Описание достижения
             projects:
               type: array
-              description: Массив проектов кандидата
+              description: Проекты кандидата
               items:
                 type: object
                 properties:
@@ -4112,12 +4551,12 @@ components:
                     description: Описание проекта
             skill_set:
               type: array
-              description: Массив ключевых навыков кандидата
+              description: Ключевые навыки кандидата
               items:
                 type: string
             certificate:
               type: array
-              description: Массив сертификатов кандидата
+              description: Сертификаты кандидата
               items:
                 type: object
                 properties:
@@ -4135,7 +4574,7 @@ components:
                     description: Дата получения сертификата (в формате `YYYY-MM-DD`)
             recommendation:
               type: array
-              description: Массив рекомендаций кандидата
+              description: Рекомендации кандидата
               items:
                 type: object
                 properties:
@@ -4153,7 +4592,7 @@ components:
                     description: Организация рекомендателя
             languages:
               type: array
-              description: Массив языков кандидата (словарь - `languages`)
+              description: 'Языки, которыми владеет кандидат (словарь - `languages`)'
               items:
                 type: object
                 properties:
@@ -4175,7 +4614,7 @@ components:
                         description: Название уровня владения
             citizenship:
               type: array
-              description: Массив гражданств кандидата (словарь - `citizenship`)
+              description: Гражданства кандидата (словарь - `citizenship`)
               items:
                 type: object
                 properties:
@@ -4187,7 +4626,7 @@ components:
                     description: Город гражданства
             work_ticket:
               type: array
-              description: Массив разрешений на работу (словарь - `citizenship`)
+              description: Разрешения на работу (словарь - `citizenship`)
               items:
                 type: object
                 properties:
@@ -4416,12 +4855,12 @@ components:
               description: Отчество
             emails:
               type: array
-              description: Массив почт кандидата
+              description: Почты кандидата
               items:
                 type: string
             phones:
               type: array
-              description: Массив телефонов кандидата
+              description: Телефоны кандидата
               items:
                 type: string
             born:
@@ -4455,7 +4894,7 @@ components:
               description: ID Города проживания (словарь - `cities`)
             accounts:
               type: array
-              description: Массив аккаунтов в социальных сетях
+              description: Аккаунты в социальных сетях
               items:
                 type: object
                 properties:
@@ -4467,7 +4906,7 @@ components:
                     description: Название социальной сети (используется для отображения иконки)
             resumes:
               type: array
-              description: Массив всех резюме кандидата
+              description: Все резюме кандидата
               items:
                 $ref: '#/components/schemas/cv_params_request'
             workflows:
@@ -4494,7 +4933,7 @@ components:
                     `Event::CoverLetter` - Сопроводительное письмо
             ajs_joins:
               type: array
-              description: Массив связей кандидата с вакансией
+              description: Связи кандидата с вакансией
               items:
                 type: object
                 properties:
@@ -4956,12 +5395,12 @@ components:
           description: Ссылка на аккаунт skype
         phones:
           type: array
-          description: 'Массив телефонов кандидата '
+          description: 'Телефоны кандидата '
           items:
             type: string
         accounts:
           type: array
-          description: Массив аккаунтов в социальных сетях
+          description: Аккаунты в социальных сетях
           items:
             type: object
             properties:
@@ -4973,7 +5412,7 @@ components:
                 description: Название социальной сети (используется для отображения иконки)
         tags:
           type: array
-          description: Массив тегов кандидата
+          description: Теги кандидата
           items:
             type: object
             properties:
@@ -4994,12 +5433,12 @@ components:
           description: 'Время обновления кандидата (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
         another_emails:
           type: array
-          description: Массив других почт кандидата
+          description: Другие почты кандидата
           items:
             type: string
         schedule:
           type: array
-          description: Массив графиков работы кандидата
+          description: Графики работы кандидата
           items:
             type: object
             properties:
@@ -5033,7 +5472,7 @@ components:
               description: 'Название региона, области или города федерального значения, в котором находится населенный пункт'
         states:
           type: array
-          description: Массив статусов Workflow
+          description: Статусы Workflow
           items:
             type: object
             properties:
@@ -5061,7 +5500,7 @@ components:
                     description: Класс объекта
               additional_info:
                 type: array
-                description: 'Дополнительная информация о действия, касающихся Workflow'
+                description: 'Дополнительная информация о действиях, касающихся Workflow'
                 items:
                   type: object
             required:
@@ -5076,7 +5515,7 @@ components:
           description: Ссылка на аватар кандидата
         resumes:
           type: array
-          description: Массив всех резюме кандидата
+          description: Все резюме кандидата
           items:
             $ref: '#/components/schemas/resume_response'
         source_name:
@@ -5087,7 +5526,7 @@ components:
           description: 'Признак того, есть ли события у кандидата сверх лимита. Лимит - `500` событий'
         events:
           type: array
-          description: Массив типов событий
+          description: Типы событий
           items:
             type: object
             properties:
@@ -5151,7 +5590,7 @@ components:
               - type
         ajs_joins:
           type: array
-          description: Массив связей кандидата с вакансией
+          description: Связи кандидата с вакансией
           items:
             type: object
             properties:
@@ -5222,6 +5661,92 @@ components:
         - extra_events_present
         - events
         - ajs_joins
+    User:
+      type: object
+      x-examples:
+        example-1:
+          id: 96657
+          name: Даниил Саетов
+          email: d.saetov@potok.io
+          avatar: null
+          phones: []
+      title: ''
+      examples:
+        - id: 123456
+          name: Иван Иванов
+          email: ivanov@ivan.ru
+          avatar: 'https://app.potok.io/uploads/user/avatar/96657/example.jpg'
+          phones:
+            - '79007006050'
+      properties:
+        id:
+          type: integer
+          description: ID пользователя
+        name:
+          type: string
+          description: ФИО пользователя
+        email:
+          type: string
+          description: Почта пользователя
+        avatar:
+          type: string
+          description: Ссылка на аватар пользователя
+        phones:
+          type: array
+          description: |-
+            Массив всегда из одного элемента.
+            Номер телефона пользователя строкой
+          items:
+            type: string
+    Move_to_stage_type_response:
+      type: object
+      x-examples:
+        example-1:
+          id: 23617786
+          stage_id: 1022678
+          applicant_id: 19634103
+          job_id: 138416
+          responsible_user_id: 51293
+          stage_type: applied
+          state_id: null
+      examples:
+        - id: 23617786
+          stage_id: 1022678
+          applicant_id: 19634103
+          job_id: 138416
+          responsible_user_id: 51293
+          stage_type: applied
+          state_id: not_sent
+      properties:
+        id:
+          type: integer
+          description: ID кандидата на вакансии `Ajs_join_id`
+        stage_id:
+          type: integer
+          description: ID этапа
+        applicant_id:
+          type: integer
+          description: ID кандидата
+        job_id:
+          type: integer
+          description: ID вакансии
+        responsible_user_id:
+          type: integer
+          description: ID ответственного за кандидата на вакансии
+        stage_type:
+          type: string
+          description: ID типа этапа
+        state_id:
+          description: ID статуса на этапе
+          type: string
+      required:
+        - id
+        - stage_id
+        - applicant_id
+        - job_id
+        - responsible_user_id
+        - stage_type
+        - state_id
   securitySchemes:
     headerToken:
       type: http
@@ -5558,4 +6083,5 @@ security:
 tags:
   - name: вакансии
   - name: кандидаты
+  - name: кандидаты на вакансии
   - name: резюме
