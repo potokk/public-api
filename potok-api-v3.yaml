@@ -3376,9 +3376,13 @@ paths:
         - schema:
             type: string
             example: initialized
+            enum:
+              - initialized
+              - approved
+              - archived
           in: query
           name: 'f[statuses][]'
-          description: 'Фильтр по статусу, можно использовать несколько раз в одном запросе'
+          description: 'Фильтр по статусу, можно использовать несколько раз в одном запросе. '
       tags:
         - потребности
   '/demands/{id}.json':
