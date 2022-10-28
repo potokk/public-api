@@ -2877,6 +2877,756 @@ paths:
               Пример запроса:
                 value:
                   state_id: offer_prinyat
+  '/demands/{demand_id}/quantity_corrections.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 654321
+        name: demand_id
+        in: path
+        required: true
+        description: ID потребности
+    post:
+      summary: Создание корректировки потребности
+      tags:
+        - потребности
+      operationId: post-demands-demand_id-quantity_corrections.json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  quantity_correction:
+                    quantity: 0
+                    author_id: 0
+                    author_email: string
+                    reason_id: string
+                    comment: string
+              properties:
+                quantity_correction:
+                  type: object
+                  required:
+                    - quantity
+                    - author_id
+                    - author_email
+                    - reason_id
+                    - comment
+                  description: Параметры корректирования потребности
+                  properties:
+                    quantity:
+                      type: integer
+                      description: Количество позиций в потребности
+                      minimum: 1
+                      example: 3
+                    author_id:
+                      type: integer
+                      description: ID создателя потребности
+                      example: 12345
+                    author_email:
+                      type: string
+                      description: Email создателя потребности
+                      example: author@example.com
+                    reason_id:
+                      type: string
+                      description: |-
+                        ID причины корректировки потребности (словарь - `demand_quantity_correction_reasons`). 
+
+                        Можно указать значение `other`
+                      example: e240fd1c-a1b0-441e-a03e-22041534c46c
+                    comment:
+                      type: string
+                      description: Комментарий к корректировке потребности
+                      example: комментарий
+              required:
+                - quantity_correction
+            examples:
+              Пример запроса:
+                value:
+                  quantity_correction:
+                    quantity: 3
+                    author_id: 12345
+                    author_email: author@example.com
+                    reason_id: e240fd1c-a1b0-441e-a03e-22041534c46c
+                    comment: комментарий
+        description: ''
+      description: 'Создание корректировки существующей потребности, находящейся в статусе `В работе`'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/demand_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 6376
+                    quantity: 10
+                    job_id: 1357
+                    business_unit_id: 4276
+                    comment: комментарий
+                    states:
+                      - updated_at: '2022-08-05T15:48:05.910+03:00'
+                        workflow_id: 3263
+                        additional_info:
+                          - {}
+                        workflow_name: demand_state
+                        state_id: approved
+                        init_by:
+                          id: 9757
+                          class: class
+                    finish_date: '2022-08-31'
+                    start_date: '2022-08-02'
+                    sprint:
+                      id: 1842
+                      name: 24.08 - 30.12
+                      start_date: '2020-08-24'
+                      finish_date: '2022-12-30'
+                      start_status: current
+                    author:
+                      id: 12345
+                      name: Иванов Иван Иванович
+                      email: ivan@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79996007755'
+                    executive:
+                      id: 4321
+                      name: Петров Петр Петрович
+                      email: petrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79901234556'
+                    customer:
+                      id: 98756
+                      name: Иванов Петр Семенович
+                      email: ivanpetrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79191223223'
+                    schedule:
+                      - id: '22'
+                        name: 2/2
+                        name_locales:
+                          en: 2/2
+                          fr: 2/2
+                    priority_item:
+                      id: 1352
+                      name: Средний
+                      color_hex: 0CE0AD
+                      position: 3
+        '404':
+          description: Передан несуществующий `demand_id`
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    quantity:
+                      - уже имеет то же значение
+              examples:
+                Пример ответа 1:
+                  value:
+                    reason_id:
+                      - не заполнен параметр
+                    comment:
+                      - должна быть строка
+                Пример ответа 2:
+                  value:
+                    demand:
+                      - Потребность должна быть в работе
+                Пример ответа 3:
+                  value:
+                    quantity:
+                      - уже имеет то же значение
+                Пример ответа 4:
+                  value:
+                    author:
+                      - Объект не найден
+  /demands.json:
+    post:
+      summary: Создание потребности
+      tags:
+        - потребности
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/demand_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 6376
+                    quantity: 10
+                    job_id: 1357
+                    business_unit_id: 4276
+                    comment: комментарий
+                    states:
+                      - updated_at: '2022-08-05T15:48:05.910+03:00'
+                        workflow_id: 3263
+                        additional_info:
+                          - {}
+                        workflow_name: demand_state
+                        state_id: approved
+                        init_by:
+                          id: 9757
+                          class: class
+                    finish_date: '2022-08-31'
+                    start_date: '2022-08-02'
+                    sprint:
+                      id: 1842
+                      name: 24.08 - 30.12
+                      start_date: '2020-08-24'
+                      finish_date: '2022-12-30'
+                      start_status: current
+                    author:
+                      id: 12345
+                      name: Иванов Иван Иванович
+                      email: ivan@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79996007755'
+                    executive:
+                      id: 4321
+                      name: Петров Петр Петрович
+                      email: petrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79901234556'
+                    customer:
+                      id: 98756
+                      name: Иванов Петр Семенович
+                      email: ivanpetrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79191223223'
+                    schedule:
+                      - id: '22'
+                        name: 2/2
+                        name_locales:
+                          en: 2/2
+                          fr: 2/2
+                    priority_item:
+                      id: 1352
+                      name: Средний
+                      color_hex: 0CE0AD
+                      position: 3
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Пример ответа 1:
+                  value:
+                    demand_params:
+                      - не заполнен параметр
+                Пример ответа 2:
+                  value:
+                    author:
+                      - Объект не найден
+                Пример ответа 3:
+                  value:
+                    job_id:
+                      - Объект не найден
+                      - не может быть пустым
+                    business_unit_id:
+                      - Объект не найден
+                      - не может быть пустым
+                    customer_id:
+                      - Объект не найден
+                      - Не может быть заказчиком потребности
+                      - не может быть пустым
+                    quantity:
+                      - Количество должно быть больше 0
+                      - не может быть пустым
+                    schedule:
+                      - Имеет неверное значение
+                      - не может быть пустым
+                    priority_item_id:
+                      - Имеет неверное значение
+                    base:
+                      - 'Пожалуйста, проверьте выделенные поля'
+                    sprint_id:
+                      - не может быть пустым
+                Пример ответа 4:
+                  value:
+                    business_unit_id:
+                      - Объект архивный
+      operationId: post-demands.json
+      description: Создание новой потребности
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  demand:
+                    author_id: integer
+                    author_email: string
+                    is_approved: boolean
+                    quantity: integer
+                    job_id: integer
+                    business_unit_id: integer
+                    customer_id: integer
+                    executive_id: integer
+                    sprint_id: integer
+                    priority_item_id: integer
+                    schedule: string
+                    comment: string
+                    start_date: string
+                    finish_date: string
+              properties:
+                demand:
+                  type: object
+                  properties:
+                    author_id:
+                      type: integer
+                      description: ID создателя потребности
+                      example: 12345
+                    author_email:
+                      type: string
+                      description: Email создателя потребности
+                      example: author@example.ru
+                    is_approved:
+                      type: boolean
+                      description: 'Признак одобрения вакансии. Если параметр передан, то статус станет `approved`'
+                    quantity:
+                      type: integer
+                      description: Количество позиций в потребности
+                      example: 3
+                    job_id:
+                      type: integer
+                      description: ID вакансии потребности
+                      example: 56413
+                    business_unit_id:
+                      type: integer
+                      description: ID объекта потребности
+                      example: 13614
+                    customer_id:
+                      type: integer
+                      description: ID заказчика потребности
+                      example: 23463
+                    executive_id:
+                      type: integer
+                      description: ID ответственного рекрутера
+                      example: 2435
+                    sprint_id:
+                      type: integer
+                      description: ID периода потребности
+                      example: 2245
+                    priority_item_id:
+                      type: integer
+                      description: ID приоритета потребности
+                      example: 1643
+                    schedule:
+                      type: string
+                      description: ID графика потребности (словарь - `demand_shedule`)
+                      example: '22'
+                    comment:
+                      type: string
+                      description: Комментарий к потребности
+                      example: комментарий
+                    start_date:
+                      type: string
+                      description: 'Дата начала работы потребности (в формате `YYYY-MM-DD`) '
+                      example: '2022-08-02'
+                    finish_date:
+                      type: string
+                      description: Дата окончания работы потребности (в формате `YYYY-MM-DD`)
+                      example: '2022-08-31'
+                  required:
+                    - author_id
+                    - author_email
+                    - quantity
+                    - job_id
+                    - business_unit_id
+                    - customer_id
+                    - executive_id
+                    - sprint_id
+                    - priority_item_id
+                    - schedule
+            examples:
+              Пример запроса:
+                value:
+                  demand:
+                    author_id: 12345
+                    author_email: author@example.ru
+                    is_approved: true
+                    quantity: 3
+                    job_id: 56413
+                    business_unit_id: 13614
+                    customer_id: 23463
+                    executive_id: 2435
+                    sprint_id: 2245
+                    priority_item_id: 1643
+                    schedule: '22'
+                    comment: комментарий
+                    start_date: '2022-08-02'
+                    finish_date: '2022-08-31'
+    get:
+      summary: Список потребностей
+      operationId: get-demands.json
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: Номер страницы списка
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                    example: 20
+                  total_pages:
+                    type: integer
+                    description: Общее количество страниц
+                    example: 1
+                  objects:
+                    type: array
+                    description: Потребности
+                    items:
+                      $ref: '#/components/schemas/demand_response'
+                required:
+                  - page
+                  - per_page
+                  - total_pages
+                  - objects
+              examples:
+                example-1:
+                  value:
+                    page: 1
+                    per_page: 20
+                    total_pages: 1
+                    objects:
+                      - id: 6376
+                        quantity: 10
+                        job_id: 1357
+                        business_unit_id: 4276
+                        comment: комментарий
+                        states:
+                          - updated_at: '2022-08-05T15:48:05.910+03:00'
+                            workflow_id: 3263
+                            additional_info:
+                              - {}
+                            workflow_name: demand_state
+                            state_id: approved
+                            init_by:
+                              id: 9757
+                              class: class
+                        finish_date: '2022-08-31'
+                        start_date: '2022-08-02'
+                        sprint:
+                          id: 1842
+                          name: 24.08 - 30.12
+                          start_date: '2020-08-24'
+                          finish_date: '2022-12-30'
+                          start_status: current
+                        author:
+                          id: 12345
+                          name: Иванов Иван Иванович
+                          email: ivan@example.ru
+                          avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                          phones:
+                            - '79996007755'
+                        executive:
+                          id: 4321
+                          name: Петров Петр Петрович
+                          email: petrov@example.ru
+                          avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                          phones:
+                            - '79901234556'
+                        customer:
+                          id: 98756
+                          name: Иванов Петр Семенович
+                          email: ivanpetrov@example.ru
+                          avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                          phones:
+                            - '79191223223'
+                        schedule:
+                          - id: '22'
+                            name: 2/2
+                            name_locales:
+                              en: 2/2
+                              fr: 2/2
+                        priority_item:
+                          id: 1352
+                          name: Средний
+                          color_hex: 0CE0AD
+                          position: 3
+      description: Получение списка потребностей
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        - schema:
+            type: string
+            example: initialized
+            enum:
+              - initialized
+              - approved
+              - archived
+          in: query
+          name: 'f[statuses][]'
+          description: 'Фильтр по статусу, можно использовать несколько раз в одном запросе. '
+      tags:
+        - потребности
+  '/demands/{id}.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 365687
+        name: id
+        in: path
+        required: true
+        description: ID потребности
+    get:
+      summary: Просмотр одной потребности
+      tags:
+        - потребности
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/demand_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 6376
+                    quantity: 10
+                    job_id: 1357
+                    business_unit_id: 4276
+                    comment: комментарий
+                    states:
+                      - updated_at: '2022-08-05T15:48:05.910+03:00'
+                        workflow_id: 3263
+                        additional_info:
+                          - {}
+                        workflow_name: demand_state
+                        state_id: approved
+                        init_by:
+                          id: 9757
+                          class: class
+                    finish_date: '2022-08-31'
+                    start_date: '2022-08-02'
+                    sprint:
+                      id: 1842
+                      name: 24.08 - 30.12
+                      start_date: '2020-08-24'
+                      finish_date: '2022-12-30'
+                      start_status: current
+                    author:
+                      id: 12345
+                      name: Иванов Иван Иванович
+                      email: ivan@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79996007755'
+                    executive:
+                      id: 4321
+                      name: Петров Петр Петрович
+                      email: petrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79901234556'
+                    customer:
+                      id: 98756
+                      name: Иванов Петр Семенович
+                      email: ivanpetrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79191223223'
+                    schedule:
+                      - id: '22'
+                        name: 2/2
+                        name_locales:
+                          en: 2/2
+                          fr: 2/2
+                    priority_item:
+                      id: 1352
+                      name: Средний
+                      color_hex: 0CE0AD
+                      position: 3
+        '404':
+          description: Передан не существующий ID потребности
+      operationId: get-demands-id-.json
+      description: Получение информаци о потребности по ID
+    put:
+      summary: Обновление потребности
+      tags:
+        - потребности
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/demand_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 6376
+                    quantity: 10
+                    job_id: 1357
+                    business_unit_id: 4276
+                    comment: комментарий
+                    states:
+                      - updated_at: '2022-08-05T15:48:05.910+03:00'
+                        workflow_id: 3263
+                        additional_info:
+                          - {}
+                        workflow_name: demand_state
+                        state_id: approved
+                        init_by:
+                          id: 9757
+                          class: class
+                    finish_date: '2022-08-31'
+                    start_date: '2022-08-02'
+                    sprint:
+                      id: 1842
+                      name: 24.08 - 30.12
+                      start_date: '2020-08-24'
+                      finish_date: '2022-12-30'
+                      start_status: current
+                    author:
+                      id: 12345
+                      name: Иванов Иван Иванович
+                      email: ivan@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79996007755'
+                    executive:
+                      id: 4321
+                      name: Петров Петр Петрович
+                      email: petrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79901234556'
+                    customer:
+                      id: 98756
+                      name: Иванов Петр Семенович
+                      email: ivanpetrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79191223223'
+                    schedule:
+                      - id: '22'
+                        name: 2/2
+                        name_locales:
+                          en: 2/2
+                          fr: 2/2
+                    priority_item:
+                      id: 1352
+                      name: Средний
+                      color_hex: 0CE0AD
+                      position: 3
+        '404':
+          description: Передан несуществующий `demand_id `
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Пример ответа 1:
+                  value:
+                    base:
+                      - 'Нельзя изменить, потребность находится в архиве'
+                Пример ответа 2:
+                  value:
+                    quantity:
+                      - 'нельзя изменить, потребность уже была опубликована'
+                Пример ответа 3:
+                  value:
+                    customer_id:
+                      - Является архивным (user@example.ru)
+                      - Не может быть заказчиком потребности
+      operationId: put-demands-id-.json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  demand:
+                    quantity: integer
+                    customer_id: integer
+                    executive_id: integer
+                    sprint_id: integer
+                    priority_item_id: integer
+                    schedule: string
+                    comment: string
+                    finish_date: string
+              properties:
+                demand:
+                  type: object
+                  properties:
+                    quantity:
+                      type: integer
+                      description: Количество позиций в потребности
+                      example: 3
+                    customer_id:
+                      type: integer
+                      description: ID заказчика потребности
+                      example: 1234
+                    executive_id:
+                      type: integer
+                      description: ID ответственного рекрутера
+                      example: 4321
+                    sprint_id:
+                      type: integer
+                      description: ID периода потребности
+                      example: 5421
+                    priority_item_id:
+                      type: integer
+                      description: ID приоритета потребности
+                      example: 4674
+                    schedule:
+                      type: string
+                      description: ID графика потребности (словарь - `demand_shedule`)
+                      example: '22'
+                    comment:
+                      type: string
+                      description: Комментарий к потребности
+                      example: комментарий
+                    finish_date:
+                      type: string
+                      description: Дата окончания работы потребности (в формате `YYYY-MM-DD`)
+                      example: '2022-08-31'
+              required:
+                - demand
+            examples:
+              Пример запроса:
+                value:
+                  demand:
+                    quantity: 3
+                    customer_id: 1234
+                    executive_id: 4321
+                    sprint_id: 5421
+                    priority_item_id: 4674
+                    schedule: '22'
+                    comment: комментарий
+                    finish_date: '2022-08-31'
+      description: Обновление потребности по ее ID
 components:
   schemas:
     author:
@@ -5748,6 +6498,370 @@ components:
         - responsible_user_id
         - stage_type
         - state_id
+    demand_response:
+      type: object
+      x-examples:
+        example-1:
+          id: 63736
+          quantity: 3
+          job_id: 244674
+          business_unit_id: 4176
+          comment: под кд Тетерин Дмитрий Алексеевич
+          states:
+            - updated_at: '2022-08-05T15:48:05.910+03:00'
+              workflow_id: 32263
+              additional_info: []
+              workflow_name: demand_state
+              state_id: approved
+              init_by:
+                id: null
+                class: null
+          finish_date: null
+          start_date: null
+          sprint:
+            id: 1
+            name: 24.08 - 30.12
+            start_date: '2020-08-24'
+            finish_date: '2022-12-30'
+            start_status: current
+          author:
+            id: 70010
+            name: 'Семенова Валентина Игоревна '
+            email: v.9995380000@example.com
+            avatar: null
+            phones:
+              - '79002002340'
+          executive:
+            id: 41387
+            name: Медведева Евгения
+            email: medvedeva@example.ru
+            avatar: 'http://localhost:8080/uploads/user/avatar/41387/IMG_6029.jpg'
+            phones: []
+          customer:
+            id: 52385
+            name: Шалмина Наталья Геннадьевна
+            email: shalmina@example.ru
+            avatar: null
+            phones:
+              - '79007001336'
+          schedule:
+            - id: ce50aa56-405e-46e1-a216-32bd2e3a4721
+              name: 4/2
+              name_locales:
+                en: 2/2
+                fr: 2/2
+          priority_item:
+            id: 10188
+            name: Низкий
+            color_hex: BABABA
+            position: 4
+      examples:
+        - id: 6376
+          quantity: 10
+          job_id: 1357
+          business_unit_id: 4276
+          comment: комментарий
+          states:
+            - updated_at: '2022-08-05T15:48:05.910+03:00'
+              workflow_id: 3263
+              additional_info:
+                - {}
+              workflow_name: demand_state
+              state_id: approved
+              init_by:
+                id: 9757
+                class: class
+          finish_date: '2022-08-31'
+          start_date: '2022-08-02'
+          sprint:
+            id: 1842
+            name: 24.08 - 30.12
+            start_date: '2020-08-24'
+            finish_date: '2022-12-30'
+            start_status: current
+          author:
+            id: 12345
+            name: Иванов Иван Иванович
+            email: ivan@example.ru
+            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            phones:
+              - '79996007755'
+          executive:
+            id: 4321
+            name: Петров Петр Петрович
+            email: petrov@example.ru
+            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            phones:
+              - '79901234556'
+          customer:
+            id: 98756
+            name: Иванов Петр Семенович
+            email: ivanpetrov@example.ru
+            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            phones:
+              - '79191223223'
+          schedule:
+            - id: '22'
+              name: 2/2
+              name_locales:
+                en: 2/2
+                fr: 2/2
+          priority_item:
+            id: 1352
+            name: Средний
+            color_hex: 0CE0AD
+            position: 3
+      properties:
+        id:
+          type: integer
+          description: ID потребности
+          example: 6376
+        quantity:
+          type: integer
+          description: Количество позиций в потребности
+          minimum: 1
+          example: 10
+        job_id:
+          type: integer
+          description: ID вакансии потребности
+          example: 1357
+        business_unit_id:
+          type: integer
+          description: ID объекта потребности
+          example: 4276
+        comment:
+          type: string
+          description: Комментарий к потребности
+          example: комментарий
+        states:
+          type: array
+          description: Статусы потребности
+          items:
+            type: object
+            properties:
+              updated_at:
+                type: string
+                description: 'Время обновления статуса потребности (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                example: '2022-08-05T15:48:05.910+03:00'
+              workflow_id:
+                type: integer
+                description: ID wokflow потребности
+                example: 3263
+              additional_info:
+                type: array
+                description: 'Дополнительная информация о действиях, касающихся Workflow'
+                items:
+                  type: object
+              workflow_name:
+                type: string
+                description: Название workflow
+                example: demand_state
+              state_id:
+                type: string
+                description: ID статуса потребности
+                example: approved
+              init_by:
+                type: object
+                description: Каким объектом системы было инициировано выставление статуса
+                properties:
+                  id:
+                    type: integer
+                    description: ID объекта
+                    example: 9757
+                  class:
+                    type: string
+                    description: Класс объекта
+                    example: class
+        finish_date:
+          type: string
+          description: Дата окончания работы потребности (в формате `YYYY-MM-DD`)
+          example: '2022-08-31'
+        start_date:
+          type: string
+          description: Дата начала работы потребности (в формате `YYYY-MM-DD`)
+          example: '2022-08-02'
+        sprint:
+          type: object
+          description: Период потребности
+          properties:
+            id:
+              type: integer
+              description: ID периода
+              example: 1842
+            name:
+              type: string
+              description: Диапозон периода
+              example: 24.08 - 30.12
+            start_date:
+              type: string
+              description: Дата начала периода
+              example: '2020-08-24'
+            finish_date:
+              type: string
+              description: Дата окончания периода
+              example: '2022-12-30'
+            start_status:
+              type: string
+              description: |-
+                Статус
+
+                `current` - текущий периода
+
+                `future` - будущий период
+              example: current
+        author:
+          type: object
+          description: Создатель потребности
+          properties:
+            id:
+              type: integer
+              description: ID создателя потребности
+              example: 12345
+            name:
+              type: string
+              description: ФИО создателя потребности
+              example: Иванов Иван Иванович
+            email:
+              type: string
+              description: Email создателя потребности
+              example: ivan@example.ru
+            avatar:
+              type: string
+              description: Ссылка на аватар создателя потребности
+              example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            phones:
+              type: array
+              description: |-
+                Массив всегда из одного элемента.
+                Номер телефона создателя потребности строкой
+              items:
+                type: string
+                example: '79996007755'
+        executive:
+          type: object
+          description: Ответственный рекрутер
+          properties:
+            id:
+              type: integer
+              description: ID рекрутера
+              example: 4321
+            name:
+              type: string
+              description: ФИО рекрутера
+              example: Петров Петр Петрович
+            email:
+              type: string
+              description: Email рекрутера
+              example: petrov@example.ru
+            avatar:
+              type: string
+              description: Ссылка на аватар рекрутера
+              example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            phones:
+              type: array
+              description: |-
+                Массив всегда из одного элемента.
+                Номер телефона рекрутера строкой
+              items:
+                type: string
+                example: '79901234556'
+        customer:
+          type: object
+          description: Заказчик потребности
+          properties:
+            id:
+              type: integer
+              description: ID заказчика
+              example: 98756
+            name:
+              type: string
+              description: ФИО заказчика
+              example: Иванов Петр Семенович
+            email:
+              type: string
+              description: Email заказчика
+              example: ivanpetrov@example.ru
+            avatar:
+              type: string
+              description: Ссылка на аватра заказчика
+              example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            phones:
+              type: array
+              description: |-
+                Массив всегда из одного элемента.
+                Номер телефона заказчика строкой
+              items:
+                type: string
+                example: '79191223223'
+        schedule:
+          type: array
+          description: Графики потребности
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID графика потребности (словарь - `demand_schedule`)
+                example: '22'
+              name:
+                type: string
+                description: Название графика (словарь - `demand_schedule`)
+                example: 2/2
+              name_locales:
+                type: object
+                description: Локализованное название графика
+                properties:
+                  en:
+                    type: string
+                    description: Название на английском языке
+                    example: 2/2
+                  fr:
+                    type: string
+                    description: Название на французском языке
+                    example: 2/2
+            required:
+              - id
+              - name
+        priority_item:
+          type: object
+          description: Приоритет потребности
+          required:
+            - id
+            - name
+            - color_hex
+            - position
+          properties:
+            id:
+              type: integer
+              description: ID приоритета
+              example: 1352
+            name:
+              type: string
+              description: Название приоритета
+              example: Средний
+            color_hex:
+              type: string
+              description: Цвет приоритета
+              example: 0CE0AD
+            position:
+              type: integer
+              description: Позиция приоритета (используется при фильтрации на странице потребностей)
+              example: 3
+      required:
+        - id
+        - quantity
+        - job_id
+        - business_unit_id
+        - comment
+        - states
+        - finish_date
+        - start_date
+        - sprint
+        - author
+        - executive
+        - customer
+        - schedule
+        - priority_item
   securitySchemes:
     headerToken:
       type: http
@@ -5824,7 +6938,7 @@ components:
         type: number
         example: 1
         default: 1
-      description: Номер страницы списка вакансий (начиная с 1)
+      description: Номер страницы списка (начиная с 1)
       allowEmptyValue: true
     per_page:
       name: per_page
@@ -6085,4 +7199,5 @@ tags:
   - name: вакансии
   - name: кандидаты
   - name: кандидаты на вакансии
+  - name: потребности
   - name: резюме
