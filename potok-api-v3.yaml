@@ -3232,7 +3232,7 @@ paths:
                       example: 2245
                     priority_item_id:
                       type: integer
-                      description: ID приоритета потребности (метод получения приоритетов - `/api/v3/priority_items.json`
+                      description: ID приоритета потребности (метод получения приоритетов - `GET /api/v3/priority_items.json`
                       example: 1643
                     schedule:
                       type: string
