@@ -3216,7 +3216,7 @@ paths:
                       example: 56413
                     business_unit_id:
                       type: integer
-                      description: ID объекта потребности
+                      description: ID объекта потребности (метод получения объектов - `GET /api/v3/business_units.json`)
                       example: 13614
                     customer_id:
                       type: integer
@@ -3228,11 +3228,11 @@ paths:
                       example: 2435
                     sprint_id:
                       type: integer
-                      description: ID периода потребности
+                      description: ID периода потребности (метод получения периодов - `GET /api/v3/sprints.json`)
                       example: 2245
                     priority_item_id:
                       type: integer
-                      description: ID приоритета потребности
+                      description: ID приоритета потребности (метод получения приоритетов - `/api/v3/priority_items.json`
                       example: 1643
                     schedule:
                       type: string
@@ -3599,11 +3599,11 @@ paths:
                       example: 4321
                     sprint_id:
                       type: integer
-                      description: ID периода потребности
+                      description: ID периода потребности (метод получения периодов - `GET /api/v3/sprints.json`)
                       example: 5421
                     priority_item_id:
                       type: integer
-                      description: ID приоритета потребности
+                      description: ID приоритета потребности (метод получения приоритетов - `/api/v3/priority_items.json`
                       example: 4674
                     schedule:
                       type: string
