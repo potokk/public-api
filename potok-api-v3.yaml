@@ -2619,7 +2619,7 @@ paths:
       operationId: get-ajs_joins-ajs_join_id-assessment_items.pdf
       description: Получение данных карточек оценки кандидадта по ID кандидата на вакансии. Метод возвращает PDF-файл со всеми карточками оценки кандидата по конкретной вакансии
       parameters: []
-  '/ajs_joins/{ajs_join_id}/move_to_stage_type':
+  '/ajs_joins/{ajs_join_id}/move_to_stage_type.json':
     parameters:
       - schema:
           type: integer
@@ -2686,7 +2686,7 @@ paths:
                 value:
                   to_stage_type: applied
       description: Перевод кандидата на первый этап указанного типа этапа
-  '/ajs_joins/{ajs_join_id}/move_to_next_stage':
+  '/ajs_joins/{ajs_join_id}/move_to_next_stage.json':
     parameters:
       - schema:
           type: integer
@@ -2720,7 +2720,7 @@ paths:
           description: ' Передан несуществующий `ajs_join_id`'
       operationId: post-ajs_joins-ajs_join_id-move_to_next_stage
       description: Перевод кандидата на следующий этап в воронке
-  '/ajs_joins/{ajs_join_id}/change_stage':
+  '/ajs_joins/{ajs_join_id}/change_stage.json':
     parameters:
       - schema:
           type: integer
@@ -3192,15 +3192,20 @@ paths:
                   properties:
                     author_id:
                       type: integer
-                      description: ID создателя потребности
+                      description: ID создателя потребности (ID пользователя)
                       example: 12345
                     author_email:
                       type: string
-                      description: Email создателя потребности
+                      description: Email создателя потребности (ID пользователя)
                       example: author@example.ru
                     is_approved:
                       type: boolean
-                      description: 'Признак одобрения вакансии. Если параметр передан, то статус станет `approved`'
+                      description: |-
+                        Признак одобрения потребности. Если параметр передан, то статус станет `approved` - одобрена.
+
+                        `True` - потребность одобрена (взята в работу)
+
+                        `False` - потребность на рассмотрении
                     quantity:
                       type: integer
                       description: Количество позиций в потребности
@@ -3211,23 +3216,23 @@ paths:
                       example: 56413
                     business_unit_id:
                       type: integer
-                      description: ID объекта потребности
+                      description: ID объекта потребности (метод получения объектов - `GET /api/v3/business_units.json`)
                       example: 13614
                     customer_id:
                       type: integer
-                      description: ID заказчика потребности
+                      description: ID заказчика потребности (ID пользователя)
                       example: 23463
                     executive_id:
                       type: integer
-                      description: ID ответственного рекрутера
+                      description: ID ответственного рекрутера (ID пользователя)
                       example: 2435
                     sprint_id:
                       type: integer
-                      description: ID периода потребности
+                      description: ID периода потребности (метод получения периодов - `GET /api/v3/sprints.json`)
                       example: 2245
                     priority_item_id:
                       type: integer
-                      description: ID приоритета потребности
+                      description: ID приоритета потребности (метод получения приоритетов - `GET /api/v3/priority_items.json`
                       example: 1643
                     schedule:
                       type: string
@@ -3586,19 +3591,19 @@ paths:
                       example: 3
                     customer_id:
                       type: integer
-                      description: ID заказчика потребности
+                      description: ID заказчика потребности (ID пользователя)
                       example: 1234
                     executive_id:
                       type: integer
-                      description: ID ответственного рекрутера
+                      description: ID ответственного рекрутера (ID пользователя)
                       example: 4321
                     sprint_id:
                       type: integer
-                      description: ID периода потребности
+                      description: ID периода потребности (метод получения периодов - `GET /api/v3/sprints.json`)
                       example: 5421
                     priority_item_id:
                       type: integer
-                      description: ID приоритета потребности
+                      description: ID приоритета потребности (метод получения приоритетов - `GET /api/v3/priority_items.json`
                       example: 4674
                     schedule:
                       type: string
@@ -3641,21 +3646,21 @@ components:
       properties:
         id:
           type: number
-          description: ID Создателя вакансии
+          description: ID пользователя
         name:
           type: string
-          description: ФИО Создателя вакансии
+          description: ФИО пользователя
         email:
           type: string
-          description: Email создателя вакансии
+          description: Email пользователя
         avatar:
           type: string
-          description: Ссылка на аватар создателя вакансии
+          description: Ссылка на аватар пользователя
         phones:
           type: array
           description: |-
             Массив всегда из одного элемента.
-            Номер телефона создателя вакансии строкой
+            Номер телефона пользователя строкой
           items:
             type: string
       required:
@@ -4100,21 +4105,21 @@ components:
             properties:
               id:
                 type: number
-                description: ID Ответственного рекрутера
+                description: ID пользователя
               name:
                 type: string
                 description: ФИО Ответственного рекрутера
               email:
                 type: string
-                description: Email ответственного рекрутера
+                description: Email пользователя
               avatar:
                 type: string
-                description: Ссылка на аватар ответственного рекрутера
+                description: Ссылка на аватар пользователя
               phones:
                 type: array
                 description: |-
                   Массив всегда из одного элемента.
-                  Номер телефона ответственного рекрутера строкой
+                  Номер телефона пользователя строкой
                 items:
                   type: string
           jobs_users:
@@ -5696,7 +5701,7 @@ components:
                     description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
                   responsible_user_id:
                     type: integer
-                    description: 'ID пользователя, принявшего кандидата на вакансию'
+                    description: 'ID ответственного за кандидата на вакансии. Входит в состав модуля `Массовый подбор`. Будет пустым, если модуль не подключен'
     Applicant_response:
       type: object
       x-examples:
@@ -6223,7 +6228,7 @@ components:
               description: 'Название региона, области или города федерального значения, в котором находится населенный пункт'
         states:
           type: array
-          description: Статусы Workflow
+          description: Статусная модель
           items:
             type: object
             properties:
@@ -6235,10 +6240,10 @@ components:
                 description: 'Время обновления Workflow (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
               workflow_name:
                 type: string
-                description: Название Workflow
+                description: Название статусной модели
               workflow_id:
                 type: integer
-                description: ID Workflow
+                description: ID статусной модели
               init_by:
                 type: object
                 description: Каким объектом системы было инициировано выставление статуса
@@ -6251,7 +6256,7 @@ components:
                     description: Класс объекта
               additional_info:
                 type: array
-                description: 'Дополнительная информация о действиях, касающихся Workflow'
+                description: 'Дополнительная информация о действиях, касающихся статусной модели'
                 items:
                   type: object
             required:
@@ -6382,7 +6387,7 @@ components:
                 $ref: '#/components/schemas/stages'
               responsible_user_id:
                 type: integer
-                description: ID ответственного за кандидата на вакансии
+                description: 'ID ответственного за кандидата на вакансии. Входит в состав модуля `Массовый подбор`. Будет пустым, если модуль не подключен'
       required:
         - id
         - first_name
@@ -6483,7 +6488,7 @@ components:
           description: ID вакансии
         responsible_user_id:
           type: integer
-          description: ID ответственного за кандидата на вакансии
+          description: 'ID ответственного за кандидата на вакансии. Входит в состав модуля `Массовый подбор`. Будет пустым, если модуль не подключен'
         stage_type:
           type: string
           description: ID типа этапа
@@ -6635,7 +6640,7 @@ components:
           example: комментарий
         states:
           type: array
-          description: Статусы потребности
+          description: Статусная модель потребности
           items:
             type: object
             properties:
@@ -6645,16 +6650,16 @@ components:
                 example: '2022-08-05T15:48:05.910+03:00'
               workflow_id:
                 type: integer
-                description: ID wokflow потребности
+                description: ID статусной модели потребности
                 example: 3263
               additional_info:
                 type: array
-                description: 'Дополнительная информация о действиях, касающихся Workflow'
+                description: 'Дополнительная информация о действиях, касающихся статусной модели'
                 items:
                   type: object
               workflow_name:
                 type: string
-                description: Название workflow
+                description: Название статусной модели
                 example: demand_state
               state_id:
                 type: string
@@ -6715,25 +6720,25 @@ components:
           properties:
             id:
               type: integer
-              description: ID создателя потребности
+              description: ID пользователя
               example: 12345
             name:
               type: string
-              description: ФИО создателя потребности
+              description: ФИО пользователя
               example: Иванов Иван Иванович
             email:
               type: string
-              description: Email создателя потребности
+              description: Email пользователя
               example: ivan@example.ru
             avatar:
               type: string
-              description: Ссылка на аватар создателя потребности
+              description: Ссылка на аватар пользователя
               example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
             phones:
               type: array
               description: |-
                 Массив всегда из одного элемента.
-                Номер телефона создателя потребности строкой
+                Номер телефона пользователя строкой
               items:
                 type: string
                 example: '79996007755'
@@ -6743,25 +6748,25 @@ components:
           properties:
             id:
               type: integer
-              description: ID рекрутера
+              description: ID пользователя
               example: 4321
             name:
               type: string
-              description: ФИО рекрутера
+              description: ФИО пользователя
               example: Петров Петр Петрович
             email:
               type: string
-              description: Email рекрутера
+              description: Email пользователя
               example: petrov@example.ru
             avatar:
               type: string
-              description: Ссылка на аватар рекрутера
+              description: Ссылка на аватар пользователя
               example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
             phones:
               type: array
               description: |-
                 Массив всегда из одного элемента.
-                Номер телефона рекрутера строкой
+                Номер телефона пользователя строкой
               items:
                 type: string
                 example: '79901234556'
@@ -6771,25 +6776,25 @@ components:
           properties:
             id:
               type: integer
-              description: ID заказчика
+              description: ID пользователя
               example: 98756
             name:
               type: string
-              description: ФИО заказчика
+              description: ФИО пользователя
               example: Иванов Петр Семенович
             email:
               type: string
-              description: Email заказчика
+              description: Email пользователя
               example: ivanpetrov@example.ru
             avatar:
               type: string
-              description: Ссылка на аватра заказчика
+              description: Ссылка на аватра пользователя
               example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
             phones:
               type: array
               description: |-
                 Массив всегда из одного элемента.
-                Номер телефона заказчика строкой
+                Номер телефона пользователя строкой
               items:
                 type: string
                 example: '79191223223'
