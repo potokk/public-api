@@ -3603,7 +3603,7 @@ paths:
                       example: 5421
                     priority_item_id:
                       type: integer
-                      description: ID приоритета потребности (метод получения приоритетов - `/api/v3/priority_items.json`
+                      description: ID приоритета потребности (метод получения приоритетов - `GET /api/v3/priority_items.json`
                       example: 4674
                     schedule:
                       type: string
