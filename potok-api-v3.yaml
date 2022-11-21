@@ -1360,7 +1360,7 @@ paths:
                           job_type: '1723'
                           stage_name: Добавлен
                           active: true
-                        employee_ext_id: 0
+                        employee_ext_id: 1234
                         stage:
                           id: 4314
                           name: Добавлен
@@ -1764,7 +1764,7 @@ paths:
                               job_type: '1723'
                               stage_name: Добавлен
                               active: true
-                            employee_ext_id: 0
+                            employee_ext_id: 1234
                             stage:
                               id: 4314
                               name: Добавлен
@@ -2015,7 +2015,7 @@ paths:
                           job_type: '1723'
                           stage_name: Добавлен
                           active: true
-                        employee_ext_id: 0
+                        employee_ext_id: 1234
                         stage:
                           id: 4314
                           name: Добавлен
@@ -2400,7 +2400,7 @@ paths:
                           job_type: '1723'
                           stage_name: Добавлен
                           active: true
-                        employee_ext_id: 0
+                        employee_ext_id: 1234
                         stage:
                           id: 4314
                           name: Добавлен
@@ -3632,6 +3632,718 @@ paths:
                     comment: комментарий
                     finish_date: '2022-08-31'
       description: Обновление потребности по ее ID
+  /client_employee_numbers.json:
+    post:
+      summary: Создание сущности Табельный номер
+      tags:
+        - табельный номер
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    object:
+                      applicant_id: 34
+                      employee_ext_id: 58
+                      state: working
+                properties:
+                  object:
+                    type: object
+                    properties:
+                      applicant_id:
+                        type: integer
+                        description: ID кандидата
+                        example: 1234
+                      employee_ext_id:
+                        type: integer
+                        description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+                        example: 4321
+                      state:
+                        type: string
+                        description: Текущий статус Workflow `client_employee_number_status`
+                        example: not_working
+                    required:
+                      - applicant_id
+                      - employee_ext_id
+                      - state
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      applicant_id: 1234
+                      employee_ext_id: 4321
+                      state: not_working
+        '422':
+          description: "В случае если одно из обязательных полей отсутствует: `applicant_id`, `employee_ext_id`\n\nВ случае если запись редактируется ( т.е. запись с такими параметрам уже существует )\nи параметр `transition` пустая возвращает ошибку. П\_устое значение перехода\n\nВ случае если параметр `transition` присутствует, но такой переход состояний невозможен возвращает ошибку. Некорректный переход"
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      transition:
+                        - пустое значение перехода
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа 1:
+                  value:
+                    errors:
+                      transition:
+                        - пустое значение перехода
+                Пример ответа 2:
+                  value:
+                    errors:
+                      applicant_id:
+                        - string
+                      employee_ext_id:
+                        - string
+      operationId: post-client_employee_numbers.json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  applicant_id: 1234
+                  employee_ext_id: 342
+                  transition: client_employee_number_status
+              properties:
+                applicant_id:
+                  type: integer
+                  description: ID кандидата
+                  example: 1234
+                employee_ext_id:
+                  type: integer
+                  description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+                  example: 4321
+                transition:
+                  type: string
+                  description: Код транзакции для смены статуса workflow. Workflow - `client_employee_number_status`
+                  example: dismiss
+              required:
+                - applicant_id
+                - employee_ext_id
+            examples:
+              Пример запроса:
+                value:
+                  applicant_id: 1234
+                  employee_ext_id: 4321
+                  transition: dismiss
+        description: ''
+      description: Создание табельного номера с параметрами и начальным статусом
+  '/jobs/{job_id}/{applicant_id}/update_planned_employment_date.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 1234
+        name: job_id
+        in: path
+        required: true
+        description: ID вакансии
+      - schema:
+          type: integer
+          example: 4321
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    put:
+      summary: Обновление ожидаемой даты выхода
+      tags:
+        - ожидаемая дата выхода
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    planned_employment_date: string
+                properties:
+                  planned_employment_date:
+                    type: string
+                    description: Ожидаемая дата выхода (в формате ISO 8601 `YYYY-MM-DD`)
+                    example: '2023-01-01'
+                required:
+                  - planned_employment_date
+              examples:
+                Пример ответа:
+                  value:
+                    planned_employment_date: '2023-01-01'
+        '400':
+          description: Приходит когда в теле запроса отсутствует поле `planned_employment_datе`
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      planned_employment_date:
+                        - string
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      planned_employment_date:
+                        - string
+        '404':
+          description: Не найдена вакансия или кандидат
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      planned_employment_date:
+                        - string
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      planned_employment_date:
+                        - string
+      operationId: put-jobs-job_id-applicant_id-update_planned_employment_date.json
+      description: Обновление ожидаемой даты выхода кандидата на вакансии
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  planned_employment_date: string
+              properties:
+                planned_employment_date:
+                  type: string
+                  description: Ожидаемая дата выхода (в формате ISO 8601 `YYYY-MM-DD`)
+                  example: '2023-01-01'
+              required:
+                - planned_employment_date
+            examples:
+              Пример запроса:
+                value:
+                  planned_employment_date: '2023-01-01'
+  '/dictionaries/{id}.json':
+    parameters:
+      - schema:
+          type: string
+          example: dictionary_name
+        name: id
+        in: path
+        required: true
+        description: Название справочника
+    get:
+      summary: Получение информации о справочнике
+      tags:
+        - справочники
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dictionaries_response'
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 1234
+                      name: education_form
+                      company_id: 101
+                      editable: false
+                      default: false
+                      format_schema:
+                        type: string
+                        properties:
+                          id:
+                            type: string
+                            title: id
+                            sort: 0
+                          value:
+                            type: string
+                            title: Значение
+                            sort: 0
+                            searchable: true
+                        required:
+                          - name
+                        item_id_field: id
+                      dct:
+                        - id: full_time
+                          value: Очная
+                      display_name: Форма обучения
+          headers: {}
+        '404':
+          description: Не найден справочник
+      operationId: get-dictionaries-id-.json
+      description: Получение информации о справочнике компании
+      parameters: []
+    put:
+      summary: Обновление справочника
+      tags:
+        - справочники
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dictionaries_response'
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 1234
+                      name: education_form
+                      company_id: 101
+                      editable: false
+                      default: false
+                      format_schema:
+                        type: string
+                        properties:
+                          id:
+                            type: string
+                            title: id
+                            sort: 0
+                          value:
+                            type: string
+                            title: Значение
+                            sort: 0
+                            searchable: true
+                        required:
+                          - name
+                        item_id_field: id
+                      dct:
+                        - id: full_time
+                          value: Очная
+                      display_name: Форма обучения
+      operationId: put-dictionaries-id-.json
+      description: |-
+        Обновление справочника компании. Название параметров и их тип данных зависит от формат-схемы справочника. Получить информацию о формат-схеме можно методом `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
+
+         
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  dct:
+                    - id: corr
+                      value: '123'
+              properties:
+                dct:
+                  type: array
+                  description: Список элементов справочника
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID элемента справочника
+                        example: corr
+                      value:
+                        type: string
+                        description: Значение элемента справочника
+                        example: half-day
+                    required:
+                      - id
+                      - value
+              required:
+                - dct
+            examples:
+              Пример запроса:
+                value:
+                  dct:
+                    - id: corr
+                      value: half-day
+  /dictionaries/metro.json:
+    get:
+      summary: Получение информации о справочнике Метро
+      tags:
+        - справочники
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    page: 1
+                    total_count: 2250
+                    total_pages: 23
+                    per_page: 100
+                    objects:
+                      - id: 1ef806da-fac8-46c2-ac60-9f39ff131c9a
+                        value: Бехичбей
+                        line_id: B
+                        line_name: Башкентрай
+                        line_hex: '666666'
+                        distance: null
+                        lon: 32.751079
+                        lat: 39.931987
+                        city: g323786
+                        archived: false
+                properties:
+                  page:
+                    type: integer
+                    description: 'Номер страницы '
+                    example: 1
+                  total_count:
+                    type: integer
+                    description: Общее количество элементов
+                    example: 2250
+                  total_pages:
+                    type: integer
+                    description: Общее количество страниц
+                    example: 23
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                    example: 100
+                  objects:
+                    type: array
+                    description: Станции метро
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: ID метро
+                          example: 1ef806da-fac8-46c2-ac60-9f39ff131c9a
+                        value:
+                          type: string
+                          description: Название метро
+                          example: Бехичбей
+                        line_id:
+                          type: string
+                          description: ID линии метро
+                          example: B
+                        line_name:
+                          type: string
+                          description: Название линии метро
+                          example: Башкентрай
+                        line_hex:
+                          type: string
+                          description: Цвет линии метро
+                          example: '55555'
+                        distance:
+                          type: 'null'
+                          description: Расстояние до точки поиска
+                        lon:
+                          type: number
+                          description: Долгота станции метро
+                          example: 55.141
+                          format: float
+                        lat:
+                          type: number
+                          description: Широта станции метро
+                          example: 67.124
+                          format: float
+                        city:
+                          type: string
+                          description: ID города
+                          example: g323786
+                        archived:
+                          type: boolean
+                          description: |-
+                            Признак архивности станции
+
+                            `True` - станция находится в архиве
+
+                            `False` - станция не архивная
+                          default: false
+                required:
+                  - page
+                  - total_count
+                  - total_pages
+                  - per_page
+                  - objects
+              examples:
+                Пример ответа:
+                  value:
+                    page: 1
+                    total_count: 2250
+                    total_pages: 23
+                    per_page: 100
+                    objects:
+                      - id: 1ef806da-fac8-46c2-ac60-9f39ff131c9a
+                        value: Бехичбей
+                        line_id: B
+                        line_name: Башкентрай
+                        line_hex: '55555'
+                        distance: null
+                        lon: 55.141
+                        lat: 67.124
+                        city: g323786
+                        archived: false
+      operationId: get-dictionaries-metro.json
+      description: |
+        Получение информации о справочнике Метро. Имеет отличие в возвращаемых данных от `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
+      parameters:
+        - schema:
+            example: 55.141
+            type: number
+            format: float
+          in: query
+          name: lon
+          description: Долгота
+        - schema:
+            example: 67.124
+            type: number
+            format: float
+          in: query
+          name: lat
+          description: Широта
+        - schema:
+            type: string
+            default: '10000'
+            example: '10000'
+          in: query
+          name: radius
+          description: Радиус от передаваемой точки (`lon``lat`) в метрах. Только для справочника `metro`
+        - schema:
+            enum:
+              - 'false'
+              - 'true'
+            default: 'false'
+            example: 'false'
+          in: query
+          name: with_archived
+          description: Возвращает список с архивными значениями. Только для справочника `metro`
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+  /dictionaries/cities.json:
+    get:
+      summary: Получение информации о справочнике Города
+      tags:
+        - справочники
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - id: 03fda61f-8863-460a-915c-4b07a22a2436
+                        name: посёлок Боголюбово
+                        region: Владимирская область
+                        country: Россия
+                        country_code: ru
+                    page: 1
+                    total_pages: 1
+                    total_count: 1
+                properties:
+                  data:
+                    type: array
+                    description: Города
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: ID города
+                          example: 03fda61f-8863-460a-915c-4b07a22a2436
+                        name:
+                          type: string
+                          description: Название города
+                          example: посёлок Боголюбово
+                        region:
+                          type: string
+                          description: Название региона
+                          example: Владимирская область
+                        country:
+                          type: string
+                          description: Название страны
+                          example: Россия
+                        country_code:
+                          type: string
+                          description: Код страны
+                          example: ru
+                  page:
+                    type: integer
+                    description: Номер страницы
+                    example: 1
+                  total_pages:
+                    type: integer
+                    description: Общее количество страниц
+                    example: 1
+                  total_count:
+                    type: integer
+                    description: Общее количество элементов
+                    example: 1
+                required:
+                  - data
+                  - page
+              examples:
+                Пример ответа:
+                  value:
+                    data:
+                      - id: 03fda61f-8863-460a-915c-4b07a22a2436
+                        name: посёлок Боголюбово
+                        region: Владимирская область
+                        country: Россия
+                        country_code: ru
+                    page: 1
+                    total_pages: 1
+                    total_count: 1
+      operationId: get-dictionaries-cities.json
+      description: |
+        Получение информации о справочнике Города. Имеет отличие в возвращаемых данных от `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: name
+          description: Название города
+        - schema:
+            type: string
+          in: query
+          name: region
+          description: Название региона
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+  /documents.json:
+    post:
+      summary: Создание документа
+      tags:
+        - документы
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    document:
+                      id: 0
+                      name: string
+                      created_at: string
+                      file_size: 0
+                      category: string
+                      url: string
+                properties:
+                  document:
+                    type: object
+                    description: Созданный документ
+                    required:
+                      - id
+                      - name
+                      - created_at
+                      - file_size
+                      - category
+                      - url
+                    properties:
+                      id:
+                        type: integer
+                        description: ID документа
+                        example: 3333
+                      name:
+                        type: string
+                        description: Название документа
+                        example: Security
+                      created_at:
+                        type: string
+                        description: 'Время создания документа (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                        example: '2022-11-18T12:11:07.678+03:00'
+                      file_size:
+                        type: integer
+                        description: Размер файла
+                        example: 4367315
+                      category:
+                        type: string
+                        description: 'Категория документа. Если категория не указана, то будет `default`'
+                        default: default
+                        example: default
+                      url:
+                        type: string
+                        description: Ссылка на загруженный документ
+                        example: 'https://app.potok.io/uploads/document/attach/3333/doc.png'
+                required:
+                  - document
+              examples:
+                Пример ответа:
+                  value:
+                    document:
+                      id: 3333
+                      name: Security
+                      created_at: '2022-11-18T12:11:07.678+03:00'
+                      file_size: 4367315
+                      category: default
+                      url: 'https://app.potok.io/uploads/document/attach/3333/doc.png'
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      attach:
+                        - формат файла запрещен для загрузки
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      attach:
+                        - формат файла запрещен для загрузки
+      operationId: post-documents.json
+      description: Создание документа в Potok
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                attach:
+                  type: string
+                  description: 'Загружаемый файл. Не больше 10 Мб. Запрещенные типы файлов - `html`, `css`, `js`, `exe`'
+                  format: binary
+                category:
+                  type: string
+                  description: Категория документа. Список доступных категорий можно получить по `/api/v2/documents/available_categories`
+                  example: security_form
+                name:
+                  type: string
+                  description: Название документа
+                  example: Security
+              required:
+                - attach
+                - name
+            examples: {}
 components:
   schemas:
     author:
@@ -6095,7 +6807,7 @@ components:
                 job_type: '1723'
                 stage_name: Добавлен
                 active: true
-              employee_ext_id: 0
+              employee_ext_id: 1234
               stage:
                 id: 4314
                 name: Добавлен
@@ -6867,6 +7579,213 @@ components:
         - customer
         - schedule
         - priority_item
+    dictionaries_response:
+      type: object
+      x-examples:
+        example-1:
+          object:
+            id: 128910
+            name: education_form
+            company_id: 1
+            editable: false
+            default: false
+            format_schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  title: id
+                  sort: 0
+                value:
+                  type: string
+                  title: Значение
+                  sort: 0
+                  searchable: true
+              required: []
+              item_id_field: id
+            dct:
+              - id: full_time
+                value: Очная
+              - id: part_time
+                value: Очно-заочная
+              - id: corr
+                value: Заочная
+            display_name: education_form
+      examples:
+        - object:
+            id: 1234
+            name: education_form
+            company_id: 101
+            editable: false
+            default: false
+            format_schema:
+              type: string
+              properties:
+                id:
+                  type: string
+                  title: id
+                  sort: 0
+                value:
+                  type: string
+                  title: Значение
+                  sort: 0
+                  searchable: true
+              required:
+                - name
+              item_id_field: id
+            dct:
+              - id: full_time
+                value: Очная
+            display_name: Форма обучения
+      properties:
+        object:
+          type: object
+          required:
+            - id
+            - name
+            - company_id
+            - editable
+            - default
+            - format_schema
+            - dct
+          properties:
+            id:
+              type: integer
+              description: ID справочника
+              example: 1234
+            name:
+              type: string
+              description: Название справочника
+              example: education_form
+            company_id:
+              type: integer
+              description: ID компании
+              example: 101
+            editable:
+              type: boolean
+              description: |-
+                Признак редактируемости справочника
+
+                `True` - справочник редактируемый
+
+                `False` - справочник не редактируемый (системный)
+              default: false
+            default:
+              type: boolean
+              default: false
+              description: 'Признак того, является ли справочник общим для всех компаний в Potok'
+            format_schema:
+              type: object
+              description: Схема полей справочника
+              properties:
+                type:
+                  type: string
+                  description: |-
+                    Тип схемы данных справочника. Возможные значения:
+
+                    `string` - строка
+
+                    `integer` - число
+
+                    `object` - объект
+                properties:
+                  type: object
+                  description: Поля справочника
+                  properties:
+                    id:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: |-
+                            Тип значения данного поля справочника. Возможные значения:
+
+                            `string` - строка
+
+                            `integer` - число
+
+                            `date` - дата
+                          example: string
+                        title:
+                          type: string
+                          description: Название поля справочника
+                          example: id
+                        sort:
+                          type: integer
+                          example: 0
+                          description: |-
+                            Возможность сортировать по данному полю
+
+                            `1` - сортировка доступна
+
+                            `0` - сортировка недоступна
+                          enum:
+                            - 1
+                            - 0
+                    value:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: |-
+                            Тип значения данного поля справочника. Возможные значения:
+
+                            `string` - строка
+
+                            `integer` - число
+
+                            `date` - дата
+                          example: string
+                        title:
+                          type: string
+                          description: Название поля справочника
+                          example: Значение
+                        sort:
+                          type: integer
+                          example: 0
+                          description: |-
+                            Возможность сортировать по данному полю
+
+                            `1` - сортировка доступна
+
+                            `0` - сортировка недоступна
+                          enum:
+                            - 1
+                            - 0
+                        searchable:
+                          type: boolean
+                          default: true
+                          description: 'Признак того, можно ли искать по этому полю'
+                required:
+                  type: array
+                  description: 'Список ID полей, обязательных к заполнению'
+                  items:
+                    type: string
+                    example: name
+                item_id_field:
+                  type: string
+                  description: 'Идентификатор поля, которое является ключевым для справочника'
+                  example: id
+            dct:
+              type: array
+              description: Список элементов справочника
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID элемента справочника
+                    example: full_time
+                  value:
+                    type: string
+                    description: Название элемента справочника
+                    example: Очная
+            display_name:
+              type: string
+              description: Отображаемое название
+              example: Форма обучения
+      required:
+        - object
   securitySchemes:
     headerToken:
       type: http
@@ -7202,7 +8121,11 @@ security:
   - queryToken: []
 tags:
   - name: вакансии
+  - name: документы
   - name: кандидаты
   - name: кандидаты на вакансии
+  - name: ожидаемая дата выхода
   - name: потребности
   - name: резюме
+  - name: справочники
+  - name: табельный номер
