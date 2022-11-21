@@ -3634,7 +3634,7 @@ paths:
       description: Обновление потребности по ее ID
   /client_employee_numbers.json:
     post:
-      summary: Создание сущности Табельный номер
+      summary: Создание сущности табельный номер
       tags:
         - табельный номер
       responses:
