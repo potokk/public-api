@@ -32,7 +32,6 @@ info:
     |400| Ошибка параметров запроса
     |401 | Отказ в доступе. Неверная авторизация или аутентификация|
     |402| Подписка компании просрочена|
-    |403| Объект есть и доступ к нему запрещён
     |404| Сервер не может найти запрашиваемый объект
     |422 | Ошибки при заполнении полей: не заполнено поле, неверный формат и ошибки валидации|
     |429| Превышено допустимое количество запросов в секунду
@@ -505,7 +504,8 @@ paths:
                   description: Описание вакансии
                 city:
                   type: number
-                  description: ID Города вакансии (словарь `cities`)
+                  description: |
+                    ID Города вакансии (словарь `cities`)
                 salary_from:
                   type: number
                   description: Ожидаемая ЗП от
@@ -3634,7 +3634,7 @@ paths:
       description: Обновление потребности по ее ID
   /client_employee_numbers.json:
     post:
-      summary: Создание сущности табельный номер
+      summary: Установка статуса трудоустройства кандидата-финалиста и присвоение табельного номера
       tags:
         - табельный номер
       responses:
@@ -3660,11 +3660,22 @@ paths:
                         example: 1234
                       employee_ext_id:
                         type: integer
-                        description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+                        description: Внешний ID сотрудника компании из организационно-штатной структуры
                         example: 4321
                       state:
                         type: string
-                        description: Текущий статус Workflow `client_employee_number_status`
+                        description: |-
+                          Текущий статус трудоустройства. Workflow - `client_employee_number_status`
+
+                          Статусы по умолчанию: 
+
+                          `работает (working)`
+
+                          `начальный (initialized) `
+
+                          `уволен (not_working)`
+
+                          `испытательный (internship)`
                         example: not_working
                     required:
                       - applicant_id
@@ -3722,11 +3733,11 @@ paths:
                   example: 1234
                 employee_ext_id:
                   type: integer
-                  description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+                  description: Внешний ID сотрудника компании из организационно-штатной структуры
                   example: 4321
                 transition:
                   type: string
-                  description: Код транзакции для смены статуса workflow. Workflow - `client_employee_number_status`
+                  description: Код транзакции для смены статуса трудоустройства. Workflow - `client_employee_number_status`
                   example: dismiss
               required:
                 - applicant_id
@@ -3738,7 +3749,12 @@ paths:
                   employee_ext_id: 4321
                   transition: dismiss
         description: ''
-      description: Создание табельного номера с параметрами и начальным статусом
+      description: |-
+        Метод позволяет установить статус трудоустройства кандидату-финалисту (отображается в Potok), связать кандидата с пользователем из организационно-штатной структуры и присвоить ему табельный номер. 
+
+        Метод работает только при наличии модуля `Передача финалиста`. 
+
+        **Метод не будет работать без дополнительных настроек на стороне Potok**
   '/jobs/{job_id}/{applicant_id}/update_planned_employment_date.json':
     parameters:
       - schema:
@@ -3896,7 +3912,10 @@ paths:
         '404':
           description: Не найден справочник
       operationId: get-dictionaries-id-.json
-      description: Получение информации о справочнике компании
+      description: |-
+        Получение информации о справочнике компании. 
+
+        Название параметров в формат-схеме может отличаться, в зависимости от настроек самого справочника (например `value` может быть `name`) 
       parameters: []
     put:
       summary: Обновление справочника
@@ -4330,7 +4349,7 @@ paths:
               properties:
                 attach:
                   type: string
-                  description: 'Загружаемый файл. Не больше 10 Мб. Запрещенные типы файлов - `html`, `css`, `js`, `exe`'
+                  description: 'Загружаемый файл. Не больше 10 Мб. Нельзя загрузить файлы со следующими расширениями - `html`, `css`, `js`, `exe`'
                   format: binary
                 category:
                   type: string
@@ -4344,6 +4363,7 @@ paths:
                 - attach
                 - name
             examples: {}
+      x-internal: true
 components:
   schemas:
     author:
@@ -7094,7 +7114,7 @@ components:
                       `False` - вакансия неактивна
               employee_ext_id:
                 type: integer
-                description: Внешний ID сотрудника компании из таблицы `employees`. Данные берутся из ОШС
+                description: Внешний ID сотрудника компании из организационно-штатной структуры
               stage:
                 $ref: '#/components/schemas/stages'
               responsible_user_id:
@@ -7664,7 +7684,7 @@ components:
             editable:
               type: boolean
               description: |-
-                Признак редактируемости справочника
+                Признак редактируемости справочника пользователем в настройках компании в Potok
 
                 `True` - справочник редактируемый
 
