@@ -4364,6 +4364,290 @@ paths:
                 - name
             examples: {}
       x-internal: true
+  /sprints.json:
+    get:
+      summary: Получение периодов потребности
+      tags:
+        - потребности
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    objects:
+                      - id: 422
+                        name: 28.11 - 31.12
+                        start_date: '2022-11-28'
+                        finish_date: '2022-12-31'
+                        start_status: future
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID периода
+                          example: 423
+                        name:
+                          type: string
+                          description: Диапозон периода
+                          example: 05.01 - 27.01
+                        start_date:
+                          type: string
+                          description: 'Дата начала периода (в формате `YYYY-MM-DD`) '
+                          example: '2023-01-05'
+                        finish_date:
+                          type: string
+                          description: 'Дата окончания периода (в формате `YYYY-MM-DD`) '
+                          example: '2023-01-27'
+                        start_status:
+                          type: string
+                          description: |-
+                            Статус активности периода
+
+                            Возможные значения:
+
+                            `current` - текущий период
+
+                            `future` - будущий период
+                          example: future
+                required:
+                  - objects
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 423
+                        name: 05.01 - 27.01
+                        start_date: '2023-01-05'
+                        finish_date: '2023-01-27'
+                        start_status: future
+      operationId: get-sprints.json
+      description: 'Получение списка действующих или будующих периодов для потребностей. Метод будет возвращать данные, только если потребонсти работают в отчетном режиме `спринты` - фиксированный отчетный период (неделя, месяц и т.д.)'
+  '/staffing_items/{node_id}.json':
+    parameters:
+      - schema:
+          type: string
+          example: position_1022673
+        name: node_id
+        in: path
+        required: true
+        description: 'Композитный ID для поиска по полному внешнему ID: `{item_type}_ID`. Возможные `item_type`: `department` `position` `new_position`'
+    get:
+      summary: Получение информации о единице организационно-штатной структуры
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    object:
+                      ext_id: string
+                      name: string
+                      node_id: string
+                      path: string
+                      company_id: 0
+                properties:
+                  object:
+                    type: object
+                    required:
+                      - ext_id
+                      - name
+                      - node_id
+                      - path
+                      - company_id
+                    properties:
+                      ext_id:
+                        type: string
+                        description: Внешний ключ резюме
+                        example: '1022673'
+                      name:
+                        type: string
+                        description: Название
+                        example: HR бизнес партнер по операционной деятельности
+                      node_id:
+                        type: string
+                        description: Полный внешний ID
+                        example: position_1022673
+                      path:
+                        type: string
+                        description: Путь по организационно-штатной структуре до заданной единицы
+                        example: department_518.department_516.department_507.position_1022673
+                      company_id:
+                        type: integer
+                        description: ID компании
+                        example: 2888
+                required:
+                  - object
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      ext_id: '1022673'
+                      name: HR бизнес партнер по операционной деятельности
+                      node_id: position_1022673
+                      path: department_518.department_516.department_507.position_1022673
+                      company_id: 2888
+        '404':
+          description: Не найдена единица организационно-штатной структуры
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                x-examples:
+                  example-1:
+                    errors:
+                      - string
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      - not_found
+      operationId: get-staffing_items-node_id-.json
+      description: 'Возвращает информацию о единице организационно-штатной структуры '
+      tags:
+        - организационно-штатная структура
+  /users.json:
+    get:
+      summary: Список пользователей компании
+      tags:
+        - пользователи
+      operationId: get-users.json
+      description: Позволяет выгрузить список всех пользователей компании
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        - $ref: '#/components/parameters/f-emails'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    per_page: 0
+                    total_pages: 0
+                    page: 0
+                    objects:
+                      - id: 0
+                        name: string
+                        email: string
+                        avatar: string
+                        phones:
+                          - string
+                properties:
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                    example: 1
+                  total_pages:
+                    type: integer
+                    description: Общее количество страниц
+                    example: 1
+                  page:
+                    type: integer
+                    description: Номер страницы списка
+                    example: 1
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID пользователя
+                          example: 1234
+                        name:
+                          type: string
+                          description: Имя пользователя
+                          example: Ivan
+                        email:
+                          type: string
+                          description: E-mail пользователя
+                          example: ivan@mail.com
+                        avatar:
+                          type: string
+                          description: Ссылка на аватар пользователя
+                          example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        phones:
+                          type: array
+                          description: |-
+                            Массив всегда из одного элемента.
+                            Номер телефона пользователя строкой
+                          items:
+                            type: string
+                            example: '+795236311'
+                      required:
+                        - id
+                        - name
+                        - email
+                required:
+                  - per_page
+                  - total_pages
+                  - page
+                  - objects
+              examples:
+                Пример ответа:
+                  value:
+                    per_page: 1
+                    total_pages: 1
+                    page: 1
+                    objects:
+                      - id: 1234
+                        name: Ivan
+                        email: ivan@mail.com
+                        avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        phones:
+                          - '+795236311'
+  '/users/{id}.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 1234
+        name: id
+        in: path
+        required: true
+        description: ID пользователя компании
+    get:
+      summary: Получение информации о пользователе компании
+      tags:
+        - пользователи
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 1234
+                    name: Ivan
+                    email: ivan@mail.com
+                    avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                    phones:
+                      - '+795236311'
+        '404':
+          description: Не найден пользователь
+      operationId: get-users-id-.json
+      description: Позволяет выгрузить информацию о конкретном пользователе компании
 components:
   schemas:
     author:
@@ -7170,15 +7454,19 @@ components:
         id:
           type: integer
           description: ID пользователя
+          example: 1234
         name:
           type: string
           description: ФИО пользователя
+          example: Ivan
         email:
           type: string
           description: Почта пользователя
+          example: ivan@mail.com
         avatar:
           type: string
           description: Ссылка на аватар пользователя
+          example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
         phones:
           type: array
           description: |-
@@ -7186,6 +7474,11 @@ components:
             Номер телефона пользователя строкой
           items:
             type: string
+            example: '+795236311'
+      required:
+        - id
+        - name
+        - email
     Move_to_stage_type_response:
       type: object
       x-examples:
@@ -7431,18 +7724,20 @@ components:
               example: 24.08 - 30.12
             start_date:
               type: string
-              description: Дата начала периода
+              description: 'Дата начала периода (в формате `YYYY-MM-DD`) '
               example: '2020-08-24'
             finish_date:
               type: string
-              description: Дата окончания периода
+              description: 'Дата окончания периода (в формате `YYYY-MM-DD`) '
               example: '2022-12-30'
             start_status:
               type: string
               description: |-
-                Статус
+                Статус активности периода
 
-                `current` - текущий периода
+                Возможные значения:
+
+                `current` - текущий период
 
                 `future` - будущий период
               example: current
@@ -8136,6 +8431,14 @@ components:
         example: higher
       description: 'Фильтр по типу образования кандидата, можно использовать несколько раз в одном запросе'
       allowEmptyValue: true
+    f-emails:
+      name: 'f[emails][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        example: example@mail.com
+      description: Фильтр по e-mail
 security:
   - headerToken: []
   - queryToken: []
@@ -8145,6 +8448,8 @@ tags:
   - name: кандидаты
   - name: кандидаты на вакансии
   - name: ожидаемая дата выхода
+  - name: организационно-штатная структура
+  - name: пользователи
   - name: потребности
   - name: резюме
   - name: справочники
