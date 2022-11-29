@@ -4651,6 +4651,24 @@ paths:
           description: Не найден пользователь
       operationId: get-users-id-.json
       description: Позволяет получить информацию о конкретном пользователе компании
+  /business_units.json:
+    get:
+      summary: Получение списка объектов потребностей
+      tags:
+        - потребности
+      responses: {}
+      operationId: get-business_units.json
+      description: Позволяет получить список всех объектов потребностей
+      parameters:
+        - $ref: '#/components/parameters/f-status'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+    post:
+      summary: Создание объекта потребности
+      tags:
+        - потребности
+      responses: {}
+      operationId: post-business_units.json
 components:
   schemas:
     author:
@@ -8109,6 +8127,115 @@ components:
               example: Форма обучения
       required:
         - object
+    business_unit_response:
+      type: object
+      x-examples:
+        example-1:
+          object:
+            id: 5506
+            name: Лента
+            code: лента
+            city:
+              id: '1'
+              name: Москва
+              region: Москва
+              country: Россия
+              country_code: ru
+            customer:
+              id: 46814
+              name: Саша Саша
+              avatar: null
+              email: a.sevrugin@potok.io
+              phones:
+                - '79258587815'
+            address: 'Лесная улица, 3'
+            lon: 37.585741542770286
+            lat: 55.777332876584126
+            metro:
+              - id: 9b9e6867-a49a-40cc-bf85-11e76b5d741e
+                value: Белорусская
+                line_id: '2'
+                line_name: Замоскворецкая линия
+                line_hex: 48b85e
+                distance: null
+                lon: 37.582201
+                lat: 55.777285
+                city: '1'
+                archived: false
+      properties:
+        object:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: ID объекта потребности
+              example: 1234
+            name:
+              type: string
+              description: Название объекта потребности
+            code:
+              type: string
+            city:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                region:
+                  type: string
+                country:
+                  type: string
+                country_code:
+                  type: string
+            customer:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                avatar:
+                  type: 'null'
+                email:
+                  type: string
+                phones:
+                  type: array
+                  items:
+                    type: string
+            address:
+              type: string
+            lon:
+              type: number
+            lat:
+              type: number
+            metro:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  value:
+                    type: string
+                  line_id:
+                    type: string
+                  line_name:
+                    type: string
+                  line_hex:
+                    type: string
+                  distance:
+                    type: 'null'
+                  lon:
+                    type: number
+                  lat:
+                    type: number
+                  city:
+                    type: string
+                  archived:
+                    type: boolean
+      required:
+        - object
   securitySchemes:
     headerToken:
       type: http
@@ -8447,6 +8574,13 @@ components:
         type: string
         example: example@mail.com
       description: 'Фильтр по e-mail, можно использовать несколько раз в одном запросе'
+    f-status:
+      name: 'f[status]'
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 'Фильтр по статусу объекта потребности. Имеет 2 состояния `active` `archived`. Если статус не указан, отображает список всех записей.'
 security:
   - headerToken: []
   - queryToken: []
