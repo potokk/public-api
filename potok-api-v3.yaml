@@ -4656,19 +4656,504 @@ paths:
       summary: Получение списка объектов потребностей
       tags:
         - потребности
-      responses: {}
       operationId: get-business_units.json
       description: Позволяет получить список всех объектов потребностей
       parameters:
         - $ref: '#/components/parameters/f-status'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: Номер страницы
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                    example: 1
+                  total_pages:
+                    type: integer
+                    description: Общее количество страниц
+                    example: 1
+                  objects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/business_unit_response'
+                required:
+                  - page
+                  - per_page
+                  - total_pages
+                  - objects
+              examples:
+                Пример ответа:
+                  value:
+                    page: 1
+                    per_page: 1
+                    total_pages: 1
+                    objects:
+                      - id: 1234
+                        name: Объект
+                        code: Объект
+                        city:
+                          id: '1'
+                          name: Москва
+                          region: Московская область
+                          country: Россия
+                          country_code: ru
+                        customer:
+                          id: 4321
+                          name: Иван Иванов
+                          avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                          email: ivan@example.com
+                          phones:
+                            - '79998887766'
+                        address: 'Азино, 777'
+                        lon: 34.32
+                        lat: 32.33
+                        metro:
+                          - id: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+                            value: Ивановское
+                            line_id: B
+                            line_name: Иванова
+                            line_hex: '55555'
+                            distance: null
+                            lon: 55.55
+                            lat: 66.55
+                            city: '1'
+                            archived: false
     post:
       summary: Создание объекта потребности
       tags:
         - потребности
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    object:
+                      id: 15046
+                      name: API2
+                      code: api2
+                properties:
+                  object:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1234
+                        description: ID объекта
+                      name:
+                        type: string
+                        example: Объект
+                        description: Название объекта
+                      code:
+                        type: string
+                        example: Объект
+                        description: Код объекта
+                    required:
+                      - id
+                      - name
+                      - code
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 1234
+                      name: Объект
+                      code: Объект
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      name:
+                        - не указан
+                      lon:
+                        - не указан
+                      lat:
+                        - не указан
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа 1:
+                  value:
+                    errors:
+                      name:
+                        - не указан
+                      lon:
+                        - не указан
+                      lat:
+                        - не указан
+                Пример ответа 2:
+                  value:
+                    errors:
+                      base:
+                        - Город не найден
       operationId: post-business_units.json
+      description: 'Позволяет создать объект потребности '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  city: '1042'
+                  name: API2
+                  address: 'Воркута, ул. Ленина, д.1'
+                  lon: '55.783056'
+                  lat: '37.719374'
+                  remote: false
+                  metro:
+                    - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+              properties:
+                city:
+                  type: string
+                  description: ID города объекта (словарь - `cities`)
+                  example: '1'
+                name:
+                  type: string
+                  description: Название объекта
+                  example: Объект
+                address:
+                  type: string
+                  description: Адрес объекта
+                  example: 'Азино, 777'
+                lon:
+                  type: string
+                  description: Долгота объекта
+                  example: '34.32'
+                lat:
+                  type: string
+                  description: Широта объекта
+                  example: '32.33'
+                remote:
+                  type: boolean
+                  description: |-
+                    Признак удаленной работы
+
+                    `True` - удаленная работа
+
+                    `False` - работа в офисе
+                  default: false
+                metro:
+                  type: array
+                  description: ID метро (словарь - `metro`)
+                  items:
+                    type: string
+                    example: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+              required:
+                - name
+                - lon
+                - lat
+            examples:
+              Пример запроса:
+                value:
+                  city: '1'
+                  name: Объект
+                  address: 'Азино, 777'
+                  lon: '34.32'
+                  lat: '32.33'
+                  remote: false
+                  metro:
+                    - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+  '/business_units/{id}.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 1234
+        name: id
+        in: path
+        required: true
+        description: ID объекта потребности
+    get:
+      summary: Получение объекта по его ID
+      tags:
+        - потребности
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  object:
+                    $ref: '#/components/schemas/business_unit_response'
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 1234
+                      name: Объект
+                      code: Объект
+                      city:
+                        id: '1'
+                        name: Москва
+                        region: Московская область
+                        country: Россия
+                        country_code: ru
+                      customer:
+                        id: 4321
+                        name: Иван Иванов
+                        avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        email: ivan@example.com
+                        phones:
+                          - '79998887766'
+                      address: 'Азино, 777'
+                      lon: 34.32
+                      lat: 32.33
+                      metro:
+                        - id: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+                          value: Ивановское
+                          line_id: B
+                          line_name: Иванова
+                          line_hex: '55555'
+                          distance: null
+                          lon: 55.55
+                          lat: 66.55
+                          city: '1'
+                          archived: false
+        '404':
+          description: Объект потребности не найден
+      operationId: get-business_units-id-.json
+      description: Позволяет получить объект потребности по его ID
+    put:
+      summary: Обновление объекта потребности
+      operationId: put-business_units-id-.json
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    object:
+                      id: 1234
+                      name: Объект
+                      code: Объект
+                properties:
+                  object:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: ID объекта
+                        example: 1234
+                      name:
+                        type: string
+                        description: Название объекта
+                        example: Объект
+                      code:
+                        type: string
+                        description: Код объекта
+                        example: Объект
+                    required:
+                      - id
+                      - name
+                      - code
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 1234
+                      name: Объект
+                      code: Объект
+        '404':
+          description: Объект не найден
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      name:
+                        - не указан
+                      lon:
+                        - не указан
+                      lat:
+                        - не указан
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа 1:
+                  value:
+                    errors:
+                      name:
+                        - не указан
+                      lon:
+                        - не указан
+                      lat:
+                        - не указан
+                Пример ответа 2:
+                  value:
+                    errors:
+                      base:
+                        - Город не найден
+      tags:
+        - потребности
+      description: Позволяет обновить параметры объекта потребности по его ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  city: '1'
+                  name: Объект
+                  address: 'Азино, 777'
+                  lon: '34.32'
+                  lat: '32.33'
+                  remote: false
+                  metro:
+                    - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+              properties:
+                city:
+                  type: string
+                  description: ID города объекта (словарь - `cities`)
+                  example: '1'
+                name:
+                  type: string
+                  description: Название объекта
+                  example: Объект
+                address:
+                  type: string
+                  description: Адрес объекта
+                  example: 'Азино, 777'
+                lon:
+                  type: string
+                  description: Долгота объекта
+                  example: '34.32'
+                lat:
+                  type: string
+                  description: Широта объекта
+                  example: '32.33'
+                remote:
+                  type: boolean
+                  description: |-
+                    Признак удаленной работы
+
+                    `True` - удаленная работа
+
+                    `False` - работа в офисе
+                  default: false
+                metro:
+                  type: array
+                  description: ID метро (словарь - `metro`)
+                  items:
+                    type: string
+                    example: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+              required:
+                - city
+                - lon
+                - lat
+            examples:
+              Пример запроса:
+                value:
+                  city: '1'
+                  name: Объект
+                  address: 'Азино, 777'
+                  lon: '34.32'
+                  lat: '32.33'
+                  remote: false
+                  metro:
+                    - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+    delete:
+      summary: Удаление объекта потребности
+      operationId: delete-business_units-id-.json
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    object:
+                      id: 13833
+                      name: METRO Проспект Мира
+                      code: metro_проспект_мира
+                properties:
+                  object:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: 'ID объекта '
+                        example: 1234
+                      name:
+                        type: string
+                        description: Название объекта
+                        example: Объект
+                      code:
+                        type: string
+                        description: Код объекта
+                        example: Объект
+                    required:
+                      - id
+                      - name
+                      - code
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 1234
+                      name: Объект
+                      code: Объект
+        '404':
+          description: Объект не найден
+        '422':
+          description: 'В случае, если с данным объектом есть хоть одна не архивная потребность удалить объект не получиться'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      base:
+                        type: array
+                        items:
+                          type: string
+                x-examples:
+                  example-1:
+                    errors:
+                      base:
+                        - 'Удалить объект не получится. На него ведется набор кандидатов. Если он не актуален, закройте потребности на этом объекте, а затем удалите его.'
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      base:
+                        - 'Удалить объект не получится. На него ведется набор кандидатов. Если он не актуален, закройте потребности на этом объекте, а затем удалите его.'
+      tags:
+        - потребности
+      description: Позволяет удалить объект потребности по его ID
 components:
   schemas:
     author:
@@ -8131,111 +8616,149 @@ components:
       type: object
       x-examples:
         example-1:
-          object:
-            id: 5506
-            name: Лента
-            code: лента
-            city:
-              id: '1'
-              name: Москва
-              region: Москва
-              country: Россия
-              country_code: ru
-            customer:
-              id: 46814
-              name: Саша Саша
-              avatar: null
-              email: a.sevrugin@potok.io
-              phones:
-                - '79258587815'
-            address: 'Лесная улица, 3'
-            lon: 37.585741542770286
-            lat: 55.777332876584126
-            metro:
-              - id: 9b9e6867-a49a-40cc-bf85-11e76b5d741e
-                value: Белорусская
-                line_id: '2'
-                line_name: Замоскворецкая линия
-                line_hex: 48b85e
-                distance: null
-                lon: 37.582201
-                lat: 55.777285
-                city: '1'
-                archived: false
+          id: 1234
+          name: Объект
+          code: Объект
+          city:
+            id: '1'
+            name: Москва
+            region: Московская область
+            country: Россия
+            country_code: ru
+          customer:
+            id: 4321
+            name: Иван Иванов
+            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            email: ivan@example.com
+            phones:
+              - '79998887766'
+          address: 'Азино, 777'
+          lon: 34.32
+          lat: 32.33
+          metro:
+            - id: '365'
+              value: Ивановское
+              line_id: B
+              line_name: Иванова
+              line_hex: '55555'
+              distance: null
+              lon: 55.55
+              lat: 66.55
+              city: '1'
+              archived: false
+      examples:
+        - id: 1234
+          name: Объект
+          code: Объект
+          city:
+            id: '1'
+            name: Москва
+            region: Московская область
+            country: Россия
+            country_code: ru
+          customer:
+            id: 4321
+            name: Иван Иванов
+            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+            email: ivan@example.com
+            phones:
+              - '79998887766'
+          address: 'Азино, 777'
+          lon: 34.32
+          lat: 32.33
+          metro:
+            - id: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+              value: Ивановское
+              line_id: B
+              line_name: Иванова
+              line_hex: '55555'
+              distance: null
+              lon: 55.55
+              lat: 66.55
+              city: '1'
+              archived: false
       properties:
-        object:
+        id:
+          type: integer
+          description: ID объекта
+        name:
+          type: string
+          description: Название объекта
+        code:
+          type: string
+          description: Код объекта
+        city:
           type: object
+          description: Город
           properties:
             id:
-              type: integer
-              description: ID объекта потребности
-              example: 1234
+              type: string
+              description: ID города
             name:
               type: string
-              description: Название объекта потребности
-            code:
+              description: Название города
+            region:
               type: string
-            city:
-              type: object
-              properties:
-                id:
-                  type: string
-                name:
-                  type: string
-                region:
-                  type: string
-                country:
-                  type: string
-                country_code:
-                  type: string
-            customer:
-              type: object
-              properties:
-                id:
-                  type: integer
-                name:
-                  type: string
-                avatar:
-                  type: 'null'
-                email:
-                  type: string
-                phones:
-                  type: array
-                  items:
-                    type: string
-            address:
+              description: Название региона
+            country:
               type: string
-            lon:
-              type: number
-            lat:
-              type: number
-            metro:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  value:
-                    type: string
-                  line_id:
-                    type: string
-                  line_name:
-                    type: string
-                  line_hex:
-                    type: string
-                  distance:
-                    type: 'null'
-                  lon:
-                    type: number
-                  lat:
-                    type: number
-                  city:
-                    type: string
-                  archived:
-                    type: boolean
-      required:
-        - object
+              description: Название страны
+            country_code:
+              type: string
+              description: Код страны
+        customer:
+          $ref: '#/components/schemas/User'
+        address:
+          type: string
+          description: Адрес объекта
+        lon:
+          type: number
+          description: Долгота объекта
+        lat:
+          type: number
+          description: Широта объекта
+        metro:
+          type: array
+          description: Метро вблизи объекта
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID метро
+              value:
+                type: string
+                description: Название метро
+              line_id:
+                type: string
+                description: ID линии метро
+              line_name:
+                type: string
+                description: Название линии метро
+              line_hex:
+                type: string
+                description: Цвет линии метро
+              distance:
+                type: 'null'
+                description: Расстояние до объекта
+              lon:
+                type: number
+                description: Долгота станции метро
+              lat:
+                type: number
+                description: Широта станции метро
+              city:
+                type: string
+                description: ID города
+              archived:
+                type: boolean
+                description: |-
+                  Признак архивности станции
+
+                  `True` - станция находится в архиве
+
+                  `False` - станция не архивная
+                default: false
   securitySchemes:
     headerToken:
       type: http
@@ -8586,13 +9109,12 @@ security:
   - queryToken: []
 tags:
   - name: вакансии
-  - name: документы
   - name: кандидаты
-  - name: кандидаты на вакансии
-  - name: ожидаемая дата выхода
-  - name: организационно-штатная структура
-  - name: пользователи
-  - name: потребности
   - name: резюме
+  - name: кандидаты на вакансии
+  - name: организационно-штатная структура
+  - name: потребности
+    description: "Метод работает только при наличии модуля `Передача финалиста`. Метод не будет работать без дополнительных настроек на стороне Potok"
+  - name: пользователи
   - name: справочники
-  - name: табельный номер
+  - name: документы
