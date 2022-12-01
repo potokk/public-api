@@ -4837,11 +4837,11 @@ paths:
                   example: 'Азино, 777'
                 lon:
                   type: string
-                  description: Долгота объекта
+                  description: Долгота объекта для отображения на карте
                   example: '34.32'
                 lat:
                   type: string
-                  description: Широта объекта
+                  description: Широта объекта для отображения на карте
                   example: '32.33'
                 remote:
                   type: boolean
@@ -5045,11 +5045,11 @@ paths:
                   example: 'Азино, 777'
                 lon:
                   type: string
-                  description: Долгота объекта
+                  description: Долгота объекта для отображения на карте
                   example: '34.32'
                 lat:
                   type: string
-                  description: Широта объекта
+                  description: Широта объекта для отображения на карте
                   example: '32.33'
                 remote:
                   type: boolean
@@ -5081,6 +5081,7 @@ paths:
                   remote: false
                   metro:
                     - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+        description: ''
     delete:
       summary: Удаление объекта потребности
       operationId: delete-business_units-id-.json
@@ -8713,10 +8714,10 @@ components:
           description: Адрес объекта
         lon:
           type: number
-          description: Долгота объекта
+          description: Долгота объекта для отображения на карте
         lat:
           type: number
-          description: Широта объекта
+          description: Широта объекта для отображения на карте
         metro:
           type: array
           description: Метро вблизи объекта
@@ -9114,7 +9115,7 @@ tags:
   - name: кандидаты на вакансии
   - name: организационно-штатная структура
   - name: потребности
-    description: "Метод работает только при наличии модуля `Массовый подбор`. Метод не будет работать без дополнительных настроек на стороне Potok"
+    description: Метод работает только при подключении функциональности `Массовый подбор`. Метод не будет работать без дополнительных настроек на стороне Potok
   - name: пользователи
   - name: справочники
   - name: документы
