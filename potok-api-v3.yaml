@@ -4858,6 +4858,10 @@ paths:
                   items:
                     type: string
                     example: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+                ' customer_id':
+                  type: integer
+                  description: ID заказчика потребности
+                  example: 4123
               required:
                 - name
                 - lon
@@ -4873,6 +4877,7 @@ paths:
                   remote: false
                   metro:
                     - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+                  customer_id: 41494
   '/business_units/{id}.json':
     parameters:
       - schema:
@@ -5066,6 +5071,10 @@ paths:
                   items:
                     type: string
                     example: 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+                ' customer_id':
+                  type: integer
+                  description: ID заказчика потребности
+                  example: 4123
               required:
                 - city
                 - lon
@@ -5081,6 +5090,7 @@ paths:
                   remote: false
                   metro:
                     - 1ec9ed5e-8340-4b57-9d45-d56bdca06a81
+                  customer_id: 41494
         description: ''
     delete:
       summary: Удаление объекта потребности
