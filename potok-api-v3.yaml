@@ -4114,7 +4114,7 @@ paths:
                         archived: false
       operationId: get-dictionaries-metro.json
       description: |
-        Получение информации о справочнике Метро. Имеет отличие в возвращаемых данных от `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
+        Получение информации о справочнике Метро. Возвращает другие данные в отличие от `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
       parameters:
         - schema:
             example: 55.141
@@ -4227,7 +4227,7 @@ paths:
                     total_count: 1
       operationId: get-dictionaries-cities.json
       description: |
-        Получение информации о справочнике Города. Имеет отличие в возвращаемых данных от `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
+        Получение информации о справочнике Города. Возвращает другие данные в отличие от `GET` `https://app.potok.io/api/v3/dictionaries/{id}.json`
       parameters:
         - schema:
             type: string
