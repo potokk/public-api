@@ -5382,7 +5382,7 @@ paths:
                     source_job_name:
                       - не указан параметр
       operationId: post-negotiations.json
-      description: Позволяет обновить информацию кандидату на вакансии об отклике с работного сайта
+      description: Позволяет обновить информацию по кандидату на вакансии об отклике с работного сайта
       requestBody:
         content:
           application/json:
@@ -5512,7 +5512,7 @@ paths:
                         color_hex: FF5A6E
                         position: 1
       operationId: get-priority_items.json
-      description: 'Позволяет получить информацию о всех приоритетах компании для потребностей '
+      description: 'Позволяет получить информацию обо всех приоритетах компании для потребностей '
       parameters:
         - schema:
             type: string
@@ -5523,7 +5523,7 @@ paths:
           in: query
           name: target
           required: true
-          description: Название словаря со значениями приоритетов (всегда '
+          description: Название словаря со значениями приоритетов (всегда 'demand`)
   /security_forms.json:
     get:
       summary: Получение информации об анкете СБ
@@ -5585,7 +5585,7 @@ paths:
                       - string
           description: Объект не найден
       operationId: get-security_forms.json
-      description: Возвращает ID и имя анкеты СБ. Используется если есть несколько форм анкеты СБ и заполнение происходит во внешней системе. Позволяет внешней системе понимать какую форму анкеты СБ отображать кандидату в интерфейсе.
+      description: 'Возвращает ID и имя анкеты СБ. Используется, если есть несколько форм анкеты СБ и заполнение происходит во внешней системе. Позволяет внешней системе понимать, какую форму анкеты СБ отображать кандидату в интерфейсе.'
       parameters:
         - schema:
             type: integer
