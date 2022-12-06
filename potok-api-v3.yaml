@@ -5155,6 +5155,455 @@ paths:
       tags:
         - потребности
       description: Позволяет удалить объект потребности по его ID
+  /jobs_users:
+    post:
+      summary: Добавление пользователя в команду по вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                x-examples:
+                  example-1:
+                    - id: 5
+                      job_id: 9
+                      role:
+                        id: 9
+                        name: role_who_can_all
+                        company_id: 9
+                        role_type: superadmin
+                        billing: false
+                      user_id: 9
+                      user:
+                        id: 9
+                        name: Антонида
+                        email: person1@example.com
+                        avatar: null
+                        phones:
+                          - '71226416752'
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID связи пользователя с вакансией
+                      example: 365
+                    job_id:
+                      type: integer
+                      example: 4321
+                      description: ID вакансии
+                    role:
+                      type: object
+                      required:
+                        - id
+                        - name
+                        - company_id
+                        - role_type
+                        - billing
+                      description: Роль пользователя
+                      properties:
+                        id:
+                          type: integer
+                          description: ID роли
+                          example: 2
+                        name:
+                          type: string
+                          description: ФИО пользователя
+                          example: superadmin
+                        company_id:
+                          type: integer
+                          description: ID компании
+                          example: 111
+                        role_type:
+                          type: string
+                          description: Тип роли
+                          example: superadmin
+                        billing:
+                          type: boolean
+                          description: |-
+                            Признак платности роли
+
+                            `True` - Платная роль
+
+                            `False` - Бесплатная роль
+                          default: true
+                    user_id:
+                      type: integer
+                      description: ID пользователя
+                      example: 1234
+                    user:
+                      $ref: '#/components/schemas/User'
+                  required:
+                    - id
+                    - job_id
+                    - role
+                    - user_id
+                    - user
+              examples:
+                Пример ответа:
+                  value:
+                    - id: 365
+                      job_id: 4321
+                      role:
+                        id: 2
+                        name: superadmin
+                        company_id: 111
+                        role_type: superadmin
+                        billing: true
+                      user_id: 1234
+                      user:
+                        id: 1234
+                        name: Иван Иванов
+                        email: ivanov@ivan.ru
+                        avatar: 'https://app.potok.io/uploads/user/avatar/96657/example.jpg'
+                        phones:
+                          - '79007006050'
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-examples:
+                  example-1:
+                    - string
+              examples:
+                Пример ответа:
+                  value:
+                    - string
+      operationId: post-jobs_users
+      parameters: []
+      description: "Позволяет связать пользователя с вакансией. \t\nВместо `user_id` можно использовать `user_email` для связки с вакансией."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  jobs_users:
+                    - user_id: -90565679
+                      user_email: dolore aute proident
+                      job_id: -77751364
+              properties:
+                jobs_users:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      user_id:
+                        type: integer
+                        description: ID пользователя
+                        example: 1234
+                      user_email:
+                        type: string
+                        description: E-mail пользователя
+                        example: user@example.com
+                      job_id:
+                        type: integer
+                        description: ID вакансии
+                        example: 4321
+                    required:
+                      - user_id
+                      - user_email
+              required:
+                - jobs_users
+            examples:
+              Пример запроса:
+                value:
+                  jobs_users:
+                    - user_id: 1234
+                      user_email: user@example.com
+                      job_id: 4321
+      tags:
+        - вакансии
+  /negotiations.json:
+    post:
+      summary: Добавление информации об отклике с работного сайта
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    object:
+                      id: 0
+                properties:
+                  object:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: ID отклика
+                        example: 10
+                    required:
+                      - id
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 10
+        '404':
+          description: Не найдена вакансия или кандидат
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                x-examples:
+                  example-1:
+                    - string
+                type: object
+                properties:
+                  '':
+                    type: array
+                    items:
+                      type: object
+              examples:
+                Пример ответа:
+                  value:
+                    type:
+                      - не указан параметр
+                    ext_id:
+                      - не указан параметр
+                    ext_job_id:
+                      - не указан параметр
+                    ext_applicant_id:
+                      - не указан параметр
+                    ext_resume_id:
+                      - не указан параметр
+                    source_job_name:
+                      - не указан параметр
+      operationId: post-negotiations.json
+      description: Позволяет обновить информацию по кандидату на вакансии об отклике с работного сайта
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  type: string
+                  job_id: 0
+                  applicant_id: 0
+                  ext_id: string
+                  ext_job_id: string
+                  ext_applicant_id: string
+                  ext_resume_id: string
+                  source_job_name: string
+              properties:
+                type:
+                  type: string
+                  description: |-
+                    Тип работного сайта
+
+                    Возможные значения: `superjob` `headhunter`
+                  example: headhunter
+                job_id:
+                  type: integer
+                  description: ID вакансии
+                  example: 4321
+                applicant_id:
+                  type: integer
+                  description: ID кандидата
+                  example: 1234
+                ext_id:
+                  type: string
+                  description: ID отклика с работного сайта
+                  example: '4'
+                ext_job_id:
+                  type: string
+                  description: ID вакансии с работного сайта
+                  example: '3'
+                ext_applicant_id:
+                  type: string
+                  description: ID кандидата с работного сайта
+                  example: '2'
+                ext_resume_id:
+                  type: string
+                  description: ID резюме с работного сайта
+                  example: '1'
+                source_job_name:
+                  type: string
+                  description: Название вакансии на работном сайте
+                  example: Менеджер по развитию культуры безопасности
+              required:
+                - type
+                - job_id
+                - applicant_id
+                - ext_id
+                - ext_job_id
+                - ext_applicant_id
+                - ext_resume_id
+                - source_job_name
+            examples:
+              Пример запроса:
+                value:
+                  type: headhunter
+                  job_id: 4321
+                  applicant_id: 1234
+                  ext_id: '4'
+                  ext_job_id: '3'
+                  ext_applicant_id: '2'
+                  ext_resume_id: '1'
+                  source_job_name: Менеджер по развитию культуры безопасности
+        description: ''
+      tags:
+        - кандидаты на вакансии
+  /priority_items.json:
+    get:
+      summary: Получение списка приоритетов для потребности
+      tags:
+        - потребности
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    objects:
+                      - id: 0
+                        name: string
+                        color_hex: string
+                        position: 0
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID приоритета
+                          example: 134
+                        name:
+                          type: string
+                          description: Название приоритета
+                          example: Наивысший
+                        color_hex:
+                          type: string
+                          description: Цвет приоритета
+                          example: FF5A6E
+                        position:
+                          type: integer
+                          description: Позиция в списке приоритетов
+                          example: 1
+                      required:
+                        - id
+                        - name
+                        - color_hex
+                        - position
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 134
+                        name: Наивысший
+                        color_hex: FF5A6E
+                        position: 1
+      operationId: get-priority_items.json
+      description: 'Позволяет получить информацию обо всех приоритетах компании для потребностей '
+      parameters:
+        - schema:
+            type: string
+            example: demand
+            default: demand
+            enum:
+              - demand
+          in: query
+          name: target
+          required: true
+          description: Название словаря со значениями приоритетов (всегда 'demand`)
+  /security_forms.json:
+    get:
+      summary: Получение информации об анкете СБ
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    objects:
+                      - id: 0
+                        name: string
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID анкеты СБ
+                          example: 1367
+                        name:
+                          type: string
+                          description: Название анкеты СБ
+                          example: security_form
+                      required:
+                        - id
+                        - name
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 1367
+                        name: security_form
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                x-examples:
+                  example-1:
+                    errors:
+                      - string
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      - string
+          description: Объект не найден
+      operationId: get-security_forms.json
+      description: |-
+        Возвращает ID и имя анкеты СБ.
+        Может использоваться в кейсе, когда необходимо отображать кандидату форму анкеты СБ в сторонней системе
+        Позволяет понимать внешней системе, какую форму анкеты СБ отображать кандидату в интерфейсе, если настроены разные формы анкеты в зависимости от типа подбора.
+      parameters:
+        - schema:
+            type: integer
+            example: 1234
+          in: query
+          name: applicant_id
+          description: ID кандидата
+          required: true
+        - schema:
+            type: integer
+            example: 4321
+          in: query
+          name: job_id
+          description: ID вакансии
+          required: true
 components:
   schemas:
     author:
@@ -9115,12 +9564,12 @@ security:
   - queryToken: []
 tags:
   - name: вакансии
+  - name: документы
   - name: кандидаты
-  - name: резюме
   - name: кандидаты на вакансии
   - name: организационно-штатная структура
-  - name: потребности
-    description: Метод работает только при подключении функциональности `Массовый подбор`. Метод не будет работать без дополнительных настроек на стороне Potok
   - name: пользователи
+  - name: потребности
+  - name: работные сайты
+  - name: резюме
   - name: справочники
-  - name: документы

@@ -6,11 +6,62 @@
     <meta charset="utf-8"> <!-- Important: rapi-doc uses utf8 characters -->
     <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
 </head>
-
+<style>
+    rapi-doc::part(btn){ 
+        border-radius: 4px; 
+        box-shadow: none;
+        }
+    rapi-doc::part(btn-fill){ 
+        color: #ffffff;
+        border-width: 1px;
+        }
+    rapi-doc::part(btn-fill):hover{ 
+        background: #26CBFF;
+        }
+    rapi-doc::part(btn-try){ 
+        color: #ffffff;
+        border: none;
+        }
+    rapi-doc::part(btn-try):hover{ 
+        background: #26CBFF;
+        }
+    rapi-doc::part(btn-outline){ 
+        border-color: #dddddd;
+        color: #26BDFC;
+        }
+    rapi-doc::part(btn-outline):hover{ 
+        background: #F1FBFF;
+        }
+    rapi-doc::part(btn-response-status){ 
+        border: solid 1px #dddddd;
+        }
+    rapi-doc::part(btn-response-status):hover{ 
+        background: #F1FBFF;
+        }
+    rapi-doc::part(btn-selected-response-status){ 
+        background: #3E4B5B;
+        border: none;
+        color: #ffffff;
+        }
+    rapi-doc::part(textbox){ 
+        border-radius: 4px;
+        }
+    rapi-doc::part(textbox-nav-filter){ 
+        background: #ffffff;
+        }
+</style>
 <body>
     <rapi-doc spec-url="Potok-API-v3.yaml"
-    theme="dark"
-    primary-color="#75c1ff"
+    theme="light"
+    primary-color="#26BDFC"
+    bg-color="#ffffff"
+    text-color="#000000"
+    header-color="#F5F5F5"
+    nav-bg-color="#F5F5F5"
+    nav-hover-bg-color="#E5E5E5"
+    nav-accent-color="#26BDFC"
+    nav-accent-text-color="#3E4B5B"
+    nav-text-color="#666666"
     schema-style="table"
     default-schema-tab = 'model'
     allow-try="true"
