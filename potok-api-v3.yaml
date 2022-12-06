@@ -5158,8 +5158,6 @@ paths:
   /jobs_users:
     post:
       summary: Добавление пользователя в команду по вакансии
-      tags:
-        - пользователи
       responses:
         '200':
           description: OK
@@ -5311,6 +5309,7 @@ paths:
                         example: 4321
                     required:
                       - user_id
+                      - user_email
               required:
                 - jobs_users
             examples:
@@ -5320,11 +5319,11 @@ paths:
                     - user_id: 1234
                       user_email: user@example.com
                       job_id: 4321
+      tags:
+        - вакансии
   /negotiations.json:
     post:
-      summary: Создание отклика с работного сайта
-      tags:
-        - работные сайты
+      summary: Добавление информации об отклике с работного сайта
       responses:
         '200':
           description: OK
@@ -5352,7 +5351,7 @@ paths:
                     object:
                       id: 10
         '404':
-          description: Не найдена вакансия или кандидата
+          description: Не найдена вакансия или кандидат
         '422':
           description: Unprocessable Entity (WebDAV)
           content:
@@ -5383,7 +5382,7 @@ paths:
                     source_job_name:
                       - не указан параметр
       operationId: post-negotiations.json
-      description: 'Позволяет создать отклик с работного сайта '
+      description: Позволяет обновить информацию кандидату на вакансии об отклике с работного сайта
       requestBody:
         content:
           application/json:
@@ -5402,7 +5401,10 @@ paths:
               properties:
                 type:
                   type: string
-                  description: Тип работного сайта
+                  description: |-
+                    Тип работного сайта
+
+                    Возможные значения: `superjob` `headhunter`
                   example: headhunter
                 job_id:
                   type: integer
@@ -5452,9 +5454,12 @@ paths:
                   ext_applicant_id: '2'
                   ext_resume_id: '1'
                   source_job_name: Менеджер по развитию культуры безопасности
+        description: ''
+      tags:
+        - кандидаты на вакансии
   /priority_items.json:
     get:
-      summary: Получение списка приоритетов потребности
+      summary: Получение списка приоритетов для потребности
       tags:
         - потребности
       responses:
@@ -5507,15 +5512,18 @@ paths:
                         color_hex: FF5A6E
                         position: 1
       operationId: get-priority_items.json
-      description: Получение списка приоритетов потребности
+      description: 'Позволяет получить информацию о всех приоритетах компании для потребностей '
       parameters:
         - schema:
             type: string
             example: demand
+            default: demand
+            enum:
+              - demand
           in: query
           name: target
           required: true
-          description: Название таргета
+          description: Название словаря со значениями приоритетов (всегда '
   /security_forms.json:
     get:
       summary: Получение информации об анкете СБ
@@ -5577,7 +5585,7 @@ paths:
                       - string
           description: Объект не найден
       operationId: get-security_forms.json
-      description: Возвращает ID и имя анкеты СБ
+      description: Возвращает ID и имя анкеты СБ. Используется если есть несколько форм анкеты СБ и заполнение происходит во внешней системе. Позволяет внешней системе понимать какую форму анкеты СБ отображать кандидату в интерфейсе.
       parameters:
         - schema:
             type: integer
