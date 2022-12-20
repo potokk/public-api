@@ -5731,7 +5731,7 @@ paths:
                 Пример ответа:
                   value:
                     id: 8976
-                    subject: Встреча с канидадатов
+                    subject: Встреча с канидадатом
                     body: Текст встречи
                     applicant:
                       id: 1234
@@ -5849,7 +5849,7 @@ paths:
                 Пример ответа:
                   value:
                     id: 8976
-                    subject: Встреча с канидадатов
+                    subject: Встреча с канидадатом
                     body: Текст встречи
                     applicant:
                       id: 1234
@@ -9918,7 +9918,7 @@ components:
           type: string
       examples:
         - id: 8976
-          subject: Встреча с канидадатов
+          subject: Встреча с канидадатом
           body: Текст встречи
           applicant:
             id: 1234
@@ -9939,7 +9939,7 @@ components:
         subject:
           type: string
           description: Тема встречи
-          example: Встреча с канидадатов
+          example: Встреча с канидадатом
         body:
           type: string
           description: Текст события
