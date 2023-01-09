@@ -9012,7 +9012,7 @@ components:
               - type
         ajs_joins:
           type: array
-          description: Связи кандидата с вакансией
+          description: Связи кандидата с вакансией. Передается только для неархивных вакансий
           items:
             type: object
             properties:
