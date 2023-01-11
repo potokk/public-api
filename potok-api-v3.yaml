@@ -6288,6 +6288,184 @@ paths:
           in: query
           name: page_cursor
           description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
+  /ajs_joins:
+    post:
+      summary: Добавление кандидата на вакансию
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    id: 26236739
+                    job:
+                      id: 452311
+                      name: Инженер-технолог
+                      job_type: point_after
+                    applicant:
+                      id: 21297318
+                      name: Сидоров
+                    stage:
+                      id: 4425321
+                      name: Добавлен
+                      serial: 1
+                      stage_type: sourced
+                properties:
+                  id:
+                    type: integer
+                    description: ID кандидата на вакансии
+                  job:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - job_type
+                    description: Вакансия
+                    properties:
+                      id:
+                        type: integer
+                        description: ID вакансии
+                        example: 1234
+                      name:
+                        type: string
+                        description: Название вакансии
+                        example: Название вакансии
+                      job_type:
+                        type: string
+                        description: ID воронки подбора
+                        example: point
+                  applicant:
+                    type: object
+                    required:
+                      - id
+                      - name
+                    description: Кандидат
+                    properties:
+                      id:
+                        type: integer
+                        description: ID кандидата
+                        example: 4321
+                      name:
+                        type: string
+                        description: ФИО кандидата
+                        example: Иванов Иван Иванович
+                  stage:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - serial
+                      - stage_type
+                    description: Этап
+                    properties:
+                      id:
+                        type: integer
+                        description: ID этапа
+                        example: 5324
+                      name:
+                        type: string
+                        description: Название этапа
+                        example: Добавлен
+                      serial:
+                        type: integer
+                        description: Порядковый номер этапа в воронке
+                        example: 1
+                      stage_type:
+                        type: string
+                        description: ID типа этапа
+                        example: sourced
+                required:
+                  - id
+                  - job
+                  - applicant
+                  - stage
+              examples:
+                Пример ответа:
+                  value:
+                    id: 0
+                    job:
+                      id: 1234
+                      name: Название вакансии
+                      job_type: point
+                    applicant:
+                      id: 4321
+                      name: Иванов Иван Иванович
+                    stage:
+                      id: 5324
+                      name: Добавлен
+                      serial: 1
+                      stage_type: sourced
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    job:
+                      - вакансия не найдена
+              examples:
+                Пример ответа 1:
+                  value:
+                    job:
+                      - вакансия не найдена
+                    applicant:
+                      - кандидат не найден
+                    stage:
+                      - этап не найден
+                Пример ответа 2:
+                  value:
+                    stage_type:
+                      - тип этапа должен быть 'sourced' или 'applied'
+                Пример ответа 3:
+                  value:
+                    ajs_join:
+                      - кандидат на вакансии уже существует
+      operationId: post-ajs_joins
+      description: Данный метод позволяет отобрать уже созданного кандидата на вакансию
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  job_id: 452311
+                  applicant_id: 21297318
+                  stage_type: sourced
+              properties:
+                job_id:
+                  type: integer
+                  description: ID вакансии
+                  example: 1234
+                applicant_id:
+                  type: integer
+                  description: ID кандидата
+                  example: 4321
+                stage_type:
+                  type: string
+                  description: ID типа этапа. Может быть только `sourced` или `applied`
+                  enum:
+                    - sourced
+                    - applied
+                  example: sourced
+              required:
+                - job_id
+                - applicant_id
+                - stage_type
+            examples:
+              Пример запроса:
+                value:
+                  job_id: 1234
+                  applicant_id: 4321
+                  stage_type: sourced
+    parameters: []
 components:
   schemas:
     author:
