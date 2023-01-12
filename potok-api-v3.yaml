@@ -6466,6 +6466,195 @@ paths:
                   applicant_id: 4321
                   stage_type: sourced
     parameters: []
+  '/applicants/{applicant_id}/templated_offers':
+    parameters:
+      - schema:
+          type: integer
+          example: 1234
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    get:
+      summary: Просмотр офферов кандидата
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    page: 1
+                    per_page: 20
+                    total_pages: 1
+                    offers:
+                      - created_at: '2022-12-20T16:41:08.304+03:00'
+                        updated_at: '2022-12-20T16:41:08.304+03:00'
+                        stored_values:
+                          city: Гонконг
+                          job_name: Инженер-технолог
+                          department: '222'
+                          company_name: Biocad (тестовая)
+                          schedule_type:
+                            id: fullDay
+                            value: Полный день
+                            archived: false
+                          applicant_name: Павел Петров
+                          employment_type: ''
+                          job_description: |
+                            Требования: 
+                            Из оффера
+                            Обязанности:
+                            Условия работы:
+                          planned_employment_date: '2022-12-22'
+                        applicant_id: 18169784
+                        job_id: 452311
+                        approval_state:
+                          state: in_process
+                          name: В процессе
+                properties:
+                  page:
+                    type: integer
+                    description: Номер страницы
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                    example: 1
+                  total_pages:
+                    type: integer
+                    description: Общее количество страниц
+                    example: 1
+                  offers:
+                    type: array
+                    description: Офферы
+                    items:
+                      type: object
+                      properties:
+                        created_at:
+                          type: string
+                          description: 'Время создания оффера (в формате ISO 8601 с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                          example: '2022-12-20T16:41:08.304+03:00'
+                        updated_at:
+                          type: string
+                          description: 'Время обновления оффера (в формате ISO 8601 с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                          example: '2022-12-20T16:41:08.304+03:00'
+                        stored_values:
+                          type: object
+                          description: Параметры оффера
+                          properties:
+                            city:
+                              type: string
+                              description: Город
+                              example: Москва
+                            job_name:
+                              type: string
+                              description: Название вакансии
+                              example: Инженер-технолог
+                            department:
+                              type: string
+                              description: Отдел
+                              example: инженерный отдел
+                            company_name:
+                              type: string
+                              description: Название компании
+                              example: Компания
+                            schedule_type:
+                              type: object
+                              description: График работы
+                              properties:
+                                id:
+                                  type: string
+                                  description: ID графика работы (словарь - `schedule_type`)
+                                  example: fullDay
+                                value:
+                                  type: string
+                                  description: Название графика работы
+                                  example: Полный день
+                                archived:
+                                  type: boolean
+                                  description: Признак архивности графика работы
+                                  default: false
+                            applicant_name:
+                              type: string
+                              description: ФИО кандидата
+                              example: Иванов Иван Иванович
+                            employment_type:
+                              type: string
+                              description: Занятость кандидата (словарь - `employment_type`)
+                              example: full
+                            job_description:
+                              type: string
+                              description: Описание вакансии
+                              example: 'Требования: \nИз оффера\nОбязанности:\nУсловия работы:\n'
+                            planned_employment_date:
+                              type: string
+                              description: Планируемая дата выхода
+                              example: '2022-12-22'
+                        applicant_id:
+                          type: integer
+                          description: ID кандидата
+                          example: 1234
+                        job_id:
+                          type: integer
+                          description: ID вакансии
+                          example: 4351
+                        approval_state:
+                          type: object
+                          description: Статус оффера
+                          properties:
+                            state:
+                              type: string
+                              description: ID статуса
+                              example: in_process
+                            name:
+                              type: string
+                              description: Название статуса
+                              example: В процессе
+                required:
+                  - page
+                  - per_page
+                  - total_pages
+                  - offers
+              examples:
+                Пример ответа:
+                  value:
+                    page: 1
+                    per_page: 1
+                    total_pages: 1
+                    offers:
+                      - created_at: '2022-12-20T16:41:08.304+03:00'
+                        updated_at: '2022-12-20T16:41:08.304+03:00'
+                        stored_values:
+                          city: Москва
+                          job_name: Инженер-технолог
+                          department: инженерный отдел
+                          company_name: Компания
+                          schedule_type:
+                            id: fullDay
+                            value: Полный день
+                            archived: false
+                          applicant_name: Иванов Иван Иванович
+                          employment_type: full
+                          job_description: 'Требования: \nИз оффера\nОбязанности:\nУсловия работы:\n'
+                          planned_employment_date: '2022-12-22'
+                        applicant_id: 1234
+                        job_id: 4351
+                        approval_state:
+                          state: in_process
+                          name: В процессе
+        '404':
+          description: Указанный `applicant_id` не существует
+      operationId: get-applicants-applicant_id-templated_offers
+      description: 'Данный метод позволяет получить данные об офферах v2 кандидата, а также сопутствующую информацию по офферу (id вакансиии, id кандидата, статус согласования оффера)'
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        - $ref: '#/components/parameters/f-jobs_id'
+        - $ref: '#/components/parameters/f-approval_state'
 components:
   schemas:
     author:
@@ -10520,6 +10709,28 @@ components:
       schema:
         type: string
       description: 'Фильтр по статусу объекта потребности. Имеет 2 состояния `active` `archived`. Если статус не указан, отображает список всех записей.'
+    f-jobs_id:
+      name: 'f[job_id][]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        example: 4321
+      description: Фильтр по ID вакансии
+    f-approval_state:
+      name: 'f[approval_state][]'
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - in_process
+          - canceled
+          - rejected
+          - not_approved
+          - initialized
+          - accepted
+      description: Фильтр по статусу согласования оффера
 security:
   - headerToken: []
   - queryToken: []
