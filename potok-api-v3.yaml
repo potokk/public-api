@@ -1364,6 +1364,7 @@ paths:
                           declined_applicants: 2
                           stage_type: sourced
                         responsible_user_id: 51293
+                        planned_employment_date: '2022-12-12'
         '402':
           description: Подписка компании просрочена
         '422':
@@ -1766,6 +1767,7 @@ paths:
                               declined_applicants: 2
                               stage_type: sourced
                             responsible_user_id: 51293
+                            planned_employment_date: '2022-12-12'
                     per_page: 1
                     pages: 4
                     page: 1
@@ -2015,6 +2017,7 @@ paths:
                           declined_applicants: 2
                           stage_type: sourced
                         responsible_user_id: 51293
+                        planned_employment_date: '2022-12-12'
         '402':
           description: Подписка компании просрочена
         '422':
@@ -2398,6 +2401,7 @@ paths:
                           declined_applicants: 2
                           stage_type: sourced
                         responsible_user_id: 51293
+                        planned_employment_date: '2022-12-12'
         '402':
           description: Подписка компании просрочена
         '404':
@@ -6477,7 +6481,8 @@ paths:
         description: ID кандидата
     get:
       summary: Просмотр офферов кандидата
-      tags: []
+      tags:
+        - кандидаты
       responses:
         '200':
           description: OK
@@ -9137,6 +9142,7 @@ components:
                 declined_applicants: 2
                 stage_type: sourced
               responsible_user_id: 51293
+              planned_employment_date: '2022-12-12'
       properties:
         id:
           type: integer
@@ -9421,6 +9427,10 @@ components:
               responsible_user_id:
                 type: integer
                 description: 'ID ответственного за кандидата на вакансии. Является частью функциональности `Массовый подбор`. Будет пустым, если функциональность не подключена'
+              planned_employment_date:
+                type: string
+                description: Планируемая дата выхода
+                example: '2022-12-12'
       required:
         - id
         - first_name
