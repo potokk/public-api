@@ -6432,7 +6432,7 @@ paths:
                     ajs_join:
                       - кандидат на вакансии уже существует
       operationId: post-ajs_joins
-      description: Данный метод позволяет отобрать уже созданного кандидата на вакансию
+      description: Данный метод позволяет добавить уже созданного кандидата на вакансию
       requestBody:
         content:
           application/json:
