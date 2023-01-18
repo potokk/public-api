@@ -587,6 +587,339 @@ paths:
         description: ''
       x-internal: false
     parameters: []
+  /cursor_paginated/jobs.json:
+    get:
+      summary: Получение списка вакансий с курсорной пагинацией
+      tags:
+        - вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    objects:
+                      jobs:
+                        - id: 500022
+                          name: dictioinary test-8
+                          description: bla bla car
+                          schedule_type: fullDay
+                          salary_from: 0
+                          salary_to: 0
+                          code: '12'
+                          code_enable: false
+                          experience_type: between3And6
+                          employment_type: full
+                          currency_type: RUR
+                          key_skills:
+                            - string
+                          city: '0'
+                          created_at: '2022-11-03T21:27:53.567+03:00'
+                          updated_at: '2022-11-03T21:27:53.790+03:00'
+                          first_opened_at: '2022-11-03T21:27:53.788+03:00'
+                          archived: false
+                          demand: null
+                          closed_at: null
+                          closure_date: null
+                          private: false
+                          direction_code: Test-098
+                          job_type: ever_2
+                          staffing_item_full_ext_id: null
+                          staffing_item_parent_full_ext_id: null
+                          priority: low
+                          do_not_consider_in_kpi: false
+                          source_job_id: null
+                          state_id: opened
+                          company_department: null
+                          published: false
+                          publish_location: null
+                          applicants_count:
+                            all: 0
+                            active: 0
+                          stages:
+                            - id: 4973260
+                              name: Откликнулся
+                              serial: 0
+                              active_applicants: 0
+                              declined_applicants: 0
+                              stage_type: applied
+                            - id: 4973261
+                              name: Добавлен
+                              serial: 1
+                              active_applicants: 0
+                              declined_applicants: 0
+                              stage_type: sourced
+                            - id: 4973262
+                              name: Скриннинг
+                              serial: 2
+                              active_applicants: 0
+                              declined_applicants: 0
+                              stage_type: screening
+                            - id: 4973263
+                              name: Интервью с заказчиком
+                              serial: 3
+                              active_applicants: 0
+                              declined_applicants: 0
+                              stage_type: interview_client
+                            - id: 4973264
+                              name: Оффер
+                              serial: 4
+                              active_applicants: 0
+                              declined_applicants: 0
+                              stage_type: offer
+                            - id: 4973265
+                              name: Принят
+                              serial: 5
+                              active_applicants: 0
+                              declined_applicants: 0
+                              stage_type: accepted
+                          author:
+                            id: 92300
+                            name: Суперадмин
+                            email: n.m.arkova@potok.io
+                            avatar: null
+                            phones: []
+                          job_bindings: []
+                          executive_recruiter: null
+                          jobs_users:
+                            - id: 1334255
+                              job_id: 500022
+                              role:
+                                id: 18124
+                                name: Суперадмин
+                                company_id: 4174
+                                role_type: superadmin
+                                billing: true
+                              user_id: 92300
+                              user:
+                                id: 92300
+                                name: Суперадмин
+                                email: n.m.arkova@potok.io
+                                avatar: null
+                                phones: []
+                          gleb: null
+                          autor: null
+                          datum: null
+                          dinam_var: null
+                          dynamic_field: null
+                      counters:
+                        mine: 0
+                        archived: 0
+                        unarchived: 39
+                        other: 0
+                        appoint: 0
+                        active: 0
+                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                    has_next_page: true
+                    total_count: 39
+                properties:
+                  objects:
+                    type: object
+                    properties:
+                      jobs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Job'
+                      counters:
+                        type: object
+                        description: Счетчик вакансий по параметрам
+                        properties:
+                          mine:
+                            type: integer
+                            description: Мои вакансии
+                            example: 1
+                          archived:
+                            type: integer
+                            description: Архивные вакансии
+                            example: 2
+                          unarchived:
+                            type: integer
+                            description: Неархивные вакансии
+                            example: 5
+                          other:
+                            type: integer
+                            description: Другие вакансии
+                            example: 1
+                          appoint:
+                            type: integer
+                            description: Вакансии с назначенными кандидатами
+                            example: 3
+                          active:
+                            type: integer
+                            description: Активные вакансии (`mine` + `other`)
+                            example: 2
+                    required:
+                      - jobs
+                      - counters
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                  has_next_page:
+                    type: boolean
+                    description: 'Признак того, имеется ли следующая страница'
+                    default: true
+                  total_count:
+                    type: integer
+                    description: Общее количество неархивных вакансий
+                    example: 5
+                required:
+                  - page_next_cursor
+                  - has_next_page
+                  - total_count
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      jobs:
+                        - - id: 1911
+                            name: Начальник технического отдела
+                            description: |-
+                              <div>
+                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Требования:</p>
+                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Обязанности:</p>
+                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Условия работы:</p>
+                              </div>
+                            schedule_type: fullDay
+                            salary_from: 10000
+                            salary_to: 20000
+                            code: 12
+                            code_enable: true
+                            experience_type: noExperience
+                            employment_type: full
+                            currency_type: RUR
+                            key_skills:
+                              - стрессоустойчивый
+                            city: '1'
+                            created_at: '2020-07-17T10:38:55.904+03:00'
+                            updated_at: '2021-07-17T10:38:55.904+03:00'
+                            first_opened_at: '2020-07-17T10:38:55.904+03:00'
+                            archived: false
+                            demand: 1
+                            closed_at: '2021-07-17T10:38:55.904+03:00'
+                            closure_date: '2022-07-17T10:38:55.904+03:00'
+                            private: false
+                            direction_code: '1357'
+                            source_job_id: 469885
+                            job_type: point
+                            staffing_item_full_ext_id: position_1234
+                            staffing_item_parent_full_ext_id: department_4321
+                            priority: highest
+                            state_id: opened
+                            company_department:
+                              archived: false
+                              id: 3121
+                              name: IT Department
+                            published: true
+                            publish_location: 'https://career.potok.io/open/jobs/1911'
+                            applicants_count:
+                              all: 3
+                              active: 2
+                            stages:
+                              - id: 1918
+                                name: Проверка СБ
+                                serial: 789
+                                active_applicants: 2
+                                declined_applicants: 1
+                                stage_type: security
+                            author:
+                              id: 11
+                              name: Иванов Иван Иванович
+                              email: ivan@ivanov.com
+                              avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                              phones:
+                                - '79996543221'
+                            job_bindings:
+                              - id: 657
+                                type: 'JobBinding::Career'
+                                url: 'https://career.potok.io/open/jobs/1911'
+                                info:
+                                  name: Начальник технического отдела
+                                  description: |-
+                                    <div>
+                                    <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Требования:</p>
+                                    <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Обязанности:</p>
+                                    <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Условия работы:</p>
+                                    </div>
+                                  schedule_type: fullDay
+                            executive_recruiter:
+                              id: 11
+                              name: Иванов Иван Иванович
+                              email: ivan@ivanov.com
+                              avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                              phones:
+                                - '79996543221'
+                            jobs_users:
+                              - id: 1234
+                                job_id: 1911
+                                role:
+                                  id: 4321
+                                  company_id: 99
+                                  name: Суперадмин
+                                  role_type: superadmin
+                                  billing: true
+                                user:
+                                  id: 11
+                                  name: Иванов Иван Иванович
+                                  email: ivan@ivanov.com
+                                  avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                                  phones:
+                                    - '79996543221'
+                      counters:
+                        mine: 1
+                        archived: 2
+                        unarchived: 5
+                        other: 1
+                        appoint: 3
+                        active: 2
+                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                    has_next_page: true
+                    total_count: 5
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    errors:
+                      page_cursor:
+                        - is not base64 string
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      page_cursor:
+                        - is not base64 string
+      operationId: get-cursor_paginated-jobs.json
+      description: |-
+        Получение списка вакансий компании с курсорной пагинацией. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.
+        Сортировка вакансий в ответе по убыванию даты создания.
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - all
+              - active
+            example: active
+            default: active
+          in: query
+          name: by_scope
+          description: '`all` (чтобы получить все вакансии) или `active` (чтобы получить активные вакансии). Значение по умолчанию `active`'
+        - $ref: '#/components/parameters/per_page'
+        - schema:
+            type: string
+            example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+          in: query
+          name: page_cursor
+          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
   '/jobs/{id}.json':
     get:
       summary: Получение вакансии по ID
@@ -1800,6 +2133,191 @@ paths:
         - $ref: '#/components/parameters/f-relocation_readiness'
         - $ref: '#/components/parameters/f-education_level'
         - $ref: '#/components/parameters/f-stage_statuses'
+    parameters: []
+  /ajs_joins.json:
+    post:
+      summary: Добавление кандидата на вакансию
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    id: 26236739
+                    job:
+                      id: 452311
+                      name: Инженер-технолог
+                      job_type: point_after
+                    applicant:
+                      id: 21297318
+                      name: Сидоров
+                    stage:
+                      id: 4425321
+                      name: Добавлен
+                      serial: 1
+                      stage_type: sourced
+                properties:
+                  id:
+                    type: integer
+                    description: ID кандидата на вакансии
+                  job:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - job_type
+                    description: Вакансия
+                    properties:
+                      id:
+                        type: integer
+                        description: ID вакансии
+                        example: 1234
+                      name:
+                        type: string
+                        description: Название вакансии
+                        example: Название вакансии
+                      job_type:
+                        type: string
+                        description: ID воронки подбора
+                        example: point
+                  applicant:
+                    type: object
+                    required:
+                      - id
+                      - name
+                    description: Кандидат
+                    properties:
+                      id:
+                        type: integer
+                        description: ID кандидата
+                        example: 4321
+                      name:
+                        type: string
+                        description: ФИО кандидата
+                        example: Иванов Иван Иванович
+                  stage:
+                    type: object
+                    required:
+                      - id
+                      - name
+                      - serial
+                      - stage_type
+                    description: Этап
+                    properties:
+                      id:
+                        type: integer
+                        description: ID этапа
+                        example: 5324
+                      name:
+                        type: string
+                        description: Название этапа
+                        example: Добавлен
+                      serial:
+                        type: integer
+                        description: Порядковый номер этапа в воронке
+                        example: 1
+                      stage_type:
+                        type: string
+                        description: ID типа этапа
+                        example: sourced
+                required:
+                  - id
+                  - job
+                  - applicant
+                  - stage
+              examples:
+                Пример ответа:
+                  value:
+                    id: 0
+                    job:
+                      id: 1234
+                      name: Название вакансии
+                      job_type: point
+                    applicant:
+                      id: 4321
+                      name: Иванов Иван Иванович
+                    stage:
+                      id: 5324
+                      name: Добавлен
+                      serial: 1
+                      stage_type: sourced
+        '422':
+          description: |-
+            Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка. 
+            Для `Пример ответа 3` - если переданный в запросе кандидат уже отобран на переданную в запросе вакансию, то возвращается ошибка, что такая связь кандидат-вакансия уже есть в системе, в том числе, если кандидат `Отклонен`, или был деперсонализован
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    job:
+                      - вакансия не найдена
+              examples:
+                Пример ответа 1:
+                  value:
+                    job:
+                      - вакансия не найдена
+                    applicant:
+                      - кандидат не найден
+                    stage:
+                      - этап не найден
+                Пример ответа 2:
+                  value:
+                    stage_type:
+                      - тип этапа должен быть 'sourced' или 'applied'
+                Пример ответа 3:
+                  value:
+                    ajs_join:
+                      - кандидат на вакансии уже существует
+      operationId: post-ajs_joins
+      description: Данный метод позволяет добавить уже созданного кандидата на вакансию
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  job_id: 452311
+                  applicant_id: 21297318
+                  stage_type: sourced
+              properties:
+                job_id:
+                  type: integer
+                  description: ID вакансии
+                  example: 1234
+                applicant_id:
+                  type: integer
+                  description: ID кандидата
+                  example: 4321
+                stage_type:
+                  type: string
+                  description: |-
+                    ID типа этапа. Может быть только 
+
+                    `sourced` - добавлен
+
+                    `applied` - откликнулся
+                  enum:
+                    - sourced
+                    - applied
+                  example: sourced
+              required:
+                - job_id
+                - applicant_id
+                - stage_type
+            examples:
+              Пример запроса:
+                value:
+                  job_id: 1234
+                  applicant_id: 4321
+                  stage_type: sourced
+      tags:
+        - кандидаты
     parameters: []
   '/applicants​/{applicant_id}.json':
     parameters:
@@ -5961,515 +6479,6 @@ paths:
       tags:
         - кандидаты на вакансии
     parameters: []
-  /cursor_paginated/jobs.json:
-    get:
-      summary: Получение списка вакансий с курсорной пагинацией
-      tags:
-        - вакансии
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                x-examples:
-                  example-1:
-                    objects:
-                      jobs:
-                        - id: 500022
-                          name: dictioinary test-8
-                          description: bla bla car
-                          schedule_type: fullDay
-                          salary_from: 0
-                          salary_to: 0
-                          code: '12'
-                          code_enable: false
-                          experience_type: between3And6
-                          employment_type: full
-                          currency_type: RUR
-                          key_skills:
-                            - string
-                          city: '0'
-                          created_at: '2022-11-03T21:27:53.567+03:00'
-                          updated_at: '2022-11-03T21:27:53.790+03:00'
-                          first_opened_at: '2022-11-03T21:27:53.788+03:00'
-                          archived: false
-                          demand: null
-                          closed_at: null
-                          closure_date: null
-                          private: false
-                          direction_code: Test-098
-                          job_type: ever_2
-                          staffing_item_full_ext_id: null
-                          staffing_item_parent_full_ext_id: null
-                          priority: low
-                          do_not_consider_in_kpi: false
-                          source_job_id: null
-                          state_id: opened
-                          company_department: null
-                          published: false
-                          publish_location: null
-                          applicants_count:
-                            all: 0
-                            active: 0
-                          stages:
-                            - id: 4973260
-                              name: Откликнулся
-                              serial: 0
-                              active_applicants: 0
-                              declined_applicants: 0
-                              stage_type: applied
-                            - id: 4973261
-                              name: Добавлен
-                              serial: 1
-                              active_applicants: 0
-                              declined_applicants: 0
-                              stage_type: sourced
-                            - id: 4973262
-                              name: Скриннинг
-                              serial: 2
-                              active_applicants: 0
-                              declined_applicants: 0
-                              stage_type: screening
-                            - id: 4973263
-                              name: Интервью с заказчиком
-                              serial: 3
-                              active_applicants: 0
-                              declined_applicants: 0
-                              stage_type: interview_client
-                            - id: 4973264
-                              name: Оффер
-                              serial: 4
-                              active_applicants: 0
-                              declined_applicants: 0
-                              stage_type: offer
-                            - id: 4973265
-                              name: Принят
-                              serial: 5
-                              active_applicants: 0
-                              declined_applicants: 0
-                              stage_type: accepted
-                          author:
-                            id: 92300
-                            name: Суперадмин
-                            email: n.m.arkova@potok.io
-                            avatar: null
-                            phones: []
-                          job_bindings: []
-                          executive_recruiter: null
-                          jobs_users:
-                            - id: 1334255
-                              job_id: 500022
-                              role:
-                                id: 18124
-                                name: Суперадмин
-                                company_id: 4174
-                                role_type: superadmin
-                                billing: true
-                              user_id: 92300
-                              user:
-                                id: 92300
-                                name: Суперадмин
-                                email: n.m.arkova@potok.io
-                                avatar: null
-                                phones: []
-                          gleb: null
-                          autor: null
-                          datum: null
-                          dinam_var: null
-                          dynamic_field: null
-                      counters:
-                        mine: 0
-                        archived: 0
-                        unarchived: 39
-                        other: 0
-                        appoint: 0
-                        active: 0
-                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
-                    has_next_page: true
-                    total_count: 39
-                properties:
-                  objects:
-                    type: object
-                    properties:
-                      jobs:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Job'
-                      counters:
-                        type: object
-                        description: Счетчик вакансий по параметрам
-                        properties:
-                          mine:
-                            type: integer
-                            description: Мои вакансии
-                            example: 1
-                          archived:
-                            type: integer
-                            description: Архивные вакансии
-                            example: 2
-                          unarchived:
-                            type: integer
-                            description: Неархивные вакансии
-                            example: 5
-                          other:
-                            type: integer
-                            description: Другие вакансии
-                            example: 1
-                          appoint:
-                            type: integer
-                            description: Вакансии с назначенными кандидатами
-                            example: 3
-                          active:
-                            type: integer
-                            description: Активные вакансии (`mine` + `other`)
-                            example: 2
-                    required:
-                      - jobs
-                      - counters
-                  page_next_cursor:
-                    type: string
-                    description: Курсор следующей страницы
-                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
-                  has_next_page:
-                    type: boolean
-                    description: 'Признак того, имеется ли следующая страница'
-                    default: true
-                  total_count:
-                    type: integer
-                    description: Общее количество неархивных вакансий
-                    example: 5
-                required:
-                  - page_next_cursor
-                  - has_next_page
-                  - total_count
-              examples:
-                Пример ответа:
-                  value:
-                    objects:
-                      jobs:
-                        - - id: 1911
-                            name: Начальник технического отдела
-                            description: |-
-                              <div>
-                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Требования:</p>
-                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Обязанности:</p>
-                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Условия работы:</p>
-                              </div>
-                            schedule_type: fullDay
-                            salary_from: 10000
-                            salary_to: 20000
-                            code: 12
-                            code_enable: true
-                            experience_type: noExperience
-                            employment_type: full
-                            currency_type: RUR
-                            key_skills:
-                              - стрессоустойчивый
-                            city: '1'
-                            created_at: '2020-07-17T10:38:55.904+03:00'
-                            updated_at: '2021-07-17T10:38:55.904+03:00'
-                            first_opened_at: '2020-07-17T10:38:55.904+03:00'
-                            archived: false
-                            demand: 1
-                            closed_at: '2021-07-17T10:38:55.904+03:00'
-                            closure_date: '2022-07-17T10:38:55.904+03:00'
-                            private: false
-                            direction_code: '1357'
-                            source_job_id: 469885
-                            job_type: point
-                            staffing_item_full_ext_id: position_1234
-                            staffing_item_parent_full_ext_id: department_4321
-                            priority: highest
-                            state_id: opened
-                            company_department:
-                              archived: false
-                              id: 3121
-                              name: IT Department
-                            published: true
-                            publish_location: 'https://career.potok.io/open/jobs/1911'
-                            applicants_count:
-                              all: 3
-                              active: 2
-                            stages:
-                              - id: 1918
-                                name: Проверка СБ
-                                serial: 789
-                                active_applicants: 2
-                                declined_applicants: 1
-                                stage_type: security
-                            author:
-                              id: 11
-                              name: Иванов Иван Иванович
-                              email: ivan@ivanov.com
-                              avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                              phones:
-                                - '79996543221'
-                            job_bindings:
-                              - id: 657
-                                type: 'JobBinding::Career'
-                                url: 'https://career.potok.io/open/jobs/1911'
-                                info:
-                                  name: Начальник технического отдела
-                                  description: |-
-                                    <div>
-                                    <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Требования:</p>
-                                    <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Обязанности:</p>
-                                    <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Условия работы:</p>
-                                    </div>
-                                  schedule_type: fullDay
-                            executive_recruiter:
-                              id: 11
-                              name: Иванов Иван Иванович
-                              email: ivan@ivanov.com
-                              avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                              phones:
-                                - '79996543221'
-                            jobs_users:
-                              - id: 1234
-                                job_id: 1911
-                                role:
-                                  id: 4321
-                                  company_id: 99
-                                  name: Суперадмин
-                                  role_type: superadmin
-                                  billing: true
-                                user:
-                                  id: 11
-                                  name: Иванов Иван Иванович
-                                  email: ivan@ivanov.com
-                                  avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                                  phones:
-                                    - '79996543221'
-                      counters:
-                        mine: 1
-                        archived: 2
-                        unarchived: 5
-                        other: 1
-                        appoint: 3
-                        active: 2
-                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
-                    has_next_page: true
-                    total_count: 5
-        '422':
-          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
-          content:
-            application/json:
-              schema:
-                type: object
-                x-examples:
-                  example-1:
-                    errors:
-                      page_cursor:
-                        - is not base64 string
-                properties:
-                  errors:
-                    type: object
-              examples:
-                Пример ответа:
-                  value:
-                    errors:
-                      page_cursor:
-                        - is not base64 string
-      operationId: get-cursor_paginated-jobs.json
-      description: Позволяет получить список вакансий с курсорной пагинацией
-      parameters:
-        - schema:
-            type: string
-            enum:
-              - all
-              - active
-            example: active
-            default: active
-          in: query
-          name: by_scope
-          description: '`all` (чтобы получить все вакансии) или `active` (чтобы получить активные вакансии). Значение по умолчанию `active`'
-        - $ref: '#/components/parameters/per_page'
-        - schema:
-            type: string
-            example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
-          in: query
-          name: page_cursor
-          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
-  /ajs_joins:
-    post:
-      summary: Добавление кандидата на вакансию
-      tags:
-        - кандидаты на вакансии
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                x-examples:
-                  example-1:
-                    id: 26236739
-                    job:
-                      id: 452311
-                      name: Инженер-технолог
-                      job_type: point_after
-                    applicant:
-                      id: 21297318
-                      name: Сидоров
-                    stage:
-                      id: 4425321
-                      name: Добавлен
-                      serial: 1
-                      stage_type: sourced
-                properties:
-                  id:
-                    type: integer
-                    description: ID кандидата на вакансии
-                  job:
-                    type: object
-                    required:
-                      - id
-                      - name
-                      - job_type
-                    description: Вакансия
-                    properties:
-                      id:
-                        type: integer
-                        description: ID вакансии
-                        example: 1234
-                      name:
-                        type: string
-                        description: Название вакансии
-                        example: Название вакансии
-                      job_type:
-                        type: string
-                        description: ID воронки подбора
-                        example: point
-                  applicant:
-                    type: object
-                    required:
-                      - id
-                      - name
-                    description: Кандидат
-                    properties:
-                      id:
-                        type: integer
-                        description: ID кандидата
-                        example: 4321
-                      name:
-                        type: string
-                        description: ФИО кандидата
-                        example: Иванов Иван Иванович
-                  stage:
-                    type: object
-                    required:
-                      - id
-                      - name
-                      - serial
-                      - stage_type
-                    description: Этап
-                    properties:
-                      id:
-                        type: integer
-                        description: ID этапа
-                        example: 5324
-                      name:
-                        type: string
-                        description: Название этапа
-                        example: Добавлен
-                      serial:
-                        type: integer
-                        description: Порядковый номер этапа в воронке
-                        example: 1
-                      stage_type:
-                        type: string
-                        description: ID типа этапа
-                        example: sourced
-                required:
-                  - id
-                  - job
-                  - applicant
-                  - stage
-              examples:
-                Пример ответа:
-                  value:
-                    id: 0
-                    job:
-                      id: 1234
-                      name: Название вакансии
-                      job_type: point
-                    applicant:
-                      id: 4321
-                      name: Иванов Иван Иванович
-                    stage:
-                      id: 5324
-                      name: Добавлен
-                      serial: 1
-                      stage_type: sourced
-        '422':
-          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
-          content:
-            application/json:
-              schema:
-                type: object
-                x-examples:
-                  example-1:
-                    job:
-                      - вакансия не найдена
-              examples:
-                Пример ответа 1:
-                  value:
-                    job:
-                      - вакансия не найдена
-                    applicant:
-                      - кандидат не найден
-                    stage:
-                      - этап не найден
-                Пример ответа 2:
-                  value:
-                    stage_type:
-                      - тип этапа должен быть 'sourced' или 'applied'
-                Пример ответа 3:
-                  value:
-                    ajs_join:
-                      - кандидат на вакансии уже существует
-      operationId: post-ajs_joins
-      description: Данный метод позволяет добавить уже созданного кандидата на вакансию
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              x-examples:
-                example-1:
-                  job_id: 452311
-                  applicant_id: 21297318
-                  stage_type: sourced
-              properties:
-                job_id:
-                  type: integer
-                  description: ID вакансии
-                  example: 1234
-                applicant_id:
-                  type: integer
-                  description: ID кандидата
-                  example: 4321
-                stage_type:
-                  type: string
-                  description: ID типа этапа. Может быть только `sourced` или `applied`
-                  enum:
-                    - sourced
-                    - applied
-                  example: sourced
-              required:
-                - job_id
-                - applicant_id
-                - stage_type
-            examples:
-              Пример запроса:
-                value:
-                  job_id: 1234
-                  applicant_id: 4321
-                  stage_type: sourced
-    parameters: []
   '/applicants/{applicant_id}/templated_offers':
     parameters:
       - schema:
@@ -6481,8 +6490,6 @@ paths:
         description: ID кандидата
     get:
       summary: Просмотр офферов кандидата
-      tags:
-        - кандидаты
       responses:
         '200':
           description: OK
@@ -6654,12 +6661,17 @@ paths:
         '404':
           description: Указанный `applicant_id` не существует
       operationId: get-applicants-applicant_id-templated_offers
-      description: 'Данный метод позволяет получить данные об офферах v2 кандидата, а также сопутствующую информацию по офферу (id вакансиии, id кандидата, статус согласования оффера)'
+      description: |-
+        Данный метод позволяет получить данные об офферах v2 кандидата, а также сопутствующую информацию по офферу (id вакансиии, id кандидата, статус согласования оффера).
+
+        При наличии нескольких офферов - они возвращаются в хронологическом порядке, начиная с последнего созданного в системе.
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
         - $ref: '#/components/parameters/f-jobs_id'
         - $ref: '#/components/parameters/f-approval_state'
+      tags:
+        - кандидаты на вакансии
 components:
   schemas:
     author:
