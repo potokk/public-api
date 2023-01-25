@@ -8661,7 +8661,7 @@ components:
                 type: string
             phones:
               type: array
-              description: Телефоны кандидата
+              description: Телефоны кандидата `Обязательно передавать с кодом страны`
               items:
                 type: string
             born:
@@ -9202,7 +9202,7 @@ components:
           description: Ссылка на аккаунт skype
         phones:
           type: array
-          description: 'Телефоны кандидата '
+          description: Телефоны кандидата
           items:
             type: string
         accounts:
