@@ -5036,6 +5036,94 @@ paths:
       description: Возвращает информацию о единице организационно-штатной структуры - ее название и полный путь до нее
       tags:
         - организационно-штатная структура
+  /staffing_items.json:
+    get:
+      summary: Получение информации о ветке организационно-штатной структуры
+      tags:
+        - организационно-штатная структура
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    objects:
+                      ext_id: '61793'
+                      name: Отдел технической поддержки
+                      node_id: department_61793
+                      path: department_81.department_61793
+                      company_id: 1
+                properties:
+                  objects:
+                    type: object
+                    properties:
+                      ext_id:
+                        type: string
+                        description: Внешний ID единицы организационно-штатной структуры
+                        example: '1022673'
+                      name:
+                        type: string
+                        description: Название
+                        example: HR бизнес партнер по операционной деятельности
+                      node_id:
+                        type: string
+                        description: Полный внешний ID
+                        example: position_1022673
+                      path:
+                        type: string
+                        description: Путь по организационно-штатной структуре до заданной единицы
+                        example: department_518.department_516.department_507.position_1022673
+                      company_id:
+                        type: integer
+                        description: ID компании
+                        example: 2888
+                    required:
+                      - ext_id
+                      - name
+                      - node_id
+                      - path
+                      - company_id
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      ext_id: '1022673'
+                      name: HR бизнес партнер по операционной деятельности
+                      node_id: position_1022673
+                      path: department_518.department_516.department_507.position_1022673
+                      company_id: 2888
+        '404':
+          description: Не найдена единица организационно-штатной структуры
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                x-examples:
+                  example-1:
+                    errors:
+                      - not_found
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      - not_found
+      operationId: get-staffing_items.json
+      parameters:
+        - schema:
+            type: string
+            example: position_1022673
+          in: query
+          name: node_id
+          description: 'Составной ID для поиска по полному внешнему ID: `{item_type}_ID`. Возможные `item_type`: `department` `position` `new_position`'
+      description: Возвращает информацию о всех единицах организационно-штатной структуры от запрошенной штатной единицы до корневого элемента - их название и полный путь
   /users.json:
     get:
       summary: Список пользователей компании
@@ -6672,6 +6760,125 @@ paths:
         - $ref: '#/components/parameters/f-approval_state'
       tags:
         - кандидаты на вакансии
+  '/ajs_joins/{ajs_join_id}.json':
+    parameters:
+      - schema:
+          type: string
+        name: ajs_join_id
+        in: path
+        required: true
+    put:
+      summary: 'Обновление значения динамического поля '
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    id: 0
+                    stage_id: 0
+                    applicant_id: 0
+                    job_id: 0
+                    responsible_user_id: 0
+                    stage_type: push_to_nfs
+                    state_id: null
+                properties:
+                  id:
+                    type: integer
+                    description: ID кандидата на вакансии
+                    example: 1234
+                  stage_id:
+                    type: integer
+                    description: ID этапа
+                    example: 234
+                  applicant_id:
+                    type: integer
+                    description: ID кандидата
+                    example: 4321
+                  job_id:
+                    type: integer
+                    description: ID вакансии
+                    example: 2
+                  responsible_user_id:
+                    type: integer
+                    description: 'ID ответственного за кандидата на вакансии. Является частью функциональности `Массовый подбор`. Будет пустым, если функциональность не подключена'
+                    example: 44
+                  stage_type:
+                    type: string
+                    description: ID типа этапа
+                    example: security
+                  state_id:
+                    type: string
+                    description: ID cтатуса на этапе
+                    example: not_sent
+                required:
+                  - id
+                  - stage_id
+                  - applicant_id
+                  - job_id
+                  - responsible_user_id
+                  - stage_type
+                  - state_id
+              examples:
+                Пример ответа:
+                  value:
+                    id: 1234
+                    stage_id: 234
+                    applicant_id: 4321
+                    job_id: 2
+                    responsible_user_id: 44
+                    stage_type: security
+                    state_id: not_sent
+                    dynamic_field1: пример
+                    dynamic_field2: 10
+                    dynamic_field3:
+                      - id: '2'
+                        value: пример
+      operationId: put-ajs_joins-ajs_join_id-.json
+      description: |-
+        Метод позволяет редактировать значение передаваемого динамического поля кандидата на вакансии. Обновлены будут только присланные поля. 
+        В объекте `ajs_join`передаются динамические поля с их значениями. В схеме запроса указаны типы возможных динамических полей для редактирования с помощью данного метода.
+        В ответе также будут приходить все имеющиеся динамические поля данного кандидата на вакансии.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  ajs_join:
+                    dynamic_string_field: string
+                    dynamic_int_field: 0
+                    dynamic_string_array_field:
+                      - string
+              properties:
+                ajs_join:
+                  type: object
+                  properties:
+                    dynamic_string_field:
+                      type: string
+                    dynamic_int_field:
+                      type: integer
+                    dynamic_string_array_field:
+                      type: array
+                      items:
+                        type: string
+              required:
+                - ajs_join
+            examples:
+              Пример запроса с 3 типами динамических полей:
+                value:
+                  ajs_join:
+                    dynamic_field1: пример
+                    dynamic_field2: 10
+                    dynamic_field3:
+                      - id: '2'
+                        value: пример
 components:
   schemas:
     author:
