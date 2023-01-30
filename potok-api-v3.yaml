@@ -5122,7 +5122,7 @@ paths:
             example: position_1022673
           in: query
           name: node_id
-          description: 'Составной ID для поиска по полному внешнему ID: `{item_type}_ID`. Возможные `item_type`: `department` `position` `new_position`'
+          description: 'Составной ID для поиска по полному внешнему ID: `{item_type}_ID`. Возможные `item_type`: `department` `position`'
       description: Возвращает информацию о всех единицах организационно-штатной структуры от запрошенной штатной единицы до корневого элемента - их название и полный путь
   /users.json:
     get:
