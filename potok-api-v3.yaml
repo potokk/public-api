@@ -4953,7 +4953,7 @@ paths:
         name: node_id
         in: path
         required: true
-        description: 'Составной ID для поиска по полному внешнему ID: `{item_type}_ID`. Возможные `item_type`: `department` `position` `new_position`'
+        description: 'Составной ID для поиска по полному внешнему ID: `{item_type}_ID`. Возможные `item_type`: `department` `position`'
     get:
       summary: Получение информации о единице организационно-штатной структуры
       responses:
