@@ -1698,6 +1698,7 @@ paths:
                           stage_type: sourced
                         responsible_user_id: 51293
                         planned_employment_date: '2022-12-12'
+                    notes: текст заметки
         '402':
           description: Подписка компании просрочена
         '422':
@@ -2101,6 +2102,7 @@ paths:
                               stage_type: sourced
                             responsible_user_id: 51293
                             planned_employment_date: '2022-12-12'
+                        notes: текст заметки
                     per_page: 1
                     pages: 4
                     page: 1
@@ -2536,6 +2538,7 @@ paths:
                           stage_type: sourced
                         responsible_user_id: 51293
                         planned_employment_date: '2022-12-12'
+                    notes: текст заметки
         '402':
           description: Подписка компании просрочена
         '422':
@@ -2920,6 +2923,7 @@ paths:
                           stage_type: sourced
                         responsible_user_id: 51293
                         planned_employment_date: '2022-12-12'
+                    notes: текст заметки
         '402':
           description: Подписка компании просрочена
         '404':
@@ -9367,6 +9371,7 @@ components:
                 stage_type: sourced
               responsible_user_id: 51293
               planned_employment_date: '2022-12-12'
+          notes: текст заметки
       properties:
         id:
           type: integer
@@ -9655,6 +9660,10 @@ components:
                 type: string
                 description: Планируемая дата выхода
                 example: '2022-12-12'
+        notes:
+          type: string
+          description: Текст из поля `Заметка о кандидате` в карточке кандидата
+          example: текст заметки
       required:
         - id
         - first_name
