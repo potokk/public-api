@@ -6898,6 +6898,7 @@ paths:
     parameters:
       - schema:
           type: integer
+          example: 123456
         name: applicant_id
         in: path
         required: true
@@ -6919,14 +6920,6 @@ paths:
                     has_next_page: true
                     objects: 'Unknown Type: Array'
                 properties:
-                  page_next_cursor:
-                    type: string
-                    description: Курсор следующей страницы
-                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
-                  has_next_page:
-                    type: boolean
-                    default: true
-                    description: 'Признак того, имеется ли следующая страница'
                   objects:
                     type: array
                     description: 'Массив, в котором каждый объект - это заполненная анкета СБ'
@@ -6956,6 +6949,14 @@ paths:
                         dynamic_fields:
                           type: object
                           description: Динамические поля анкеты
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                  has_next_page:
+                    type: boolean
+                    default: true
+                    description: 'Признак того, имеется ли следующая страница'
               examples:
                 Пример ответа:
                   value:
@@ -6984,23 +6985,29 @@ paths:
                       page_cursor:
                         - is not base64 string
       operationId: get-applicants-applicant_id-security_forms
-      description: Позволяет получать список заполненных анкет СБ кандидата. Есть возможность выводить анкеты с фильтром по вакансии
+      description: Позволяет получать список заполненных анкет СБ кандидата. Есть возможность выводить анкеты с фильтром по вакансиям
       parameters:
         - schema:
             type: string
           in: query
           name: page_cursor
-          description: Курсор для пагинации
+          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
         - schema:
-            type: string
+            type: number
           in: query
           name: page_size
           description: Кол-во записей на странице (по умолчанию 20)
-        - $ref: '#/components/parameters/f-jobs_id'
+        - in: query
+          name: 'f[job_ids][]'
+          schema:
+            type: integer
+            example: 123456
+          description: 'Фильтр по id вакансии. Можно передавать несколько id вакансий, тогда query-параметр будет иметь вид ?f[job_ids][]=1234&f[job_ids][]=321'
   '/jobs/{job_id}/ajs_joins.json':
     parameters:
       - schema:
           type: integer
+          example: 123456
         name: job_id
         in: path
         required: true
@@ -7131,16 +7138,20 @@ paths:
       parameters:
         - schema:
             type: integer
+            example: 123456
           in: query
           description: ID кандидата
           name: applicant_id
         - schema:
             type: string
+            example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
           in: query
           name: page_cursor
-          description: Курсор для пагинации
+          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
         - schema:
-            type: string
+            type: number
+            default: '20'
+            example: '20'
           in: query
           name: page_size
           description: Кол-во записей на странице (по умолчанию 20)
