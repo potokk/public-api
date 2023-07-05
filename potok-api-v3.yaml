@@ -6894,6 +6894,267 @@ paths:
                     dynamic_field3:
                       - id: '2'
                         value: пример
+  '/applicants/{applicant_id}/security_forms':
+    parameters:
+      - schema:
+          type: integer
+          example: 123456
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    get:
+      summary: Получение списка анкет СБ
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    page_next_cursor: string
+                    has_next_page: true
+                    objects: 'Unknown Type: Array'
+                properties:
+                  objects:
+                    type: array
+                    description: 'Массив, в котором каждый объект - это заполненная анкета СБ'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 123
+                          description: id анкеты
+                        job_id:
+                          type: integer
+                          example: 123456
+                          description: id вакансии
+                        applicant_id:
+                          type: integer
+                          example: 1234567
+                          description: id кандидата
+                        created_at:
+                          type: string
+                          description: 'Время создания анкеты (в формате ISO 8601 с точностью до миллисекунд YYYY-MM-DDThh:mm:ss.mmm±hh:mm)'
+                          example: '2020-07-06T16:04:26.387+03:00'
+                        updated_at:
+                          type: string
+                          description: 'Время последнего изменения анкеты (в формате ISO 8601 с точностью до миллисекунд YYYY-MM-DDThh:mm:ss.mmm±hh:mm)'
+                          example: '2020-07-06T16:04:26.387+03:00'
+                        dynamic_fields:
+                          type: object
+                          description: Динамические поля анкеты
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                  has_next_page:
+                    type: boolean
+                    default: true
+                    description: 'Признак того, имеется ли следующая страница'
+              examples:
+                Пример ответа:
+                  value:
+                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                    has_next_page: true
+                    objects:
+                      - id: 123
+                        job_id: 123456
+                        applicant_id: 1234567
+                        created_at: '2020-07-06T16:04:26.387+03:00'
+                        updated_at: '2020-07-06T16:04:26.387+03:00'
+                        dynamic_fields: {}
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      page_cursor:
+                        - is not base64 string
+      operationId: get-applicants-applicant_id-security_forms
+      description: Позволяет получать список заполненных анкет СБ кандидата. Есть возможность выводить анкеты с фильтром по вакансиям
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: page_cursor
+          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
+        - schema:
+            type: number
+          in: query
+          name: page_size
+          description: Кол-во записей на странице (по умолчанию 20)
+        - in: query
+          name: 'f[job_ids][]'
+          schema:
+            type: integer
+            example: 123456
+          description: 'Фильтр по id вакансии. Можно передавать несколько id вакансий, тогда query-параметр будет иметь вид ?f[job_ids][]=1234&f[job_ids][]=321'
+  '/jobs/{job_id}/ajs_joins.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 123456
+        name: job_id
+        in: path
+        required: true
+        description: ID вакансии
+    get:
+      summary: Получение динамических полей ajsjoin
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    objects:
+                      - id: 0
+                        job_id: 0
+                        applicant_id: 0
+                        stage_id: 0
+                        responsible_user_id: 0
+                        demand_id: 0
+                        planned_employment_date: string
+                        datetime_of_create: string
+                        dynamic_fields: {}
+                        active: true
+                    has_next_page: true
+                    page_next_cursor: string
+                properties:
+                  objects:
+                    type: array
+                    description: 'Связи кандидатов с вакансией. Если не задан параметр applicant_id, выводится информация обо всех кандидатах на этой вакансии'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID кандидата на вакансии
+                          example: 1234567
+                        job_id:
+                          type: integer
+                          description: ID вакансии
+                          example: 123456
+                        applicant_id:
+                          type: integer
+                          description: ID кандидата
+                          example: 123456
+                        stage:
+                          type: object
+                          description: 'Этап, на котором находится кандидат на вакансии'
+                          properties:
+                            id:
+                              type: integer
+                              example: 1234567
+                              description: ID этапа
+                            stage_type:
+                              type: string
+                              example: security
+                              description: Тип этапа
+                        responsible_user_id:
+                          type: integer
+                          description: 'ID ответственного за кандидата на вакансии. Является частью функциональности Массовый подбор. Будет пустым, если функциональность не подключена'
+                          example: 51293
+                        demand_id:
+                          type: integer
+                          description: ID потребности
+                          example: 6376
+                        planned_employment_date:
+                          type: string
+                          description: Ожидаемая дата выхода
+                          example: '2022-12-12'
+                        datetime_of_create:
+                          type: string
+                          description: 'Время создания вакансии (в формате ISO 8601 с точностью до миллисекунд YYYY-MM-DDThh:mm:ss.mmm±hh:mm)'
+                          example: '2020-07-06T16:04:26.387+03:00'
+                        dynamic_fields:
+                          type: object
+                          description: Динамические поля ajsjoin
+                        active:
+                          type: boolean
+                          description: Признак активности кандидата на вакансии
+                          default: true
+                  has_next_page:
+                    type: boolean
+                    description: 'Признак того, имеется ли следующая страница'
+                    default: true
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 1234567
+                        job_id: 123456
+                        applicant_id: 123456
+                        stage:
+                          id: 1234567
+                          stage_type: security
+                        responsible_user_id: 51293
+                        demand_id: 6376
+                        planned_employment_date: '2022-12-12'
+                        datetime_of_create: '2020-07-06T16:04:26.387+03:00'
+                        dynamic_fields: {}
+                        active: true
+                    has_next_page: true
+                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      page_cursor:
+                        - is not base64 string
+      operationId: get-jobs-job_id-ajs_joins.json
+      description: 'Позволяет просматривать поля кандидата на вакансии, в том числе динамические. Динамические поля настраиваются на стороне системы по требованию клиента'
+      parameters:
+        - schema:
+            type: integer
+            example: 123456
+          in: query
+          description: ID кандидата
+          name: applicant_id
+        - schema:
+            type: string
+            example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+          in: query
+          name: page_cursor
+          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
+        - schema:
+            type: number
+            default: '20'
+            example: '20'
+          in: query
+          name: page_size
+          description: Кол-во записей на странице (по умолчанию 20)
 components:
   schemas:
     author:
