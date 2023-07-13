@@ -7150,11 +7150,230 @@ paths:
           description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
         - schema:
             type: number
-            default: '20'
-            example: '20'
+            default: 20
+            example: 20
           in: query
           name: page_size
           description: Кол-во записей на странице (по умолчанию 20)
+  /dictionaries.json:
+    get:
+      summary: Получение информации о справочниках компании
+      tags:
+        - справочники
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    objects:
+                      - id: 89072
+                        name: language_lev_kab
+                        archived: false
+                      - id: 89073
+                        name: attitude_military_service
+                        archived: false
+                      - id: 89074
+                        name: type_drive_lic
+                        archived: false
+                      - id: 89075
+                        name: maritalstatus
+                        archived: false
+                      - id: 110898
+                        name: test12387634
+                        archived: true
+                      - id: 115018
+                        name: Test
+                        archived: true
+                      - id: 115047
+                        name: Test123
+                        archived: true
+                      - id: 119325
+                        name: Словарь
+                        archived: true
+                      - id: 119952
+                        name: Статус привики Covid-19
+                        archived: true
+                      - id: 119989
+                        name: genders
+                        archived: false
+                    has_next_page: true
+                    page_next_cursor: MTE5OTg5
+                properties:
+                  objects:
+                    type: array
+                    description: Массив словарей
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID словаря
+                          example: 1234
+                        name:
+                          type: string
+                          description: Название словаря
+                          example: Словарь
+                        archived:
+                          type: boolean
+                          description: Признак архивности словаря
+                          default: false
+                  has_next_page:
+                    type: boolean
+                    default: true
+                  page_next_cursor:
+                    type: string
+                    example: MTE5OTg5
+                required:
+                  - objects
+                  - has_next_page
+                  - page_next_cursor
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 1234
+                        name: Словарь
+                        archived: false
+                    has_next_page: true
+                    page_next_cursor: MTE5OTg5
+        '422':
+          description: Описание ошибки
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Example 1:
+                  value:
+                    id - не найдено: null
+                Example 2:
+                  value:
+                    page - пустое: null
+      operationId: get-dictionaries.json
+      description: Позволяет получить информацию о всех справочниках компании
+      parameters:
+        - $ref: '#/components/parameters/page_size'
+        - schema:
+            type: string
+          in: query
+          name: ываыва
+          description: ываыва
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              components:
+                schemas:
+                  Job:
+                    children:
+                      - children:
+                          - description: jID Вакансии
+              properties:
+                job:
+                  $ref: '#/components/schemas/Job'
+            examples:
+              Example 1:
+                value:
+                  job:
+                    - id: 1911
+                      name: Начальник технического отдела
+                      description: |-
+                        <div>
+                        <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Требования:</p>
+                        <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Обязанности:</p>
+                        <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Условия работы:</p>
+                        </div>
+                      schedule_type: fullDay
+                      salary_from: 10000
+                      salary_to: 20000
+                      code: 12
+                      code_enable: true
+                      experience_type: noExperience
+                      employment_type: full
+                      currency_type: RUR
+                      key_skills:
+                        - стрессоустойчивый
+                      city: '1'
+                      created_at: '2020-07-17T10:38:55.904+03:00'
+                      updated_at: '2021-07-17T10:38:55.904+03:00'
+                      first_opened_at: '2020-07-17T10:38:55.904+03:00'
+                      archived: false
+                      demand: 1
+                      closed_at: '2021-07-17T10:38:55.904+03:00'
+                      closure_date: '2022-07-17T10:38:55.904+03:00'
+                      private: false
+                      direction_code: '1357'
+                      source_job_id: 469885
+                      job_type: point
+                      staffing_item_full_ext_id: position_1234
+                      staffing_item_parent_full_ext_id: department_4321
+                      priority: highest
+                      state_id: opened
+                      company_department:
+                        archived: false
+                        id: 3121
+                        name: IT Department
+                      published: true
+                      publish_location: 'https://career.potok.io/open/jobs/1911'
+                      applicants_count:
+                        all: 3
+                        active: 2
+                      stages:
+                        - id: 1918
+                          name: Проверка СБ
+                          serial: 789
+                          active_applicants: 2
+                          declined_applicants: 1
+                          stage_type: security
+                      author:
+                        id: 11
+                        name: Иванов Иван Иванович
+                        email: ivan@ivanov.com
+                        avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        phones:
+                          - '79996543221'
+                      job_bindings:
+                        - id: 657
+                          type: 'JobBinding::Career'
+                          url: 'https://career.potok.io/open/jobs/1911'
+                          info:
+                            name: Начальник технического отдела
+                            description: |-
+                              <div>
+                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Требования:</p>
+                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Обязанности:</p>
+                              <p style="white-space:pre-wrap;line-height:1;margin:6px 0;">Условия работы:</p>
+                              </div>
+                            schedule_type: fullDay
+                      executive_recruiter:
+                        id: 11
+                        name: Иванов Иван Иванович
+                        email: ivan@ivanov.com
+                        avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                        phones:
+                          - '79996543221'
+                      jobs_users:
+                        - id: 1234
+                          job_id: 1911
+                          role:
+                            id: 4321
+                            company_id: 99
+                            name: Суперадмин
+                            role_type: superadmin
+                            billing: true
+                          user:
+                            id: 11
+                            name: Иванов Иван Иванович
+                            email: ivan@ivanov.com
+                            avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                            phones:
+                              - '79996543221'
 components:
   schemas:
     author:
@@ -11240,6 +11459,15 @@ components:
           - initialized
           - accepted
       description: Фильтр по статусу согласования оффера
+    page_size:
+      name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 20
+        example: 20
+      description: Количество записей на странице (по умолчанию 20)
 security:
   - headerToken: []
   - queryToken: []
