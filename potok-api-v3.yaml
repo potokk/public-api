@@ -7255,7 +7255,7 @@ paths:
                   value:
                     page - пустое: null
       operationId: get-dictionaries.json
-      description: Позволяет получить информацию о всех справочниках компании ddd
+      description: Позволяет получить информацию о всех справочниках компании
       parameters:
         - $ref: '#/components/parameters/page_size'
         - schema:
