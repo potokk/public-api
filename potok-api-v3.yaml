@@ -7155,6 +7155,245 @@ paths:
           in: query
           name: page_size
           description: Кол-во записей на странице (по умолчанию 20)
+  /finalists:
+    get:
+      summary: Получение списка финалистов
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    objects:
+                      - id: 2
+                        job_id: 664623
+                        applicant_id: 19811089
+                        state: sent
+                        created_at: '2023-07-24T10:13:52Z'
+                        updated_at: '2023-07-24T15:28:53Z'
+                    page_next_cursor: Mg==
+                    has_next_page: false
+                properties:
+                  objects:
+                    type: array
+                    description: Массив с финалистами
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: id финалиста
+                          example: 1
+                        job_id:
+                          type: integer
+                          description: id вакансии
+                          example: 123456
+                        applicant_id:
+                          type: integer
+                          description: id кандидата
+                          example: 1234567
+                        state:
+                          type: string
+                          description: Статус финалиста
+                          example: ready_to_send
+                        created_at:
+                          type: string
+                          description: Дата создания
+                          example: '2023-07-24T10:13:52Z'
+                        updated_at:
+                          type: string
+                          description: Дата последнего обновления
+                          example: '2023-07-24T10:13:52Z'
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                  has_next_page:
+                    type: boolean
+                    description: 'Признак того, имеется ли следующая страница'
+                required:
+                  - objects
+                  - page_next_cursor
+                  - has_next_page
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 1
+                        job_id: 123456
+                        applicant_id: 1234567
+                        state: ready_to_send
+                        created_at: '2023-07-24T10:13:52Z'
+                        updated_at: '2023-07-24T10:13:52Z'
+                    page_next_cursor: Mg==
+                    has_next_page: true
+      operationId: get-api-v3-finalists
+      description: |-
+        Метод позволяет получить список финалистов. 
+        Есть возможность фильтрации по job_id и state при помощи query-параметров. 
+      parameters:
+        - schema:
+            type: integer
+            example: 123456
+          in: query
+          name: job_id
+          description: id вакансии
+        - schema:
+            type: string
+            example: ready_to_send
+          in: query
+          name: state
+          description: Статус финалиста
+    parameters: []
+  '/finalists/{finalist_id}':
+    get:
+      summary: Получение финалиста по id
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    id: 2
+                    job_id: 664623
+                    applicant_id: 19811089
+                    state: ready_to_send
+                    created_at: '2023-07-24T10:13:52Z'
+                    updated_at: '2023-07-24T10:13:52Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                    description: id финалиста
+                  job_id:
+                    type: integer
+                    example: 123456
+                    description: id вакансии
+                  applicant_id:
+                    type: integer
+                    example: 1234567
+                    description: id кандидата
+                  state:
+                    type: string
+                    example: ready_to_send
+                    description: Статус финалиста
+                  created_at:
+                    type: string
+                    example: '2023-07-24T10:13:52Z'
+                    description: Дата создания финалиста
+                  updated_at:
+                    type: string
+                    example: '2023-07-24T10:13:52Z'
+                    description: Дата последнего редактирования финалиста
+              examples:
+                Пример ответа:
+                  value:
+                    id: 123
+                    job_id: 123456
+                    applicant_id: 1234567
+                    state: ready_to_send
+                    created_at: '2023-07-24T10:13:52Z'
+                    updated_at: '2023-07-24T10:13:52Z'
+      operationId: get-finalists
+      description: Получение финалиста по его id
+    parameters:
+      - schema:
+          type: integer
+          example: 123
+        name: finalist_id
+        in: path
+        required: true
+        description: id финалиста
+  '/finalists/{finalist_id}/change_state.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 123
+        name: finalist_id
+        in: path
+        required: true
+        description: id финалиста
+    post:
+      summary: Смена статуса финалиста
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    id: 2
+                    job_id: 664623
+                    applicant_id: 19811089
+                    state: sent
+                    created_at: '2023-07-24T10:13:52Z'
+                    updated_at: '2023-07-24T15:28:53Z'
+                properties:
+                  id:
+                    type: integer
+                    description: id финалиста
+                    example: 123
+                  job_id:
+                    type: integer
+                    description: id вакансии
+                    example: 123456
+                  applicant_id:
+                    type: integer
+                    description: id кандидата
+                    example: 1234567
+                  state:
+                    type: string
+                    description: Статус финалиста
+                    example: sent
+                  created_at:
+                    type: string
+                    description: Дата создания финалиста
+                    example: '2023-07-24T10:13:52Z'
+                  updated_at:
+                    type: string
+                    description: Дата последнего изменения финалиста
+                    example: '2023-07-24T10:13:52Z'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 123
+                    job_id: 123456
+                    applicant_id: 1234567
+                    state: sent
+                    created_at: '2023-07-24T10:13:52Z'
+                    updated_at: '2023-07-24T10:13:52Z'
+      operationId: post-finalists-finalist_id-change_state.json
+      description: Метод позволяет изменить статус финалиста
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  state: sent
+              properties:
+                state:
+                  type: string
+                  example: sent
+                  description: Новый статус финалиста
+              required:
+                - state
+        description: ''
 components:
   schemas:
     author:
