@@ -7207,7 +7207,7 @@ paths:
                           example: '2023-07-24T10:13:52Z'
                         updated_at:
                           type: string
-                          description: Дата последнего обновления
+                          description: 'Дата последнего обновления: создания финалиста или смены статуса'
                           example: '2023-07-24T10:13:52Z'
                   page_next_cursor:
                     type: string
@@ -7216,10 +7216,6 @@ paths:
                   has_next_page:
                     type: boolean
                     description: 'Признак того, имеется ли следующая страница'
-                required:
-                  - objects
-                  - page_next_cursor
-                  - has_next_page
               examples:
                 Пример ответа:
                   value:
@@ -7249,6 +7245,19 @@ paths:
           in: query
           name: state
           description: Статус финалиста
+        - schema:
+            type: string
+            example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+          in: query
+          name: page_cursor
+          description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
+        - schema:
+            type: number
+            default: 20
+            example: 20
+          in: query
+          name: page_size
+          description: Кол-во записей на странице (по умолчанию 20)
     parameters: []
   '/finalists/{finalist_id}':
     get:
@@ -7294,7 +7303,7 @@ paths:
                   updated_at:
                     type: string
                     example: '2023-07-24T10:13:52Z'
-                    description: Дата последнего редактирования финалиста
+                    description: 'Дата последнего обновления: создания финалиста или смены статуса'
               examples:
                 Пример ответа:
                   value:
@@ -7365,7 +7374,7 @@ paths:
                     example: '2023-07-24T10:13:52Z'
                   updated_at:
                     type: string
-                    description: Дата последнего изменения финалиста
+                    description: 'Дата последнего обновления: создания финалиста или смены статуса'
                     example: '2023-07-24T10:13:52Z'
               examples:
                 Пример ответа:
@@ -7393,6 +7402,10 @@ paths:
                   description: Новый статус финалиста
               required:
                 - state
+            examples:
+              Пример запроса:
+                value:
+                  state: sent
         description: ''
 components:
   schemas:
