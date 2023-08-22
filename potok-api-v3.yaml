@@ -7523,6 +7523,24 @@ paths:
       parameters:
         - $ref: '#/components/parameters/page_size'
         - $ref: '#/components/parameters/page_cursor'
+  '/dictionaries/{id}/items/{item_id}/archive.json':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: item_id
+        in: path
+        required: true
+    post:
+      summary: Архивация значения справочника
+      tags:
+        - справочники
+      responses: {}
+      operationId: post-dictionaries-id-items-item_id-archive.json
 components:
   schemas:
     author:
