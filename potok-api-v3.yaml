@@ -7420,6 +7420,7 @@ paths:
         - справочники
       responses: {}
       operationId: get-dictionaries-dictionary_id-items.json
+      description: Позволяет получить информацию о значения конкретного справочника компании
 components:
   schemas:
     author:
