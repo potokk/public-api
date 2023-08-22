@@ -7596,8 +7596,91 @@ paths:
       summary: Получение всех справочников компании
       tags:
         - справочники
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    objects:
+                      - id: 89072
+                        name: language_lev_kab
+                        archived: false
+                      - id: 89073
+                        name: attitude_military_service
+                        archived: false
+                      - id: 89074
+                        name: type_drive_lic
+                        archived: false
+                      - id: 89075
+                        name: maritalstatus
+                        archived: false
+                      - id: 110898
+                        name: test12387634
+                        archived: true
+                      - id: 115018
+                        name: Test
+                        archived: true
+                      - id: 115047
+                        name: Test123
+                        archived: true
+                      - id: 119325
+                        name: Словарь
+                        archived: true
+                      - id: 119952
+                        name: Статус привики Covid-19
+                        archived: true
+                      - id: 119989
+                        name: genders
+                        archived: false
+                    has_next_page: true
+                    page_next_cursor: MTE5OTg5
+                properties:
+                  objects:
+                    type: array
+                    description: Массив справочников компании
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID справочника
+                          example: 10110
+                        name:
+                          type: string
+                          description: Название справочника
+                          example: Справочник №1
+                        archived:
+                          type: boolean
+                          description: Признак архивности справочника
+                          default: false
+                  has_next_page:
+                    type: boolean
+                    description: 'Признак того, имеется ли следующая страница'
+                    default: true
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: MTE5OTg5
+                required:
+                  - objects
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 10110
+                        name: Справочник №1
+                        archived: false
+                    has_next_page: true
+                    page_next_cursor: MTE5OTg5
       operationId: get-dictionaries.json
+      description: Позволяет получить информацию о всех справочника компании
+      parameters:
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/page_cursor'
 components:
   schemas:
     author:
@@ -11690,6 +11773,7 @@ components:
       schema:
         type: integer
         default: 20
+        example: 20
       description: Количество записей на странице (по умолчанию 20)
     page_cursor:
       name: page_cursor
@@ -11697,6 +11781,7 @@ components:
       required: false
       schema:
         type: string
+        example: MTE5OTg5
       description: 'Курсор страницы. Значение берется из ответа, в параметре ''page_next_cursor'''
 security:
   - headerToken: []
