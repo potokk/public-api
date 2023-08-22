@@ -7407,6 +7407,19 @@ paths:
                 value:
                   state: sent
         description: ''
+  '/dictionaries/{dictionary_id}/items.json':
+    parameters:
+      - schema:
+          type: string
+        name: dictionary_id
+        in: path
+        required: true
+    get:
+      summary: Получение информации о значениях справочника
+      tags:
+        - справочники
+      responses: {}
+      operationId: get-dictionaries-dictionary_id-items.json
 components:
   schemas:
     author:
