@@ -7556,6 +7556,24 @@ paths:
                   value: {}
       operationId: post-dictionaries-id-items-item_id-archive.json
       description: Позволяет архивировать конкретное значение конкретного справочника компании
+  '/dictionaries/{id}/items/{item_id}/unarchive.json':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: item_id
+        in: path
+        required: true
+    post:
+      summary: Восстановление значения справочника
+      tags:
+        - справочники
+      responses: {}
+      operationId: post-dictionaries-id-items-item_id-unarchive.json
 components:
   schemas:
     author:
