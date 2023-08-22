@@ -7013,7 +7013,7 @@ paths:
         required: true
         description: ID вакансии
     get:
-      summary: Получение динамических полей ajsjoin
+      summary: Получение динамических полей
       tags:
         - кандидаты на вакансии
       responses:
@@ -7261,7 +7261,7 @@ paths:
     parameters: []
   '/finalists/{finalist_id}':
     get:
-      summary: Получение финалиста по id
+      summary: Получение финалиста
       tags:
         - кандидаты на вакансии
       responses:
