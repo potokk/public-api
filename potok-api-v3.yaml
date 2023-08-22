@@ -7559,21 +7559,43 @@ paths:
   '/dictionaries/{id}/items/{item_id}/unarchive.json':
     parameters:
       - schema:
-          type: string
+          type: integer
+          example: 123
         name: id
         in: path
         required: true
+        description: ID справочника. Можно получить методом 'GET /dictionaries.json'
       - schema:
-          type: string
+          type: integer
+          example: 12345
         name: item_id
         in: path
         required: true
+        description: 'ID значения справочника. Можно получить методом ''GET /dictionaries/{dictionary_id}/items.json'''
     post:
       summary: Восстановление значения справочника
       tags:
         - справочники
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Пример ответа:
+                  value: {}
       operationId: post-dictionaries-id-items-item_id-unarchive.json
+      description: Позволяет разахривировать (восстановить) конкретное значение конкретного справочника
+  /dictionaries.json:
+    get:
+      summary: Получение всех справочников компании
+      tags:
+        - справочники
+      responses: {}
+      operationId: get-dictionaries.json
 components:
   schemas:
     author:
