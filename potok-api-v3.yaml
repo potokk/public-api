@@ -7410,10 +7410,12 @@ paths:
   '/dictionaries/{dictionary_id}/items.json':
     parameters:
       - schema:
-          type: string
+          type: integer
+          example: 12
         name: dictionary_id
         in: path
         required: true
+        description: ID справочника. Можно получить методом 'GET /dictionaries.json'
     get:
       summary: Получение информации о значениях справочника
       tags:
