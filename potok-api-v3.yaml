@@ -7526,21 +7526,36 @@ paths:
   '/dictionaries/{id}/items/{item_id}/archive.json':
     parameters:
       - schema:
-          type: string
+          type: integer
+          example: 1
         name: id
         in: path
         required: true
+        description: ID справочника. Можно получить методом 'GET /dictionaries.json'
       - schema:
-          type: string
+          type: integer
+          example: 12345
         name: item_id
         in: path
         required: true
+        description: 'ID значения справочника. Можно получить методом ''GET /dictionaries/{dictionary_id}/items.json'''
     post:
       summary: Архивация значения справочника
       tags:
         - справочники
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Пример ответа:
+                  value: {}
       operationId: post-dictionaries-id-items-item_id-archive.json
+      description: Позволяет архивировать конкретное значение конкретного справочника компании
 components:
   schemas:
     author:
