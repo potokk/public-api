@@ -7150,8 +7150,8 @@ paths:
           description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
         - schema:
             type: number
-            default: '20'
-            example: '20'
+            example: 20
+            default: 20
           in: query
           name: page_size
           description: Кол-во записей на странице (по умолчанию 20)
@@ -7418,9 +7418,111 @@ paths:
       summary: Получение информации о значениях справочника
       tags:
         - справочники
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    objects:
+                      - id: 1538882
+                        values:
+                          label: Жен.
+                          value: female
+                          label_locales:
+                            en: Female
+                            fr: Femme
+                        archived: false
+                      - id: 1538883
+                        values:
+                          label: Муж.
+                          value: male
+                          label_locales:
+                            en: Male
+                            fr: Homme
+                        archived: false
+                      - id: 1538884
+                        values:
+                          label: Не указан
+                          value: not_specified
+                          label_locales:
+                            en: Undefined
+                            fr: Non indiqué
+                        archived: false
+                    has_next_page: false
+                    page_next_cursor: MTUzODg4NA==
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID элемента справочника
+                          example: 1234
+                        values:
+                          type: object
+                          description: Значение справочника
+                          properties:
+                            label:
+                              type: string
+                              description: Отображаемое название элемента справочника
+                              example: Жен.
+                            value:
+                              type: string
+                              description: Название элемента справочника
+                              example: female
+                            label_locales:
+                              type: object
+                              description: Локализованное название элемента справочника
+                              properties:
+                                en:
+                                  type: string
+                                  description: Название элемента на английском
+                                  example: Female
+                                fr:
+                                  type: string
+                                  description: Название элемента на французском
+                                  example: Femme
+                        archived:
+                          type: boolean
+                          description: Признак архивности элемента справочника
+                          default: false
+                  has_next_page:
+                    type: boolean
+                    default: false
+                    description: 'Признак того, имеется ли следующая страница'
+                  page_next_cursor:
+                    type: string
+                    example: MTUzODg4NA==
+                    description: Курсор следующей страницы
+                required:
+                  - objects
+                  - has_next_page
+                  - page_next_cursor
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 1234
+                        values:
+                          label: Жен.
+                          value: female
+                          label_locales:
+                            en: Female
+                            fr: Femme
+                        archived: false
+                    has_next_page: false
+                    page_next_cursor: MTUzODg4NA==
       operationId: get-dictionaries-dictionary_id-items.json
       description: Позволяет получить информацию о значения конкретного справочника компании
+      parameters:
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/page_cursor'
 components:
   schemas:
     author:
@@ -11506,6 +11608,21 @@ components:
           - initialized
           - accepted
       description: Фильтр по статусу согласования оффера
+    page_size:
+      name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 20
+      description: Количество записей на странице (по умолчанию 20)
+    page_cursor:
+      name: page_cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 'Курсор страницы. Значение берется из ответа, в параметре ''page_next_cursor'''
 security:
   - headerToken: []
   - queryToken: []
