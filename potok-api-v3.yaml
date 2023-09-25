@@ -2326,7 +2326,7 @@ paths:
       tags:
         - кандидаты
     parameters: []
-  '/applicants​/{applicant_id}.json':
+  '/applicants/{applicant_id}.json':
     parameters:
       - schema:
           type: integer
