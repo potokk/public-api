@@ -6888,28 +6888,21 @@ paths:
                     dynamic_string_array_field:
                       - string
               properties:
-                ajs_join:
-                  type: object
-                  properties:
-                    dynamic_string_field:
-                      type: string
-                    dynamic_int_field:
-                      type: integer
-                    dynamic_string_array_field:
-                      type: array
-                      items:
-                        type: string
-              required:
-                - ajs_join
+                dynamic_string_field:
+                  type: string
+                dynamic_int_field:
+                  type: integer
+                dynamic_string_array_field:
+                  type: array
+                  items: {}
             examples:
               Пример запроса с 3 типами динамических полей:
                 value:
-                  ajs_join:
-                    dynamic_field1: пример
-                    dynamic_field2: 10
-                    dynamic_field3:
-                      - id: '2'
-                        value: пример
+                  dynamic_field1: пример
+                  dynamic_field2: 10
+                  dynamic_field3:
+                    - id: '2'
+                      value: пример
   '/applicants/{applicant_id}/security_forms':
     parameters:
       - schema:
