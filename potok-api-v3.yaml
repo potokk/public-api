@@ -7690,6 +7690,109 @@ paths:
       parameters:
         - $ref: '#/components/parameters/page_size'
         - $ref: '#/components/parameters/page_cursor'
+  /jobs/state_histories.json:
+    get:
+      summary: Получение событий изменения статусов workflow
+      tags:
+        - вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    objects:
+                      - id: 485496405
+                        job_id: 480344
+                        state_id: opened
+                        workflow_name: job_state
+                        created_at: '2022-09-09T07:48:11Z'
+                    page_next_cursor: W3sic2Vjb25kcyI6MTY2NTQ4MTQ0NywibmFub3NlY29uZHMiOjI3MDAzODAwMH0sNDkyODU1NTk0LCJ0aW1lIl0=
+                    has_next_page: true
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID события
+                          example: 85496
+                        job_id:
+                          type: integer
+                          description: ID вакансии
+                          example: 1234
+                        state_id:
+                          type: string
+                          description: |
+                            ID статуса вакансии
+
+                            `opened` - вакансия открыта
+
+                            `paused` - вакансия приостановлена
+
+                            `closed` - вакансия закрыта
+
+                            `canceled` - вакансия отменена
+                          example: opened
+                        workflow_name:
+                          type: string
+                          description: Название статусной модели
+                          example: job_state
+                        created_at:
+                          type: string
+                          description: 'Время создания события в формате ([ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDT`)'
+                          example: '2022-09-09T07:48:11Z'
+                      required:
+                        - id
+                        - job_id
+                        - state_id
+                        - workflow_name
+                        - created_at
+                  page_next_cursor:
+                    type: string
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                  has_next_page:
+                    type: boolean
+                    description: 'Признак того, имеется ли следующая страница'
+                required:
+                  - page_next_cursor
+                  - has_next_page
+              examples:
+                Пример ответа:
+                  value:
+                    objects:
+                      - id: 85496
+                        job_id: 1234
+                        state_id: opened
+                        workflow_name: job_state
+                        created_at: '2022-09-09T07:48:11Z'
+                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                    has_next_page: true
+      operationId: get-jobs-state_histories.json
+      description: |
+        Позволяет получать информацию о событиях для сущности `job` (вакансия) для построения аналитики во внешней системе.
+        Сортировка данных: от старых событий к новым.
+      parameters:
+        - schema:
+            type: string
+            example: '2022-09-09T07:48:11Z'
+          in: query
+          name: 'created_at[from]'
+          description: Период изменения статуса ОТ (включительно)
+        - schema:
+            type: string
+            example: '2022-12-09T07:48:11Z'
+          in: query
+          name: 'created_at[to]'
+          description: Период изменения статуса ДО (включительно)
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/page_cursor'
 components:
   schemas:
     author:
@@ -11791,7 +11894,7 @@ components:
       schema:
         type: string
         example: MTE5OTg5
-      description: 'Курсор страницы. Значение берется из ответа, в параметре ''page_next_cursor'''
+      description: 'Курсор страницы. Значение берется из ответа, в параметре `page_next_cursor`'
 security:
   - headerToken: []
   - queryToken: []
