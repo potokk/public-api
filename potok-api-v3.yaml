@@ -3746,7 +3746,7 @@ paths:
                       example: 2435
                     sprint_id:
                       type: integer
-                      description: ID периода потребности (метод получения периодов - `GET /api/v3/sprints.json`)
+                      description: 'ID периода потребности (метод получения периодов - `GET /api/v3/sprints.json`. Не является обязательным параметром, если используется гибкая дата)'
                       example: 2245
                     priority_item_id:
                       type: integer
