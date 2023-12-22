@@ -10506,7 +10506,7 @@ components:
                 type: string
               type:
                 type: string
-                description: 'Тип события (возможные типы событий - `Event::CoverLetter`, `Event::Response`, `Event::Comment`, `Event::System`)'
+                description: Тип события
             required:
               - id
               - subject
