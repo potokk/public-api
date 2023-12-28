@@ -7868,7 +7868,6 @@ components:
         - stage_type
     Job:
       type: array
-      description: ''
       uniqueItems: true
       x-examples:
         example-1:
@@ -8047,7 +8046,6 @@ components:
                   avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
                   phones:
                     - '79996543221'
-      title: ''
       items:
         type: object
         properties:
@@ -8175,7 +8173,7 @@ components:
 
               `closed` - вакансия закрыта
 
-              `canceld` - вакансия отменена
+              `canceled` - вакансия отменена
           company_department:
             type: object
             description: Отдел
