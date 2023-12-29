@@ -4669,16 +4669,24 @@ paths:
           name: radius
           description: Радиус от передаваемой точки (`lon``lat`) в метрах. Только для справочника `metro`
         - schema:
-            enum:
-              - 'false'
-              - 'true'
             default: 'false'
             example: 'false'
+            enum:
+              - 'true'
+              - 'false'
           in: query
           name: with_archived
           description: Возвращает список с архивными значениями. Только для справочника `metro`
         - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/per_page'
+        - schema:
+            type: number
+            default: 100
+            maximum: 200
+            minimum: 1
+          in: query
+          name: per_page
+          allowEmptyValue: true
+          description: Количество элементов на странице (по умолчанию 100)
   /dictionaries/cities.json:
     get:
       summary: Получение информации о справочнике Города
@@ -4763,12 +4771,12 @@ paths:
         - schema:
             type: string
           in: query
-          name: name
+          name: 'f[name]'
           description: Название города
         - schema:
             type: string
           in: query
-          name: region
+          name: 'f[region]'
           description: Название региона
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
