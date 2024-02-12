@@ -4681,8 +4681,8 @@ paths:
         - schema:
             type: number
             default: 100
-            maximum: 200
             minimum: 1
+            maximum: 100
           in: query
           name: per_page
           allowEmptyValue: true
