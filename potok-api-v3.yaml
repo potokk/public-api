@@ -7833,6 +7833,7 @@ paths:
                         x-stoplight:
                           id: 2oapgw86z1jf2
                         description: ID кандидата
+                        example: 12345
                       first_name:
                         type: string
                         x-stoplight:
@@ -7869,16 +7870,19 @@ paths:
                     x-stoplight:
                       id: ienhuddg22ciu
                     description: Дата начала события (в формате YYYY-MM-DDThhmmss±hh)
+                    example: '2022-12-20T14:24:00+03:00'
                   to:
                     type: string
                     x-stoplight:
                       id: plm16tazogjhc
                     description: Дата окончания события (в формате YYYY-MM-DDThhmmss±hh)
+                    example: '2022-12-20T14:24:00+03:00'
                   type:
                     type: string
                     x-stoplight:
                       id: hyo40kpjvzzjb
                     description: Тип события
+                    example: 'Event::Comment'
               examples:
                 Пример ответа:
                   value:
@@ -7957,11 +7961,13 @@ paths:
                       x-stoplight:
                         id: x5jmvobs9pm07
                       description: 'Дата и время начала события(YYYY-MM-DD hh:mm:ss)'
+                      example: '2022-12-20T14:24:00+03:00'
                     to:
                       type: string
                       x-stoplight:
                         id: t5cyng0v9q8mf
                       description: 'Дата и время конца события(YYYY-MM-DD hh:mm:ss)'
+                      example: '2022-12-20T14:24:00+03:00'
                     type:
                       type: string
                       x-stoplight:
