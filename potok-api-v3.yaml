@@ -7793,6 +7793,208 @@ paths:
           description: Период изменения статуса ДО (включительно)
         - $ref: '#/components/parameters/page_size'
         - $ref: '#/components/parameters/page_cursor'
+  /events.json:
+    post:
+      summary: Создание события (комментарий или email)
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    x-stoplight:
+                      id: qmy95wdcxwo8g
+                    example: 480219
+                    description: ID события
+                  subject:
+                    type: string
+                    x-stoplight:
+                      id: 1si2k89y1k89b
+                    description: Заголовок/название события
+                  body:
+                    type: string
+                    x-stoplight:
+                      id: 59q1dsh895q85
+                    description: Текст события
+                  applicant:
+                    type: object
+                    x-stoplight:
+                      id: pxu5bwarj37tu
+                    description: Кандидат
+                    properties:
+                      id:
+                        type: integer
+                        x-stoplight:
+                          id: 2oapgw86z1jf2
+                        description: ID кандидата
+                        example: 12345
+                      first_name:
+                        type: string
+                        x-stoplight:
+                          id: yn76izzjpcty6
+                        description: Имя кандидата
+                      last_name:
+                        type: string
+                        x-stoplight:
+                          id: y9hpshvdvy7eg
+                        description: Фамилия кандидата
+                      middle_name:
+                        type: string
+                        x-stoplight:
+                          id: 8vo5rx1bjzb1w
+                        description: Отчество кандидата
+                  job:
+                    type: object
+                    x-stoplight:
+                      id: nkgm587eqi7ao
+                    description: Вакансия
+                    properties:
+                      id:
+                        type: integer
+                        x-stoplight:
+                          id: f0nerxrdo9eci
+                        description: ID вакансии
+                      name:
+                        type: string
+                        x-stoplight:
+                          id: js9samuv2cqwp
+                        description: Название вакансии
+                  from:
+                    type: string
+                    x-stoplight:
+                      id: ienhuddg22ciu
+                    description: Дата начала события (в формате YYYY-MM-DDThhmmss±hh)
+                    example: '2022-12-20T14:24:00+03:00'
+                  to:
+                    type: string
+                    x-stoplight:
+                      id: plm16tazogjhc
+                    description: Дата окончания события (в формате YYYY-MM-DDThhmmss±hh)
+                    example: '2022-12-20T14:24:00+03:00'
+                  type:
+                    type: string
+                    x-stoplight:
+                      id: hyo40kpjvzzjb
+                    description: Тип события
+                    example: 'Event::Comment'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 480219
+                    subject: 'null'
+                    body: Комментарий
+                    applicant:
+                      id: 12345
+                      first_name: Александра
+                      last_name: Петрова
+                      middle_name: Андреевна
+                    job:
+                      id: 54321
+                      name: Менеджер по продажам
+                    from: null
+                    to: null
+                    type: 'Event::Comment'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    x-stoplight:
+                      id: o7vve88vg3tqe
+              examples:
+                Пример ошибки:
+                  value:
+                    errors:
+                      id:
+                        - need set ajs_id or applicant_id
+      operationId: post-events.json
+      description: Создание события с типом комментарий или email в кандидате или кандидате на вакансии
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: object
+                  x-stoplight:
+                    id: 8qff5qnw4cdk0
+                  properties:
+                    subject:
+                      type: string
+                      x-stoplight:
+                        id: awolt2adxf8c4
+                      description: Заголовок/название события
+                      example: Комментарий к кандидату
+                    body:
+                      type: string
+                      x-stoplight:
+                        id: f0ahzzxzd0b6s
+                      description: Текст события
+                      example: Кандидат прошел тестирование
+                    applicant_id:
+                      type: integer
+                      x-stoplight:
+                        id: p44w13gr6o2oa
+                      description: ID кандидата
+                      example: 1234
+                    job_id:
+                      type: integer
+                      x-stoplight:
+                        id: nqvzqwdey394n
+                      description: |-
+                        Id вакансии.
+                        Если событие создается к конкретной вакансии, то нужно указывать.
+                      example: 54321
+                    from:
+                      type: string
+                      x-stoplight:
+                        id: x5jmvobs9pm07
+                      description: 'Дата и время начала события(YYYY-MM-DD hh:mm:ss)'
+                      example: '2022-12-20T14:24:00+03:00'
+                    to:
+                      type: string
+                      x-stoplight:
+                        id: t5cyng0v9q8mf
+                      description: 'Дата и время конца события(YYYY-MM-DD hh:mm:ss)'
+                      example: '2022-12-20T14:24:00+03:00'
+                    type:
+                      type: string
+                      x-stoplight:
+                        id: 8a5awo42r0g6i
+                      example: 'Event::Comment'
+                      description: |-
+                        Тип события:
+
+                        Event::Email (письмо),
+
+                        Event::Comment (комментарий)
+                  required:
+                    - body
+                    - applicant_id
+                    - type
+            examples:
+              Пример запроса:
+                value:
+                  event:
+                    subject: Комментарий к кандидату
+                    body: Кандидат прошел тестирование
+                    applicant_id: 12345
+                    job_id: 54321
+                    from: '2022-12-20T14:24:00+03:00'
+                    to: '2022-12-20T14:24:00+03:00'
+                    type: 'Event::Comment'
+      parameters: []
 components:
   schemas:
     author:
