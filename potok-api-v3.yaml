@@ -7947,7 +7947,7 @@ paths:
                       x-stoplight:
                         id: p44w13gr6o2oa
                       description: ID кандидата
-                      example: '12345'
+                      example: 1234
                     job_id:
                       type: integer
                       x-stoplight:
@@ -7955,7 +7955,7 @@ paths:
                       description: |-
                         Id вакансии.
                         Если событие создается к конкретной вакансии, то нужно указывать.
-                      example: '54321'
+                      example: 54321
                     from:
                       type: string
                       x-stoplight:
@@ -7987,12 +7987,12 @@ paths:
               Пример запроса:
                 value:
                   event:
-                    subject: ''
+                    subject: Комментарий к кандидату
                     body: Кандидат прошел тестирование
-                    applicant_id: '12345'
-                    job_id: '54321'
-                    from: ''
-                    to: ''
+                    applicant_id: 12345
+                    job_id: 54321
+                    from: '2022-12-20T14:24:00+03:00'
+                    to: '2022-12-20T14:24:00+03:00'
                     type: 'Event::Comment'
       parameters: []
 components:
