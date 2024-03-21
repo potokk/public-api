@@ -8340,6 +8340,16 @@ components:
           source_job_id:
             type: integer
             description: ID заявки
+          create_reason:
+            type: object
+            description: Причина открытия вакансии (словарь - `create_reason`)
+            properties:
+              id:
+                type: string
+                description: ID причины
+              value:
+                type: string
+                description: Название причины открытия
           job_type:
             type: string
             description: |-
@@ -8585,6 +8595,7 @@ components:
           - private
           - direction_code
           - source_job_id
+          - create_reason
           - job_type
           - staffing_item_full_ext_id
           - staffing_item_parent_full_ext_id
@@ -8598,6 +8609,7 @@ components:
           - author
           - executive_recruiter
           - jobs_users
+      title: ''
     cv_params_request:
       type: object
       x-examples:
