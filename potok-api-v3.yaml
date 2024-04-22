@@ -4198,7 +4198,7 @@ paths:
                   correction_author_email:
                     type: string
                     description: email создателя корректировки
-                    pattern: author@example.com
+                    example: author@example.com
                 required:
                   - id
                   - prev_quantity
@@ -4216,7 +4216,7 @@ paths:
                     comment: комментарий
                     datetime_of_create: '2024-04-18T10:45:14.910+03:00'
                     correction_author_id: 115152
-                    correction_author_email: string
+                    correction_author_email: author@example.com
       parameters:
         - schema:
             type: string
@@ -4260,7 +4260,7 @@ paths:
                         description: ID кандидата
                         example: 1234
                       employee_ext_id:
-                        type: integer
+                        type: string
                         description: Внешний ID сотрудника компании из организационно-штатной структуры
                         example: 4321
                       state:
@@ -4339,7 +4339,7 @@ paths:
                   description: ID кандидата
                   example: 1234
                 employee_ext_id:
-                  type: integer
+                  type: string
                   description: Внешний ID сотрудника компании из организационно-штатной структуры
                   example: 4321
                 transition:
