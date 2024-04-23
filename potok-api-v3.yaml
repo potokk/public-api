@@ -3395,177 +3395,6 @@ paths:
               Пример запроса:
                 value:
                   state_id: offer_prinyat
-  '/demands/{demand_id}/quantity_corrections.json':
-    parameters:
-      - schema:
-          type: integer
-          example: 654321
-        name: demand_id
-        in: path
-        required: true
-        description: ID потребности
-    post:
-      summary: Создание корректировки потребности
-      tags:
-        - потребности
-      operationId: post-demands-demand_id-quantity_corrections.json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              x-examples:
-                example-1:
-                  quantity_correction:
-                    quantity: 0
-                    author_id: 0
-                    author_email: string
-                    reason_id: string
-                    comment: string
-              properties:
-                quantity_correction:
-                  type: object
-                  description: Параметры корректировки потребности
-                  required:
-                    - quantity
-                    - author_id
-                    - author_email
-                    - reason_id
-                    - comment
-                  properties:
-                    quantity:
-                      type: integer
-                      description: Количество позиций в потребности
-                      minimum: 1
-                      example: 3
-                    author_id:
-                      type: integer
-                      description: ID создателя потребности
-                      example: 12345
-                    author_email:
-                      type: string
-                      description: Email создателя потребности
-                      example: author@example.com
-                    reason_id:
-                      type: string
-                      description: |-
-                        ID причины корректировки потребности (словарь - `demand_quantity_correction_reasons`). 
-
-                        Можно указать значение `other`
-                      example: e240fd1c-a1b0-441e-a03e-22041534c46c
-                    comment:
-                      type: string
-                      description: Комментарий к корректировке потребности
-                      example: комментарий
-              required:
-                - quantity_correction
-            examples:
-              Пример запроса:
-                value:
-                  quantity_correction:
-                    quantity: 3
-                    author_id: 12345
-                    author_email: author@example.com
-                    reason_id: e240fd1c-a1b0-441e-a03e-22041534c46c
-                    comment: комментарий
-        description: ''
-      description: 'Создание корректировки существующей потребности, находящейся в статусе `В работе`'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/demand_response'
-              examples:
-                Пример ответа:
-                  value:
-                    id: 6376
-                    quantity: 10
-                    job_id: 1357
-                    business_unit_id: 4276
-                    comment: комментарий
-                    states:
-                      - updated_at: '2022-08-05T15:48:05.910+03:00'
-                        workflow_id: 3263
-                        additional_info:
-                          - {}
-                        workflow_name: demand_state
-                        state_id: approved
-                        init_by:
-                          id: 9757
-                          class: class
-                    finish_date: '2022-08-31'
-                    start_date: '2022-08-02'
-                    sprint:
-                      id: 1842
-                      name: 24.08 - 30.12
-                      start_date: '2020-08-24'
-                      finish_date: '2022-12-30'
-                      start_status: current
-                    author:
-                      id: 12345
-                      name: Иванов Иван Иванович
-                      email: ivan@example.ru
-                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                      phones:
-                        - '79996007755'
-                    executive:
-                      id: 4321
-                      name: Петров Петр Петрович
-                      email: petrov@example.ru
-                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                      phones:
-                        - '79901234556'
-                    customer:
-                      id: 98756
-                      name: Иванов Петр Семенович
-                      email: ivanpetrov@example.ru
-                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
-                      phones:
-                        - '79191223223'
-                    schedule:
-                      - id: '22'
-                        name: 2/2
-                        name_locales:
-                          en: 2/2
-                          fr: 2/2
-                    priority_item:
-                      id: 1352
-                      name: Средний
-                      color_hex: 0CE0AD
-                      position: 3
-        '404':
-          description: Передан несуществующий `demand_id`
-        '422':
-          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
-          content:
-            application/json:
-              schema:
-                type: object
-                x-examples:
-                  example-1:
-                    quantity:
-                      - уже имеет то же значение
-              examples:
-                Пример ответа 1:
-                  value:
-                    reason_id:
-                      - не заполнен параметр
-                    comment:
-                      - должна быть строка
-                Пример ответа 2:
-                  value:
-                    demand:
-                      - Потребность должна быть в работе
-                Пример ответа 3:
-                  value:
-                    quantity:
-                      - уже имеет то же значение
-                Пример ответа 4:
-                  value:
-                    author:
-                      - Объект не найден
   /demands.json:
     post:
       summary: Создание потребности
@@ -4150,6 +3979,260 @@ paths:
                     comment: комментарий
                     finish_date: '2022-08-31'
       description: Обновление потребности по ее ID
+  '/demands/{demand_id}/quantity_corrections.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 654321
+        name: demand_id
+        in: path
+        required: true
+        description: ID потребности
+    post:
+      summary: Создание корректировки потребности
+      tags:
+        - потребности
+      operationId: post-demands-demand_id-quantity_corrections.json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  quantity_correction:
+                    quantity: 0
+                    author_id: 0
+                    author_email: string
+                    reason_id: string
+                    comment: string
+              properties:
+                quantity_correction:
+                  type: object
+                  description: Параметры корректировки потребности
+                  required:
+                    - quantity
+                    - author_id
+                    - author_email
+                    - reason_id
+                    - comment
+                  properties:
+                    quantity:
+                      type: integer
+                      description: Количество позиций в потребности
+                      minimum: 1
+                      example: 3
+                    author_id:
+                      type: integer
+                      description: ID создателя потребности
+                      example: 12345
+                    author_email:
+                      type: string
+                      description: Email создателя потребности
+                      example: author@example.com
+                    reason_id:
+                      type: string
+                      description: |-
+                        ID причины корректировки потребности (словарь - `demand_quantity_correction_reasons`). 
+
+                        Можно указать значение `other`
+                      example: e240fd1c-a1b0-441e-a03e-22041534c46c
+                    comment:
+                      type: string
+                      description: Комментарий к корректировке потребности
+                      example: комментарий
+              required:
+                - quantity_correction
+            examples:
+              Пример запроса:
+                value:
+                  quantity_correction:
+                    quantity: 3
+                    author_id: 12345
+                    author_email: author@example.com
+                    reason_id: e240fd1c-a1b0-441e-a03e-22041534c46c
+                    comment: комментарий
+        description: ''
+      description: 'Позволяет создать корректировки существующей потребности, находящейся в статусе `В работе`'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/demand_response'
+              examples:
+                Пример ответа:
+                  value:
+                    id: 6376
+                    quantity: 10
+                    job_id: 1357
+                    business_unit_id: 4276
+                    comment: комментарий
+                    states:
+                      - updated_at: '2022-08-05T15:48:05.910+03:00'
+                        workflow_id: 3263
+                        additional_info:
+                          - {}
+                        workflow_name: demand_state
+                        state_id: approved
+                        init_by:
+                          id: 9757
+                          class: class
+                    finish_date: '2022-08-31'
+                    start_date: '2022-08-02'
+                    sprint:
+                      id: 1842
+                      name: 24.08 - 30.12
+                      start_date: '2020-08-24'
+                      finish_date: '2022-12-30'
+                      start_status: current
+                    author:
+                      id: 12345
+                      name: Иванов Иван Иванович
+                      email: ivan@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79996007755'
+                    executive:
+                      id: 4321
+                      name: Петров Петр Петрович
+                      email: petrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79901234556'
+                    customer:
+                      id: 98756
+                      name: Иванов Петр Семенович
+                      email: ivanpetrov@example.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                      phones:
+                        - '79191223223'
+                    schedule:
+                      - id: '22'
+                        name: 2/2
+                        name_locales:
+                          en: 2/2
+                          fr: 2/2
+                    priority_item:
+                      id: 1352
+                      name: Средний
+                      color_hex: 0CE0AD
+                      position: 3
+        '404':
+          description: Передан несуществующий `demand_id`
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    quantity:
+                      - уже имеет то же значение
+              examples:
+                Пример ответа 1:
+                  value:
+                    reason_id:
+                      - не заполнен параметр
+                    comment:
+                      - должна быть строка
+                Пример ответа 2:
+                  value:
+                    demand:
+                      - Потребность должна быть в работе
+                Пример ответа 3:
+                  value:
+                    quantity:
+                      - уже имеет то же значение
+                Пример ответа 4:
+                  value:
+                    author:
+                      - Объект не найден
+      parameters: []
+    get:
+      summary: Получение корректировок потребности
+      operationId: get-demands-demand_id-quantity_corrections.json
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    id: 3
+                    prev_quantity: 500
+                    quantity: 400
+                    comment: Комментарий
+                    datetime_of_create: '2024-03-06T15:34:32.507+03:00'
+                    correction_author_id: 106315
+                    correction_author_email: modules-demand@potok.io
+                properties:
+                  id:
+                    type: integer
+                    description: id потребности
+                    example: 35605
+                  prev_quantity:
+                    type: integer
+                    description: Предыдущее количество
+                    example: 17
+                  quantity:
+                    type: integer
+                    description: Текущее количество
+                    example: 23
+                  comment:
+                    type: string
+                    description: Комментарий
+                    example: комментарий
+                  datetime_of_create:
+                    type: string
+                    description: 'Дата корректировки (в формате ISO 8601 с точностью до миллисекунд YYYY-MM-DDThh:mm:ss.mmm±hh:mm)'
+                    example: '2024-04-18T10:45:14.910+03:00'
+                  correction_author_id:
+                    type: integer
+                    description: id создателя корректировки
+                    example: 115152
+                  correction_author_email:
+                    type: string
+                    description: email создателя корректировки
+                    example: author@example.com
+                required:
+                  - id
+                  - prev_quantity
+                  - quantity
+                  - comment
+                  - datetime_of_create
+                  - correction_author_id
+                  - correction_author_email
+              examples:
+                Пример ответа:
+                  value:
+                    id: 35605
+                    prev_quantity: 17
+                    quantity: 23
+                    comment: комментарий
+                    datetime_of_create: '2024-04-18T10:45:14.910+03:00'
+                    correction_author_id: 115152
+                    correction_author_email: author@example.com
+      parameters:
+        - schema:
+            type: string
+            example: '2022-08-31'
+          in: query
+          name: start_date
+          description: Фильтр по дате ОТ (включительно). Задается в формате YYYY-MM-DD
+        - schema:
+            type: string
+            example: '2022-12-09'
+          in: query
+          name: end_date
+          description: Фильтр по дате ПО (включительно). Задается в формате YYYY-MM-DD
+      description: Позволяет получить корректировки потребности по ее ID
+      tags:
+        - потребности
   /client_employee_numbers.json:
     post:
       summary: Установка статуса трудоустройства кандидата-финалиста и присвоение табельного номера
@@ -4177,7 +4260,7 @@ paths:
                         description: ID кандидата
                         example: 1234
                       employee_ext_id:
-                        type: integer
+                        type: string
                         description: Внешний ID сотрудника компании из организационно-штатной структуры
                         example: 4321
                       state:
@@ -4187,13 +4270,13 @@ paths:
 
                           Статусы по умолчанию (по требованию статусы можно поменять или добавить): 
 
-                          `работает (working)`
+                          `working` - работает
 
-                          `начальный (initialized) `
+                          `initialized` - начальный
 
-                          `уволен (not_working)`
+                          `not_working` - уволен
 
-                          `испытательный (internship)`
+                          `internship` - испытательный
                         example: not_working
                     required:
                       - applicant_id
@@ -4256,13 +4339,16 @@ paths:
                   description: ID кандидата
                   example: 1234
                 employee_ext_id:
-                  type: integer
+                  type: string
                   description: Внешний ID сотрудника компании из организационно-штатной структуры
                   example: 4321
                 transition:
                   type: string
-                  description: Код транзакции для смены статуса трудоустройства. Workflow - `client_employee_number_status`
                   example: dismiss
+                  description: |-
+                    Код транзакции для смены статуса трудоустройства
+
+                    Статус трудоустройства указывается на workflow `client_employee_number_status`
               required:
                 - applicant_id
                 - employee_ext_id
@@ -4279,6 +4365,120 @@ paths:
         Метод работает только при наличии функциональности `Передача финалиста`. 
 
         **Метод не будет работать без дополнительных настроек на стороне системы**
+  '/finalists/{finalist_id}/set_employee_number.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 25213295
+        name: finalist_id
+        in: path
+        required: true
+        description: id финалиста
+    post:
+      summary: Смена статуса трудоустройства и присвоение табельного номера по id финалиста
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    object:
+                      id: 25213295
+                      employee_ext_id: 12
+                      state: working
+                properties:
+                  object:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: |-
+                          id финалиста
+
+                          По id финалиста определяется кандидат, которому должен быть присвоен табельный номер
+                        example: 25213295
+                      employee_ext_id:
+                        type: string
+                        example: '12'
+                        description: Внешний ID сотрудника компании из организационно-штатной структуры
+                      state:
+                        type: string
+                        description: |-
+                          Текущий статус трудоустройства. Workflow - `client_employee_number_status`
+
+                          Статусы по умолчанию (по требованию статусы можно поменять или добавить): 
+
+                          `working` - работает
+
+                          `initialized` - начальный
+
+                          `not_working` - уволен
+
+                          `internship` - испытательный
+                        example: working
+                    required:
+                      - id
+                      - employee_ext_id
+                      - state
+              examples:
+                Пример ответа:
+                  value:
+                    object:
+                      id: 25213295
+                      employee_ext_id: '12'
+                      state: working
+        '422':
+          description: |-
+            В случае если одно из обязательных полей отсутствует: `id`, `employee_ext_id`
+
+            В случае если запись редактируется ( т.е. запись с такими параметрами уже существует )
+            и параметр `transition` пустой, возвращает ошибку. Пустое значение перехода
+
+            В случае если параметр `transition` присутствует, но такой переход состояний невозможен, возвращает ошибку. Некорректный переход
+      operationId: post-finalists-id-set_employee_number.json
+      description: |-
+        Метод позволяет установить статус трудоустройства кандидату-финалисту (отображается в системе), связать кандидата с пользователем из организационно-штатной структуры и присвоить ему табельный номер. 
+
+        Метод работает только при наличии функциональности `Передача финалиста`. 
+
+        **Метод не будет работать без дополнительных настроек на стороне системы**
+
+        Отличие от метода `/client_employee_numbers.json` - обращение по id финалиста
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  employee_ext_id: 12
+                  transition: hire
+              properties:
+                employee_ext_id:
+                  type: string
+                  example: '12'
+                  description: Внешний ID сотрудника компании из организационно-штатной структуры
+                transition:
+                  type: string
+                  description: |-
+                    Код транзакции для смены статуса трудоустройства
+
+                    Статус трудоустройства указывается на workflow `client_employee_number_status`
+                  example: hire
+              required:
+                - employee_ext_id
+            examples:
+              Пример запроса:
+                value:
+                  employee_ext_id: '12'
+                  transition: hire
+        description: ''
+      parameters: []
   '/jobs/{job_id}/{applicant_id}/update_planned_employment_date.json':
     parameters:
       - schema:
