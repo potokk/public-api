@@ -782,7 +782,7 @@ paths:
                   - has_next_page
                   - total_count
               examples:
-                Примр ответа:
+                Пример ответа:
                   value:
                     objects:
                       jobs:
