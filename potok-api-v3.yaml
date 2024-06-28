@@ -224,6 +224,9 @@ paths:
                         private: false
                         direction_code: '1357'
                         source_job_id: 469885
+                        create_reason:
+                          id: id_1
+                          name: Ввод новой позиции
                         job_type: point
                         staffing_item_full_ext_id: position_1234
                         staffing_item_parent_full_ext_id: department_4321
@@ -402,6 +405,9 @@ paths:
                         private: false
                         direction_code: '1357'
                         source_job_id: 469885
+                        create_reason:
+                          id: id_1
+                          name: Ввод новой позиции
                         job_type: point
                         staffing_item_full_ext_id: position_1234
                         staffing_item_parent_full_ext_id: department_4321
@@ -569,7 +575,7 @@ paths:
               required:
                 - name
             examples:
-              Пример запроса:
+              Пример ответа:
                 value:
                   name: Начальник технического отдела
                   description: Вакансия для тех. отдела ООО Аврора
@@ -776,7 +782,7 @@ paths:
                   - has_next_page
                   - total_count
               examples:
-                Пример ответа:
+                Примр ответа:
                   value:
                     objects:
                       jobs:
@@ -809,6 +815,9 @@ paths:
                             private: false
                             direction_code: '1357'
                             source_job_id: 469885
+                            create_reason:
+                              id: id_1
+                              name: Ввод новой позиции
                             job_type: point
                             staffing_item_full_ext_id: position_1234
                             staffing_item_parent_full_ext_id: department_4321
@@ -1038,6 +1047,9 @@ paths:
                         private: false
                         direction_code: '1357'
                         source_job_id: 469885
+                        create_reason:
+                          id: id_1
+                          name: Ввод новой позиции
                         job_type: point
                         staffing_item_full_ext_id: position_1234
                         staffing_item_parent_full_ext_id: department_4321
@@ -4262,7 +4274,7 @@ paths:
                       employee_ext_id:
                         type: string
                         description: Внешний ID сотрудника компании из организационно-штатной структуры
-                        example: 4321
+                        example: '4321'
                       state:
                         type: string
                         description: |-
@@ -4287,7 +4299,7 @@ paths:
                   value:
                     object:
                       applicant_id: 1234
-                      employee_ext_id: 4321
+                      employee_ext_id: '4321'
                       state: not_working
         '422':
           description: |-
@@ -4341,7 +4353,7 @@ paths:
                 employee_ext_id:
                   type: string
                   description: Внешний ID сотрудника компании из организационно-штатной структуры
-                  example: 4321
+                  example: '4321'
                 transition:
                   type: string
                   example: dismiss
@@ -4356,7 +4368,7 @@ paths:
               Пример запроса:
                 value:
                   applicant_id: 1234
-                  employee_ext_id: 4321
+                  employee_ext_id: '4321'
                   transition: dismiss
         description: ''
       description: |-
@@ -8085,8 +8097,8 @@ paths:
                     job:
                       id: 54321
                       name: Менеджер по продажам
-                    from: null
-                    to: null
+                    from: '2022-12-20T14:24:00+03:00'
+                    to: '2022-12-20T14:24:00+03:00'
                     type: 'Event::Comment'
         '422':
           description: Unprocessable Entity (WebDAV)
@@ -8372,6 +8384,9 @@ components:
             private: false
             direction_code: '1357'
             source_job_id: 469885
+            create_reason:
+              id: id_1
+              name: Ввод новой позиции
             job_type: point
             staffing_item_full_ext_id: position_1234
             staffing_item_parent_full_ext_id: department_4321
