@@ -6787,7 +6787,7 @@ paths:
         required: true
         description: ID кандидата
     get:
-      summary: Просмотр офферов кандидата
+      summary: Просмотр офферов v2 кандидата
       responses:
         '200':
           description: OK
@@ -8195,6 +8195,172 @@ paths:
                     to: '2022-12-20T14:24:00+03:00'
                     type: 'Event::Comment'
       parameters: []
+  '/applicants/{applicant_id}/offers':
+    parameters:
+      - schema:
+          type: integer
+          example: 1234
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    get:
+      summary: Просмотр офферов v3 кандидата
+      tags:
+        - кандидаты на вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    page: 1
+                    per_page: 1
+                    total_pages: 1
+                    offers:
+                      - created_at: '2022-12-20T16:41:08.304+03:00'
+                        updated_at: '2022-12-20T16:41:08.304+03:00'
+                        offer_id: 111222
+                        applicant_id: 1234
+                        job_id: 4351
+                        approval_state:
+                          state: in_process
+                          name: В процессе
+                        ajs_join: 9876543
+                        offer_values:
+                          salary: 100000
+                          form: Бессрочный трудовой договор
+                properties:
+                  page:
+                    type: integer
+                    description: Номер страницы
+                    example: 1
+                  per_page:
+                    type: integer
+                    description: Количество элементов на странице
+                    example: 1
+                  total_pages:
+                    type: integer
+                    example: 1
+                    description: Общее количество страниц
+                  offers:
+                    type: array
+                    description: Офферы
+                    items:
+                      type: object
+                      properties:
+                        created_at:
+                          type: string
+                          description: 'Время создания оффера (в формате ISO 8601 с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                          example: '2023-12-20T16:41:08.304+03:00'
+                        updated_at:
+                          type: string
+                          example: '2023-12-20T16:41:08.304+03:00'
+                          description: 'Время обновления оффера (в формате ISO 8601 с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                        offer_id:
+                          type: integer
+                          example: 111222
+                          description: ID оффера
+                        applicant_id:
+                          type: integer
+                          example: 1234
+                          description: ID кандидата
+                        job_id:
+                          type: integer
+                          example: 4351
+                          description: ID вакансии
+                        approval_state:
+                          type: object
+                          description: Статус оффера
+                          properties:
+                            state:
+                              type: string
+                              example: accepted
+                              description: ID статуса
+                            name:
+                              type: string
+                              example: Согласован
+                              description: Название статуса
+                        ajs_join:
+                          type: integer
+                          example: 9876543
+                          description: ID кандидата на вакансии
+                        offer_values:
+                          type: object
+                          description: Переменные оффера
+                          properties:
+                            salary:
+                              type: integer
+                              example: 100000
+                              description: Зарплата
+                            form:
+                              type: string
+                              example: Бессрочный трудовой договор
+                              description: Форма договора
+                required:
+                  - page
+                  - per_page
+                  - total_pages
+                  - offers
+              examples:
+                Пример ответа:
+                  value:
+                    page: 1
+                    per_page: 1
+                    total_pages: 1
+                    offers:
+                      - created_at: '2023-12-20T16:41:08.304+03:00'
+                        updated_at: '2023-12-20T16:41:08.304+03:00'
+                        offer_id: 111222
+                        applicant_id: 1234
+                        job_id: 4351
+                        approval_state:
+                          state: accepted
+                          name: Согласован
+                        ajs_join: 9876543
+                        offer_values:
+                          salary: 100000
+                          form: Бессрочный трудовой договор
+        '404':
+          description: |-
+            Not Found
+            Задан невалидный applicant_id
+      operationId: get-applicants-applicant_id-offers
+      description: |-
+        Данный метод позволяет получить данные об офферах v3 кандидата, а также сопутствующую информацию по офферу (ID вакансиии, ID кандидата, ID кандидата на вакансии, статус согласования оффера).
+
+        При наличии нескольких офферов - они возвращаются в хронологическом порядке, начиная с последнего созданного в системе.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        - schema:
+            type: integer
+            example: 4351
+          in: query
+          name: 'f[job_id]'
+          description: Фильтр по ID вакансии
+        - schema:
+            type: string
+            enum:
+              - in_process
+              - canceled
+              - rejected
+              - not_approved
+              - initialized
+              - accepted
+            example: accepted
+          in: query
+          name: 'f[approval_state]'
+          description: Фильтр по статусу согласования оффера
+        - schema:
+            type: integer
+            example: 9876543
+          in: query
+          description: Фильтр по ID кандидата на ваканси
+          name: 'f[ajs_join]'
 components:
   schemas:
     author:
