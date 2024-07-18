@@ -817,7 +817,7 @@ paths:
                             source_job_id: 469885
                             create_reason:
                               id: id_1
-                              name: Ввод новой позиции
+                              value: Ввод новой позиции
                             job_type: point
                             staffing_item_full_ext_id: position_1234
                             staffing_item_parent_full_ext_id: department_4321
