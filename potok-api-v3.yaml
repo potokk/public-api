@@ -8361,6 +8361,112 @@ paths:
           in: query
           description: Фильтр по ID кандидата на ваканси
           name: 'f[ajs_join]'
+  '/jobs/{job_id}/assign_executive_recruiter.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 12345
+        name: job_id
+        in: path
+        description: ID вакансии
+        required: true
+    post:
+      summary: Назначение ответственного рекрутера по вакансии
+      tags:
+        - вакансии
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: integer
+                    x-stoplight:
+                      id: lcndmr0r4ks94
+                    description: ID вакансии
+                  executive_recruiter:
+                    $ref: '#/components/schemas/User'
+                    x-stoplight:
+                      id: xdhqgrcbhvilw
+                    description: "\t\nОтветственный рекрутер"
+                required:
+                  - job_id
+                  - executive_recruiter
+              examples:
+                Example 1:
+                  value:
+                    job_id: 12345
+                    executive_recruiter:
+                      id: 123456
+                      name: Иван Иванов
+                      email: ivanov@ivan.ru
+                      avatar: 'https://app.potok.io/uploads/user/avatar/96657/example.jpg'
+                      phones:
+                        - '79007006050'
+        '404':
+          description: Если указанная вакансия или пользователь не найдены в компании.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    x-stoplight:
+                      id: hs6yzyfltz6y7
+                    properties:
+                      user:
+                        type: array
+                        x-stoplight:
+                          id: pqrjaxr0bxre8
+                        items:
+                          x-stoplight:
+                            id: ae5ig6btu86ze
+                          type: string
+              examples:
+                Example 1:
+                  value:
+                    errors:
+                      user:
+                        - Пользователь не найден
+        '422':
+          description: 'Ошибки при заполнении полей: не заполнено поле, неверный формат и прочие ошибки валидации на разных этапах с указанием полей, в которых произошла ошибка.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    x-stoplight:
+                      id: ad5xw4lyl32nh
+              examples:
+                Example 1:
+                  value:
+                    errors: string
+      operationId: post-jobs-job_id-assign_executive_recruiter.json
+      description: 'Позволяет назначить пользователя ответственным рекрутером по вакансии. Важно: пользователь уже должен состоять в команде по вакансии.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  x-stoplight:
+                    id: b304r4n4ryki1
+                  description: E-mail пользователя
+              required:
+                - email
+            examples:
+              Example 1:
+                value:
+                  email: user@example.com
+        description: ''
 components:
   schemas:
     author:
