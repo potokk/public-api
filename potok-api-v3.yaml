@@ -2972,6 +2972,120 @@ paths:
                         - is not exists
       operationId: get-api-v3-applicants-applicant_id-.json
       description: Получение данных кандидата по его ID
+  '/applicants/{applicant_id}/depersonalize.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 123
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    post:
+      summary: Деперсонализация кандидата
+      tags:
+        - кандидаты
+      operationId: post-api-v3-applicants-applicant_id-depersonalize.json
+      description: |-
+        Удаляет персональные данные кандидата, заменяя их на псевдоним **Соискатель №<Число>**, и перемещает его в архив.
+
+        Операция необратима — восстановить данные после деперсонализации невозможно.
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applicant_id:
+                    type: integer
+                    description: ID кандидата
+                  applicant_name:
+                    type: string
+                    description: 'Сгенерированный псевдоним кандидата. Номер генерируется системой и уникален в рамках аккаунта. Формат: Соискатель №[0-9]+'
+                  errors:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                Пример ответа:
+                  value:
+                    applicant_id: 123
+                    applicant_name: Соискатель №456
+                    errors: []
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                Пример ответа:
+                  value:
+                    applicant_id: null
+                    applicant_name: null
+                    errors:
+                      - Unauthorized
+        '404':
+          description: not_found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                Пример ответа:
+                  value:
+                    applicant_id: 123
+                    applicant_name: null
+                    errors:
+                      - Applicant not found
+        '422':
+          description: unprocessable_entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                Пример ответа:
+                  value:
+                    applicant_id: 123
+                    applicant_name: Соискатель №456
+                    errors:
+                      - Applicant Already depersonalized
+        '500':
+          description: internal_server_error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                Пример ответа:
+                  value:
+                    applicant_id: 123
+                    applicant_name: null
+                    errors:
+                      - Internal server error    
   '/ajs_joins/{ajs_join_id}/assessment_items.json':
     parameters:
       - schema:
