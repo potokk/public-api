@@ -1477,7 +1477,7 @@ paths:
                       base:
                         - Формат файла не поддерживается
                       cv_original:
-                        - 'имеет неразрешенное расширение png. Корректные расширения: doc, docx, pdf, rtf, html.'
+                        - 'имеет неразрешенное расширение png. Корректные расширения: doc, docx, pdf, rtf.'
                 Пример ответа 3:
                   value:
                     errors:
@@ -1488,12 +1488,17 @@ paths:
                     errors:
                       base:
                         - прервана попытка загрузить зараженный файл
+                Пример ответа 5:
+                  value:
+                    errors:
+                      cv_original:
+                        - 'имеет неразрешенное расширение html. Корректные расширения: doc, docx, pdf, rtf.'
       operationId: post-applicants-applicant_id-resume_file.json
       description: |-
         Добавление файла резюме в карточку кандидата. Метод возвращает массив всех резюме кандидата
 
 
-        Допустимые расширения файлов - doc, docx, pdf, rtf, html. Размер файла резюме должен быть меньше 10 Мбайт.
+        Допустимые расширения файлов - doc, docx, pdf, rtf. Размер файла резюме должен быть меньше 10 Мбайт.
       requestBody:
         content:
           multipart/form-data:
