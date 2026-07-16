@@ -1154,7 +1154,7 @@ paths:
                 properties:
                   id:
                     type: number
-                    description: Уникальный идентификатор вакансии (совпадает с ID из запроса)
+                    description: ID Вакансии
                   name:
                     type: string
                     description: Название вакансии
@@ -1163,178 +1163,368 @@ paths:
                     description: Описание вакансии
                   company_department:
                     type: object
+                    description: Отдел вакансии
                     properties:
                       id:
                         type: number
+                        description: ID отдела
                       name:
                         type: string
+                        description: Название отдела
                       archived:
                         type: boolean
+                        description: |-
+                         Признак архивности отдела
+
+                         `true` - находится в архиве
+
+                         `false` - не находится в архиве
                   schedule_type:
                     type: string
+                    description: ID Графика работы (словарь `schedule_type`)
                   salary_from:
                     type: number
+                    description: Ожидаемая ЗП от
                   salary_to:
                     type: number
+                    description: Ожидаемая ЗП до
                   code:
                     type: string
+                    description: Код вакансии
                   code_enable:
                     type: boolean
+                    description: |-
+                     Признак активности кода
+
+                       `true`  - код вакансии включен
+
+                       `false`  - код вакансии выключен
                   experience_type:
                     type: string
+                    description: ID Опыта работы (словарь `experience_type`)
                   employment_type:
                     type: string
+                    description: ID Занятости (словарь `employment_type`)
                   currency_type:
                     type: string
+                    description: ID Валюты (словарь `currency_type`)
                   key_skills:
+                    description: Ключевые навыки
                     type: array
                     items:
                       type: string
                   city:
                     type: string
+                    description: ID Города вакансии (словарь `cities`)
                   published:
                     type: boolean
+                    description: |-
+                     Признак опубликованности вакансии на карьерном сайте
+                      
+                      `true`  - вакансия опубликована
+
+                      `false`  -  вакансия неопубликована
                   publish_location:
                     type: string
+                    description: URL Вакансии на карьерной странице. Может быть `null`
                   applicants_count:
                     type: object
+                    description: Количество кандидатов по вакансии
                     properties:
                       all:
                         type: number
+                        description: Все кандидаты, включая отклоненных
                       active:
                         type: number
+                        description: Активные кандидаты
                   created_at:
                     type: string
+                    description: 'Время создания вакансии (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
                   updated_at:
                     type: string
-                    description: 'Время последнего обновления (ISO 8601, до миллисекунд: YYYY-MM-DDThh:mm:ss.mmm±hh:mm)'
+                    description: 'Время обновления вакансии (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                  first_opened_at:
+                    type: string
+                    description: 'Дата и время первого открытия вакансии (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
                   stages:
                     type: array
+                    description: Массив этапов на вакансии
                     items:
                       type: object
                       properties:
                         id:
                           type: number
+                          description: ID Этапа вакансии
                         name:
                           type: string
+                          description: Название этапа вакансии
                         serial:
                           type: number
+                          description: Порядковый номер этапа в воронке
                         active_applicants:
                           type: number
+                          description: Количество активных кандидатов на этапе
                         declined_applicants:
                           type: number
+                          description: Количество отклонённых кандидатов на этапе
                         stage_type:
                           type: string
+                          description: ID Типа этапа
                   author:
                     type: object
+                    description: Создатель вакансии
                     properties:
                       id:
                         type: number
+                        description: ID пользователя
                       name:
                         type: string
+                        description: ФИО пользователя
                       email:
                         type: string
+                        description: Email пользователя
                       avatar:
                         type: string
+                        description: Ссылка на аватар пользователя
                       phones:
                         type: array
+                        description: Массив всегда из одного элемента. Номер телефона пользователя строкой
                         items:
                           type: string
                   job_bindings:
                     type: array
-                    items:
-                      type: object
-                  executive_recruiter:
-                    type: object
-                    properties:
-                      id:
-                        type: number
-                      name:
-                        type: string
-                      email:
-                        type: string
-                      avatar:
-                        type: string
-                      phones:
-                        type: array
-                        items:
-                          type: string
-                  jobs_users:
-                    type: array
+                    uniqueItems: true
+                    description: Массив активных публикаций на работных сайтах
                     items:
                       type: object
                       properties:
                         id:
                           type: number
+                          description: ID Публикации
+                        type:
+                          type: string
+                          description: |-
+                            Тип публикации:
+                            `JobBinding::Remote`
+                            `JobBinding::CompanyPartner`
+                            `JobBinding::Vcv`
+                            `JobBinding::Superjob`
+                            `JobBinding::Headhunter`
+                            `JobBinding::Avito`
+                            `JobBinding::Icanchoose`
+                            `JobBinding::Career`
+                        url:
+                          type: string
+                          description: URL Публикации
+                        info:
+                          type: object
+                          description: Информация о публикации
+                          properties:
+                            name:
+                              type: string
+                              description: Название публикации
+                            description:
+                              type: string
+                              description: Описание публикации
+                            schedule_type:
+                              type: string
+                              description: ID Графика работы (словарь `schedule_type`)
+                  executive_recruiter:
+                    type: object
+                    description: Ответственный рекрутер
+                    properties:
+                      id:
+                        type: number
+                        description: ID пользователя
+                      name:
+                        type: string
+                        description: ФИО Ответственного рекрутера
+                      email:
+                        type: string
+                        description: Email пользователя
+                      avatar:
+                        type: string
+                        description: Ссылка на аватар пользователя
+                      phones:
+                        type: array
+                        description: Массив всегда из одного элемента. Номер телефона пользователя строкой
+                        items:
+                          type: string
+                  jobs_users:
+                    type: array
+                    description: Массив пользователей команды по вакансии
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          description: ID связки пользователя с вакансией
                         job_id:
                           type: number
+                          description: ID Вакансии
+                        user_id:
+                          type: number
+                          description: ID Пользователя
                         role:
                           type: object
+                          description: Роль пользователя
                           properties:
                             id:
                               type: number
+                              description: ID Роли
                             company_id:
                               type: number
+                              description: ID Компании
                             name:
                               type: string
+                              description: Название роли
                             role_type:
                               type: string
+                              description: Тип роли (например, `manager`)
                             billing:
                               type: boolean
+                              description: |-
+                               Признак платной роли
+                      
+                               `true`  - платная роль
+
+                               `false`  -  бесплатная роль
                         user:
                           type: object
+                          description: Пользователь в команде по вакансии
                           properties:
                             id:
                               type: number
+                              description: ID Пользователя
                             name:
                               type: string
+                              description: ФИО Пользователя
                             email:
                               type: string
+                              description: Email пользователя
                             avatar:
                               type: string
+                              description: Ссылка на аватар пользователя
                             phones:
                               type: array
+                              description: Массив всегда из одного элемента. Номер телефона пользователя строкой
                               items:
                                 type: string
-                  first_opened_at:
-                    type: string
                   archived:
                     type: boolean
+                    description: |-
+                     Признак архивности вакансии
+                      
+                     `true`  - вакансия находится в архиве
+
+                     `false`  -  вакансия не находится в архиве
                   demand:
                     type: number
+                    description: Количество вакантных мест
                   state_id:
                     type: string
+                    description: |-
+                     ID Статуса вакансии
+                      
+                      `opened`  - вакансия открыта
+
+                      `paused`  - вакансия приостановлена
+
+                      `closed`  - вакансия закрыта
+
+                      `canceled`  - вакансия отменена
                   closed_at:
                     type: string
+                    description: 'Фактическое время закрытия вакансии (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
                   closure_date:
                     type: string
+                    description: 'Ожидаемое время закрытия вакансии (в формате [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
                   private:
                     type: boolean
+                    description: |-
+                     Признак конфиденциальности вакансии
+
+                     `true`  - вакансия конфиденциальна (доступ ограничен)
+
+                     `false`  - вакансия не конфиденциальна
                   direction_code:
                     type: string
+                    description: |-
+                     Код направления подбора (в компании могут быть добавлены дополнительные направления)
+                     `point`  - точечный подбор
                   job_type:
                     type: string
+                    description: |-
+                     ID воронки подбора (в компании могут быть добавлены дополнительные воронки)
+                     `point`  - точечный подбор
                   staffing_item_full_ext_id:
                     type: string
+                    description: ID Должности из штатной структуры
                   staffing_item_parent_full_ext_id:
                     type: string
+                    description: ID Подразделения из штатной структуры
                   priority:
                     type: string
+                    description: |-
+                     Приоритет вакансии
+                                            
+                      `low`  - низкий
+
+                      `medium`  - средний
+
+                      `high`  - высокий
+
+                      `highest`  - наивысший
+                  do_not_consider_in_kpi:
+                    type: boolean
+                    description: Не учитывать вакансию в KPI
                   source_job_id:
                     type: number
+                    description: ID заявки
                   create_reason:
                     type: object
+                    description: Причина открытия вакансии (словарь - `create_reason`)
                     properties:
                       id:
                         type: string
+                        description: ID причины
                       value:
                         type: string
+                        description: Название причины открытия
                   master_job:
                     type: object
+                    description: Супервакансия
+                    properties:
+                      id:
+                        type: number
+                        description: ID Супервакансии
+                      name:
+                        type: string
+                        description: Название Супервакансии
+                      private:
+                        type: boolean
+                        description: Признак приватности вакансии
+                      can_see:
+                        type: boolean
+                        description: Признак доступа к Супервакансии
                   linked_jobs:
                     type: array
+                    description: Подвакансии
                     items:
                       type: object
+                      properties:
+                        id:
+                          type: number
+                          description: ID подвакансии
+                        name:
+                          type: string
+                          description: Название подвакансии
+                        private:
+                          type: boolean
+                          description: Признак приватности вакансии
+                        can_see:
+                          type: boolean
+                          description: Признак доступа к подвакансии
                 required:
                   - id
               examples:
@@ -1435,16 +1625,16 @@ paths:
               schema:
                 type: object
                 properties:
-                 errors:
-                  type: array
-                  items:
-                     type: string
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
               examples:
                 Пример ответа:
                   value:
                     errors:
-                      message: 
-                       Invalid request format
+                      message: Invalid request format
         '401':
           description: 'Unauthorized'
           content:
@@ -1452,15 +1642,16 @@ paths:
               schema:
                 type: object
                 properties:
-                 errors:
-                 type: array
-                 items:
-                  type: string
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
               examples:
                 Пример ответа:
                   value:
-                   errors:
-                    Unauthorized
+                    errors:
+                      message: Unauthorized
         '404':
           description: 'Not Found'
           content:
@@ -1468,16 +1659,18 @@ paths:
               schema:
                 type: object
                 properties:
-                 errors:
-                 type: array
-                 items:
-                  type: string
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
               examples:
                 Пример ответа:
                   value:
-                   errors:
-                    job:
-                     - Job not found
+                    errors:
+                      job:
+                        - Job not found
         '422':
           description: 'Unprocessable Entity'
           content:
@@ -1485,17 +1678,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  error:
+                  errors:
                     type: object
                     additionalProperties:
                       type: array
                       items:
-                       type: string
+                        type: string
               examples:
                 Пример ответа:
                   value:
                     errors:
-                       job_type: 
+                      job_type:
                         - Field "job_type" is read-only and cannot be updated
         '500':
           description: 'Internal Server Error'
@@ -1504,16 +1697,16 @@ paths:
               schema:
                 type: object
                 properties:
-                 errors:
-                  type: array
-                  items:
-                   type: string
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
               examples:
                 Пример ответа:
                   value:
                     errors:
-                       message: 
-                        Internal server error
+                      message: Internal server error
       parameters:
       - schema:
           type: number
@@ -1577,7 +1770,7 @@ paths:
                   type: number
                   description: 'ID Отдела. Может быть получен из `GET /api/v2/company_departments.json`, механизм аутентификации аналогичен'
                 linked_job_ids:
-                  description: ID Gодвакансии
+                  description: ID Подвакансии
                   type: array
                   items:
                     type: number
