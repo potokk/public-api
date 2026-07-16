@@ -1131,6 +1131,472 @@ paths:
         in: path
         required: true
         description: ID Вакансии
+    patch:
+      summary: Обновление вакансии
+      tags: 
+        - вакансии
+      description: |-
+        Метод выполняет частичное обновление вакансии: в теле запроса передаются только те поля, которые нужно изменить. Метод возвращает данные обновленной вакансии — статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии.
+        
+        При передаче перечисленных полей в теле запроса возвращается `422 Unprocessable Entity`:
+         **direction_code** — направление подбора
+         **job_type** — тип подбора
+         **job_id**
+         **state_id — статус вакансии** (этим методом не меняется)
+         **created_at**, **updated_at**, **closed_at** — управляются системой автоматически
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    description: Уникальный идентификатор вакансии (совпадает с ID из запроса)
+                  name:
+                    type: string
+                    description: Название вакансии
+                  description:
+                    type: string
+                    description: Описание вакансии
+                  company_department:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      archived:
+                        type: boolean
+                  schedule_type:
+                    type: string
+                  salary_from:
+                    type: number
+                  salary_to:
+                    type: number
+                  code:
+                    type: string
+                  code_enable:
+                    type: boolean
+                  experience_type:
+                    type: string
+                  employment_type:
+                    type: string
+                  currency_type:
+                    type: string
+                  key_skills:
+                    type: array
+                    items:
+                      type: string
+                  city:
+                    type: string
+                  published:
+                    type: boolean
+                  publish_location:
+                    type: string
+                  applicants_count:
+                    type: object
+                    properties:
+                      all:
+                        type: number
+                      active:
+                        type: number
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                    description: 'Время последнего обновления (ISO 8601, до миллисекунд: YYYY-MM-DDThh:mm:ss.mmm±hh:mm)'
+                  stages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        serial:
+                          type: number
+                        active_applicants:
+                          type: number
+                        declined_applicants:
+                          type: number
+                        stage_type:
+                          type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      avatar:
+                        type: string
+                      phones:
+                        type: array
+                        items:
+                          type: string
+                  job_bindings:
+                    type: array
+                    items:
+                      type: object
+                  executive_recruiter:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      avatar:
+                        type: string
+                      phones:
+                        type: array
+                        items:
+                          type: string
+                  jobs_users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        job_id:
+                          type: number
+                        role:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            company_id:
+                              type: number
+                            name:
+                              type: string
+                            role_type:
+                              type: string
+                            billing:
+                              type: boolean
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                            name:
+                              type: string
+                            email:
+                              type: string
+                            avatar:
+                              type: string
+                            phones:
+                              type: array
+                              items:
+                                type: string
+                  first_opened_at:
+                    type: string
+                  archived:
+                    type: boolean
+                  demand:
+                    type: number
+                  state_id:
+                    type: string
+                  closed_at:
+                    type: string
+                  closure_date:
+                    type: string
+                  private:
+                    type: boolean
+                  direction_code:
+                    type: string
+                  job_type:
+                    type: string
+                  staffing_item_full_ext_id:
+                    type: string
+                  staffing_item_parent_full_ext_id:
+                    type: string
+                  priority:
+                    type: string
+                  source_job_id:
+                    type: number
+                  create_reason:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      value:
+                        type: string
+                  master_job:
+                    type: object
+                  linked_jobs:
+                    type: array
+                    items:
+                      type: object
+                required:
+                  - id
+              examples:
+                Пример ответа:
+                  value:
+                    id: 0
+                    name: string
+                    description: string
+                    company_department: {}
+                    schedule_type: string
+                    salary_from: 0
+                    salary_to: 0
+                    code: string
+                    code_enable: true
+                    experience_type: string
+                    employment_type: string
+                    currency_type: string
+                    key_skills:
+                      - string
+                    city: string
+                    published: true
+                    publish_location: {}
+                    applicants_count:
+                      all: 0
+                      active: 0
+                    created_at: string
+                    updated_at: string
+                    stages:
+                      - id: 0
+                        name: string
+                        serial: 0
+                        active_applicants: 0
+                        declined_applicants: 0
+                        stage_type: string
+                    author:
+                      id: 0
+                      name: string
+                      email: string
+                      avatar: string
+                      phones:
+                        - string
+                    job_bindings:
+                      - {}
+                    executive_recruiter:
+                      id: 0
+                      name: string
+                      avatar: string
+                      phones:
+                        - string
+                    jobs_users:
+                      - id: 0
+                        job_id: 0
+                        role:
+                          id: 0
+                          company_id: 0
+                          name: string
+                          role_type: string
+                          billing: true
+                        user_id: 0
+                        user:
+                          id: 0
+                          name: string
+                          email: string
+                          avatar: string
+                          phones:
+                            - string
+                    first_opened_at: string
+                    archived: true
+                    demand: 0
+                    state_id: string
+                    closed_at: string
+                    closure_date: string
+                    private: true
+                    direction_code: string
+                    job_type: string
+                    staffing_item_full_ext_id: string
+                    staffing_item_parent_full_ext_id: string
+                    priority: string
+                    do_not_consider_in_kpi: true
+                    source_job_id: 0
+                    create_reason:
+                      id: string
+                      value: string
+                    master_job:
+                      id: 0
+                      name: string
+                      private: true
+                      can_see: true
+                    linked_jobs:
+                      - id: 0
+                        name: string
+                        private: true
+                        can_see: true
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 errors:
+                  type: array
+                  items:
+                     type: string
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      message: 
+                       Invalid request format
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 errors:
+                 type: array
+                 items:
+                  type: string
+              examples:
+                Пример ответа:
+                  value:
+                   errors:
+                    Unauthorized
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 errors:
+                 type: array
+                 items:
+                  type: string
+              examples:
+                Пример ответа:
+                  value:
+                   errors:
+                    job:
+                     - Job not found
+        '422':
+          description: 'Unprocessable Entity'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                       type: string
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                       job_type: 
+                        - Field "job_type" is read-only and cannot be updated
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 errors:
+                  type: array
+                  items:
+                   type: string
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                       message: 
+                        Internal server error
+      parameters:
+      - schema:
+          type: number
+          example: 16564
+        name: id
+        in: path
+        required: true
+        description: ID Вакансии
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: 'Поля для частичного обновления вакансии. Все поля необязательны — передаются только изменяемые.'
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Название вакансии
+                description:
+                  type: string
+                  description: Описание вакансии
+                city:
+                  type: number
+                  description: |
+                    ID Города вакансии (словарь `cities`)
+                salary_from:
+                  type: number
+                  description: Ожидаемая ЗП от
+                salary_to:
+                  type: number
+                  description: Ожидаемая ЗП до
+                employment_type:
+                  type: string
+                  description: ID Занятости (словарь - `employment_type`)
+                experience_type:
+                  type: string
+                  description: ID Опыта работы (словарь - `experience_type`)
+                schedule_type:
+                  type: string
+                  description: ID Графика работы (словарь - `schedule_type`)
+                currency_type:
+                  type: string
+                  description: ID Валюты (словарь - `currency_type`)
+                code:
+                  type: number
+                  description: Код вакансии
+                key_skills:
+                  description: Ключевые навыки
+                  type: array
+                  items:
+                    type: string
+                is_draft:
+                  type: boolean
+                  description: |-
+                    Признак черновика вакансии
+
+                    `true` - черновик вакансии
+
+                    `false` - вакансия не является черновиком
+                company_department_id:
+                  type: number
+                  description: 'ID Отдела. Может быть получен из `GET /api/v2/company_departments.json`, механизм аутентификации аналогичен'
+                linked_job_ids:
+                  description: ID Gодвакансии
+                  type: array
+                  items:
+                    type: number
+            examples:
+              Пример запроса:
+                value:
+                  name: Начальник технического отдела
+                  description: Вакансия для тех. отдела ООО Аврора
+                  city: 1
+                  salary_from: 100000
+                  salary_to: 200000
+                  employment_type: full
+                  experience_type: noExperience
+                  schedule_type: fullDay
+                  currency_type: RUR
+                  key_skills:
+                    - стрессоустойчивость
+                  is_draft: false
+                  company_department_id: 0
   '/applicants/{applicant_id}/resumes.json':
     parameters:
       - schema:
@@ -1477,7 +1943,7 @@ paths:
                       base:
                         - Формат файла не поддерживается
                       cv_original:
-                        - 'имеет неразрешенное расширение png. Корректные расширения: doc, docx, pdf, rtf.'
+                        - 'имеет неразрешенное расширение png. Корректные расширения: doc, docx, pdf, rtf, html.'
                 Пример ответа 3:
                   value:
                     errors:
@@ -1488,17 +1954,12 @@ paths:
                     errors:
                       base:
                         - прервана попытка загрузить зараженный файл
-                Пример ответа 5:
-                  value:
-                    errors:
-                      cv_original:
-                        - 'имеет неразрешенное расширение html. Корректные расширения: doc, docx, pdf, rtf.'
       operationId: post-applicants-applicant_id-resume_file.json
       description: |-
         Добавление файла резюме в карточку кандидата. Метод возвращает массив всех резюме кандидата
 
 
-        Допустимые расширения файлов - doc, docx, pdf, rtf. Размер файла резюме должен быть меньше 10 Мбайт.
+        Допустимые расширения файлов - doc, docx, pdf, rtf, html. Размер файла резюме должен быть меньше 10 Мбайт.
       requestBody:
         content:
           multipart/form-data:
