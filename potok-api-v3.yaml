@@ -8673,7 +8673,7 @@ paths:
         - $ref: '#/components/parameters/page_cursor'
   /jobs/state_histories.json:
     get:
-      summary: Получение событий изменения статусов workflow
+      summary: Получение событий изменения статусов вакансий
       tags:
         - вакансии
       responses:
@@ -8757,7 +8757,7 @@ paths:
                     has_next_page: true
       operationId: get-jobs-state_histories.json
       description: |
-        Позволяет получать информацию о событиях для сущности `job` (вакансия) для построения аналитики во внешней системе.
+        Позволяет получать информацию о событиях смены статусов workflow сущности `job` (вакансия) для построения аналитики во внешней системе.
         Сортировка данных: от старых событий к новым.
       parameters:
         - schema:
@@ -8774,6 +8774,572 @@ paths:
           description: Период изменения статуса ДО (включительно)
         - $ref: '#/components/parameters/page_size'
         - $ref: '#/components/parameters/page_cursor'
+  /jobs/{job_id}/events.json:
+    parameters:
+      - schema:
+          type: integer
+          example: 480344
+        name: job_id
+        in: path
+        required: true
+        description: ID вакансии
+    get:
+      summary: История событий вакансии
+      tags:
+        - вакансии
+      operationId: get-jobs-job_id-events.json
+      description: |
+        Возвращает ленту событий по вакансии (изменения статуса, ответственного, состава команды, параметров вакансии и т.д.) с курсорной пагинацией.
+
+        Сортировка данных: от новых событий к старым.
+
+        Набор полей объекта события зависит от его типа (`type`). Перечень типов приведён в описании поля `type`.
+      parameters:
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/page_cursor'
+        - schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 'Event::JobCreated'
+                - 'Event::JobStatusChanged'
+                - 'Event::JobRecruiterChanged'
+                - 'Event::JobApprovalComment'
+                - 'Event::JobPositionsChanged'
+                - 'Event::JobHiringManagerChanged'
+                - 'Event::JobWatchersChanged'
+                - 'Event::JobTitleChanged'
+                - 'Event::JobDescriptionChanged'
+                - 'Event::JobCustomFieldChanged'
+                - 'Event::JobSalaryChanged'
+                - 'Event::JobLocationChanged'
+                - 'Event::JobDepartmentChanged'
+                - 'Event::JobDeadlineChanged'
+                - 'Event::JobPipelineChanged'
+          in: query
+          name: 'type[]'
+          description: 'Фильтр по типу события. Можно указывать несколько раз — значения объединяются по ИЛИ. Неизвестный тип не вызывает ошибку: вернётся пустой список'
+        - schema:
+            type: integer
+            example: 42
+          in: query
+          name: author_id
+          description: 'Фильтр по ID автора события. События с `author: null` (автоматические) в выборку не попадают'
+        - schema:
+            type: string
+            example: '2026-03-01T00:00:00%2B03:00'
+          in: query
+          name: date_from
+          description: 'Начало временного периода (включительно)'
+        - schema:
+            type: string
+            example: '2026-04-01T23:59:59%2B03:00'
+          in: query
+          name: date_to
+          description: 'Конец временного периода (включительно)'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID события
+                          example: 485496405
+                        type:
+                          type: string
+                          description: |
+                            Тип события. Принимает одно из значений:
+
+                            `Event::JobCreated` — вакансия создана
+
+                            `Event::JobStatusChanged` — изменён статус вакансии
+
+                            `Event::JobRecruiterChanged` — изменён ответственный рекрутер
+
+                            `Event::JobApprovalComment` — финальный комментарий согласования заявки, из которой создана вакансия
+
+                            `Event::JobPositionsChanged` — изменено количество вакантных позиций
+
+                            `Event::JobWatchersChanged` — изменён список участников команды по вакансии
+
+                            `Event::JobTitleChanged` — изменено название вакансии
+
+                            `Event::JobDescriptionChanged` — изменено описание вакансии (поля `description` (описание) и/или `additional_info` (комментарий))
+
+                            `Event::JobCustomFieldChanged` — изменено динамическое поле вакансии. На каждое поле создается свое событие.
+
+                            `Event::JobSalaryChanged` — изменена зарплата
+
+                            `Event::JobLocationChanged` — изменено местоположение
+
+                            `Event::JobDepartmentChanged` — изменён отдел
+
+                            `Event::JobDeadlineChanged` — изменёна ожидаемая дата закрытия (дедлайн)
+                          enum:
+                            - 'Event::JobCreated'
+                            - 'Event::JobStatusChanged'
+                            - 'Event::JobRecruiterChanged'
+                            - 'Event::JobApprovalComment'
+                            - 'Event::JobPositionsChanged'
+                            - 'Event::JobWatchersChanged'
+                            - 'Event::JobTitleChanged'
+                            - 'Event::JobDescriptionChanged'
+                            - 'Event::JobCustomFieldChanged'
+                            - 'Event::JobSalaryChanged'
+                            - 'Event::JobLocationChanged'
+                            - 'Event::JobDepartmentChanged'
+                            - 'Event::JobDeadlineChanged'
+                          example: 'Event::JobStatusChanged'
+                        author:
+                          type: [object, 'null']
+                          description: Автор события
+                          properties:
+                            id:
+                              type: integer
+                              description: ID пользователя
+                              example: 148846
+                            name:
+                              type: string
+                              description: Имя пользователя
+                              example: Иван Иванов Иванович
+                            avatar:
+                              type: [string, 'null']
+                              description: Ссылка на аватар
+                              example: 'https://app.potok.io/uploads/user/avatar/1/photo.png'
+                            email:
+                              type: string
+                              description: Email пользователя
+                              example: ivan@ivanov.com
+                        created_at:
+                          type: string
+                          description: 'Время создания события (в формате ISO 8601 с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                          example: '2026-08-18T08:43:25.153+03:00'
+                        updated_at:
+                          type: string
+                          description: 'Время обновления события (в формате ISO 8601 с точностью до миллисекунд `YYYY-MM-DDThh:mm:ss.mmm±hh:mm`)'
+                          example: '2026-08-18T08:43:25.153+03:00'
+                        job_id:
+                          type: integer
+                          description: ID вакансии
+                          example: 480344
+                        old_status:
+                          type: [string, 'null']
+                          description: 'Прежний статус вакансии. Возвращается техническое имя (`opened`, `paused`, `closed`, `canceled` либо имя состояния из кастомного workflow компании) для события `Event::JobStatusChanged`. Для остальных типов — всегда `null`'
+                          example: opened
+                        new_status:
+                          type: [string, 'null']
+                          description: 'Новый статус вакансии (техническое имя состояния) для события `Event::JobStatusChanged`. Для остальных типов — всегда `null`'
+                          example: paused
+                        prev_responsible_user_id:
+                          type: [integer, 'null']
+                          description: 'ID прежнего ответственного рекрутера для события `Event::JobRecruiterChanged`. Для остальных типов — всегда `null`'
+                          example: 148846
+                        responsible_user_id:
+                          type: [integer, 'null']
+                          description: 'ID нового ответственного рекрутера для события `Event::JobRecruiterChanged`. Для остальных типов — всегда `null`'
+                          example: 150022
+                        source_proposal_id:
+                          type: [integer, 'null']
+                          description: 'ID заявки, из которой создана вакансия для события `Event::JobCreated`. Для остальных типов — всегда `null`'
+                          example: 55123
+                        comment:
+                          type: [string, 'null']
+                          description: 'Текст комментария согласования заявки для события `Event::JobApprovalComment`. Для остальных типов — всегда `null`'
+                          example: Согласовано с руководителем
+                        approval_decision:
+                          type: [string, 'null']
+                          description: 'Статус по согласованию для события `Event::JobApprovalComment`. Для остальных типов — всегда `null`'
+                          example: accepted
+                        proposal_id:
+                          type: [integer, 'null']
+                          description: 'ID заявки на согласование для события `Event::JobApprovalComment`. Для остальных типов — всегда `null`'
+                          example: 55123
+                        prev_quantity:
+                          type: [integer, 'null']
+                          description: 'Прежнее количество вакантных позиций (значение поля `demand`) для события `Event::JobPositionsChanged`. Для остальных типов — всегда `null`'
+                          example: 2
+                        quantity:
+                          type: [integer, 'null']
+                          description: 'Новое количество вакантных позиций (значение поля `demand`). Для события `Event::JobPositionsChanged`. Для остальных типов — всегда `null`'
+                          example: 3
+                        prev_hiring_manager_id:
+                          type: [integer, 'null']
+                          description: '⚠️ не используется. Поле всегда `null`'
+                          example: 148846
+                        hiring_manager_id:
+                          type: [integer, 'null']
+                          description: '⚠️ не используется. Поле всегда `null`'
+                          example: 150022
+                        added_watcher_ids:
+                          type: array
+                          default: []
+                          description: 'ID добавленных участников команды по вакансии для события `Event::JobWatchersChanged`. Для остальных типов — всегда `null`'
+                          items:
+                            type: integer
+                          example:
+                            - 150022
+                        removed_watcher_ids:
+                          type: array
+                          default: []
+                          description: 'ID удалённых участников команды по вакансии для события `Event::JobWatchersChanged`. Для остальных типов — всегда `null`'
+                          items:
+                            type: integer
+                          example:
+                            - 148846
+                        old_title:
+                          type: [string, 'null']
+                          description: 'Прежнее название вакансии (значение поля `name`). Для события `Event::JobTitleChanged`. Для остальных типов — всегда `null`'
+                          example: Менеджер по продажам
+                        new_title:
+                          type: [string, 'null']
+                          description: 'Новое название вакансии (значение поля `name`). Для события `Event::JobTitleChanged`. Для остальных типов — всегда `null`'
+                          example: Старший менеджер по продажам
+                        changed_fields:
+                          type: array
+                          default: []
+                          description: |
+                            Список изменённых полей описания вакансии: `description` (описание) и/или `additional_info` (комментарий) для события `Event::JobDescriptionChanged`. Для остальных типов — пустой массив).
+
+                            Содержимое значений полей не отображается — только ID полей
+                          items:
+                            type: string
+                          example:
+                            - description
+                        field_id:
+                          type: [string, 'null']
+                          description: 'ID динамического поля для события `Event::JobCustomFieldChanged`. Для остальных типов — всегда `null`'
+                          example: grade
+                        field_name:
+                          type: [string, 'null']
+                          description: 'Название динамического поля для события `Event::JobCustomFieldChanged`. Для остальных типов — всегда `null`'
+                          example: Грейд
+                        old_value:
+                          description: 'Прежнее значение динамического поля (в оригинальном типе данных — число, строка, boolean и т.д.) для события `Event::JobCustomFieldChanged`. Для остальных типов — всегда `null`'
+                          example: Первый
+                        new_value:
+                          description: 'Новое значение динамического поля (в оригинальном типе данных) для события `Event::JobCustomFieldChanged`. Для остальных типов — всегда `null`'
+                          example: Второй
+                        old_salary_from:
+                          type: [integer, 'null']
+                          description: 'Прежняя зарплата «от» (значение поля `salary_from`) для события `Event::JobSalaryChanged`. Для остальных типов — всегда `null`'
+                          example: 50000
+                        old_salary_to:
+                          type: [integer, 'null']
+                          description: 'Прежняя зарплата «до» (значение поля `salary_to`) для события `Event::JobSalaryChanged`. Для остальных типов — всегда `null`'
+                          example: 70000
+                        new_salary_from:
+                          type: [integer, 'null']
+                          description: 'Новая зарплата «от» (значение поля `salary_from`) для события `Event::JobSalaryChanged`. Для остальных типов — всегда `null`'
+                          example: 60000
+                        new_salary_to:
+                          type: [integer, 'null']
+                          description: 'Новая зарплата «до» (значение поля `salary_to`) для события `Event::JobSalaryChanged`. Для остальных типов — всегда `null`'
+                          example: 80000
+                        old_city:
+                          type: [string, 'null']
+                          description: |
+                            ID прежнего населённого пункта (ID поля `city` вакансии, не название) для события `Event::JobLocationChanged`. Для остальных типов — всегда `null`.
+
+                            Название можно получить через справочник городов `GET /dictionaries/cities.json`
+                          example: '1'
+                        new_city:
+                          type: [string, 'null']
+                          description: |
+                            ID нового населённого пункта ((ID поля `city` вакансии, не название) для события `Event::JobLocationChanged`. Для остальных типов — всегда `null`.
+                          
+                            Название можно получить через справочник городов `GET /dictionaries/cities.json`)
+                          example: '1329'
+                        old_area_id:
+                          type: [string, 'null']
+                          description: 'ID прежнего региона по справочнику работного сайта (HeadHunter). ⚠️ Заполняется при публикации вакансии на работный сайт для события `Event::JobLocationChanged`. Для остальных типов — всегда `null`'
+                          example: '1'
+                        new_area_id:
+                          type: [string, 'null']
+                          description: 'ID нового региона по справочнику работного сайта (HeadHunter). ⚠️ Заполняется при публикации вакансии на работный сайт для события `Event::JobLocationChanged`. Для остальных типов — всегда `null`'
+                          example: '2'
+                        old_address_id:
+                          type: [integer, 'null']
+                          description: 'ID прежнего адреса места работы из справочника адресов работодателя на работном сайте (HeadHunter). ⚠️ Заполняется при публикации вакансии на работный сайт для события `Event::JobLocationChanged`. Для остальных типов — всегда `null`'
+                          example: 10
+                        new_address_id:
+                          type: [integer, 'null']
+                          description: 'ID нового адреса места работы из справочника адресов работодателя на работном сайте (HeadHunter). ⚠️ Заполняется при публикации вакансии на работный сайт для события `Event::JobLocationChanged`. Для остальных типов — всегда `null`'
+                          example: 20
+                        old_company_department_id:
+                          type: [integer, 'null']
+                          description: |
+                            ID прежнего отдела для события `Event::JobDepartmentChanged`. Для остальных типов — всегда `null` 
+                            
+                            Название можно получить из `GET /api/v2/company_departments.json`, механизм аутентификации аналогичен
+                          example: 57690
+                        new_company_department_id:
+                          type: [integer, 'null']
+                          description: |
+                            ID нового отдела для события `Event::JobDepartmentChanged`. Для остальных типов — всегда `null` 
+                            
+                            Название можно получить из `GET /api/v2/company_departments.json`, механизм аутентификации аналогичен
+                          example: 46861
+                        old_deadline:
+                          type: [string, 'null']
+                          description: 'Прежняя ожидаемая дата закрытия для события `Event::JobDeadlineChanged`. Для остальных типов — всегда `null`'
+                          example: '2026-09-01 03:00:00 +0300'
+                        new_deadline:
+                          type: [string, 'null']
+                          description: 'Новая ожидаемая дата закрытия для события `Event::JobDeadlineChanged`. Для остальных типов — всегда `null`'
+                          example: '2026-09-08 03:00:00 +0300'
+                        old_stage_ids:
+                          type: array
+                          default: []
+                          description: '⚠️ не используется (по дефолту — пустой массив)'
+                          items:
+                            type: integer
+                          example: []
+                        new_stage_ids:
+                          type: array
+                          default: []
+                          description: '⚠️ не используется (по дефолту — пустой массив)'
+                          items:
+                            type: integer
+                          example: []
+                      required:
+                        - id
+                        - type
+                        - job_id
+                        - created_at
+                  page_next_cursor:
+                    type: [string, 'null']
+                    description: Курсор следующей страницы
+                    example: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                  has_next_page:
+                    type: boolean
+                    description: 'Признак того, имеется ли следующая страница'
+                required:
+                  - objects
+                  - page_next_cursor
+                  - has_next_page
+              examples: 
+                Создание вакансии из заявки:
+                  value:
+                    objects:
+                      - id: 473550617
+                        type: 'Event::JobCreated'
+                        author:
+                          id: 148846
+                          name: Иван Иванов Иванович
+                          avatar: null
+                          email: ivan@ivanov.com
+                        created_at: '2026-08-18T08:43:25.153+03:00'
+                        updated_at: '2026-08-18T08:43:25.153+03:00'
+                        job_id: 1680829
+                        old_status: null
+                        new_status: null
+                        prev_responsible_user_id: null
+                        responsible_user_id: null
+                        source_proposal_id: 1417708
+                        comment: null
+                        approval_decision: null
+                        proposal_id: null
+                        prev_quantity: null
+                        quantity: null
+                        prev_hiring_manager_id: null
+                        hiring_manager_id: null
+                        added_watcher_ids: []
+                        removed_watcher_ids: []
+                        old_title: null
+                        new_title: null
+                        changed_fields: []
+                        field_id: null
+                        field_name: null
+                        old_salary_from: null
+                        old_salary_to: null
+                        new_salary_from: null
+                        new_salary_to: null
+                        old_city: null
+                        new_city: null
+                        old_area_id: null
+                        new_area_id: null
+                        old_address_id: null
+                        new_address_id: null
+                        old_company_department_id: null
+                        new_company_department_id: null
+                        old_deadline: null
+                        new_deadline: null
+                        old_stage_ids: []
+                        new_stage_ids: []
+                        old_value: null
+                        new_value: null
+                    page_next_cursor: null
+                    has_next_page: false
+                Изменен статус вакансии:
+                  value:
+                    objects:
+                      - id: 485496405
+                        type: 'Event::JobStatusChanged'
+                        author:
+                          id: 148846
+                          name: Иван Иванов Иванович
+                          avatar: null
+                          email: ivan@ivanov.com
+                        created_at: '2022-09-09T07:48:11.000+03:00'
+                        updated_at: '2022-09-09T07:48:11.000+03:00'
+                        job_id: 480344
+                        old_status: opened
+                        new_status: paused
+                        prev_responsible_user_id: null
+                        responsible_user_id: null
+                        source_proposal_id: null
+                        comment: null
+                        approval_decision: null
+                        proposal_id: null
+                        prev_quantity: null
+                        quantity: null
+                        prev_hiring_manager_id: null
+                        hiring_manager_id: null
+                        added_watcher_ids: []
+                        removed_watcher_ids: []
+                        old_title: null
+                        new_title: null
+                        changed_fields: []
+                        field_id: null
+                        field_name: null
+                        old_salary_from: null
+                        old_salary_to: null
+                        new_salary_from: null
+                        new_salary_to: null
+                        old_city: null
+                        new_city: null
+                        old_area_id: null
+                        new_area_id: null
+                        old_address_id: null
+                        new_address_id: null
+                        old_company_department_id: null
+                        new_company_department_id: null
+                        old_deadline: null
+                        new_deadline: null
+                        old_stage_ids: []
+                        new_stage_ids: []
+                        old_value: null
+                        new_value: null
+                    page_next_cursor: WzE2Njc1MDAwNzM3ODgsMTY2NzUwMDA3MzU2N10=
+                    has_next_page: false
+                Изменение динамического поля:
+                  value:
+                    objects:
+                      - id: 473577385
+                        type: 'Event::JobCustomFieldChanged'
+                        author:
+                          id: 148846
+                          name: Иван Иванов Иванович
+                          avatar: null
+                          email: ivan@ivanov.com
+                        created_at: '2026-08-18T09:49:58.442+03:00'
+                        updated_at: '2026-08-18T09:49:58.442+03:00'
+                        job_id: 1680829
+                        old_status: null
+                        new_status: null
+                        prev_responsible_user_id: null
+                        responsible_user_id: null
+                        source_proposal_id: null
+                        comment: null
+                        approval_decision: null
+                        proposal_id: null
+                        prev_quantity: null
+                        quantity: null
+                        prev_hiring_manager_id: null
+                        hiring_manager_id: null
+                        added_watcher_ids: []
+                        removed_watcher_ids: []
+                        old_title: null
+                        new_title: null
+                        changed_fields: []
+                        field_id: 'grade'
+                        field_name: 'Грейд'
+                        old_salary_from: null
+                        old_salary_to: null
+                        new_salary_from: null
+                        new_salary_to: null
+                        old_city: null
+                        new_city: null
+                        old_area_id: null
+                        new_area_id: null
+                        old_address_id: null
+                        new_address_id: null
+                        old_company_department_id: null
+                        new_company_department_id: null
+                        old_deadline: null
+                        new_deadline: null
+                        old_stage_ids: []
+                        new_stage_ids: []
+                        old_value: null
+                        new_value: '1'
+                    page_next_cursor: null
+                    has_next_page: false
+                Изменение описания вакансии:
+                  value:
+                    objects:
+                      - id: 473578235
+                        type: 'Event::JobDescriptionChanged'
+                        author:
+                          id: 148846
+                          name: Иван Иванов Иванович
+                          avatar: null
+                          email: ivan@ivanov.com
+                        created_at: '2026-08-18T09:51:31.238+03:00'
+                        updated_at: '2026-08-18T09:51:31.238+03:00'
+                        job_id: 1680829
+                        old_status: null
+                        new_status: null
+                        prev_responsible_user_id: null
+                        responsible_user_id: null
+                        source_proposal_id: null
+                        comment: null
+                        approval_decision: null
+                        proposal_id: null
+                        prev_quantity: null
+                        quantity: null
+                        prev_hiring_manager_id: null
+                        hiring_manager_id: null
+                        added_watcher_ids: []
+                        removed_watcher_ids: []
+                        old_title: null
+                        new_title: null
+                        changed_fields: [description, additional_info]
+                        field_id: null
+                        field_name: null
+                        old_salary_from: null
+                        old_salary_to: null
+                        new_salary_from: null
+                        new_salary_to: null
+                        old_city: null
+                        new_city: null
+                        old_area_id: null
+                        new_area_id: null
+                        old_address_id: null
+                        new_address_id: null
+                        old_company_department_id: null
+                        new_company_department_id: null
+                        old_deadline: null
+                        new_deadline: null
+                        old_stage_ids: []
+                        new_stage_ids: []
+                        old_value: null
+                        new_value: null
+                    page_next_cursor: null
+                    has_next_page: false
+        '404':
+          description: Вакансия не найдена или принадлежит другой компании
+        '422':
+          description: 'Некорректный формат `date_from` / `date_to` либо `date_from` больше `date_to`'
   /events.json:
     post:
       summary: Создание события (комментарий или email)
@@ -12906,7 +13472,7 @@ components:
           type: string
       examples:
         - id: 8976
-          subject: Встреча с канидадатом
+          subject: Встреча с канидатом
           body: Текст встречи
           applicant:
             id: 1234
@@ -13379,21 +13945,21 @@ tags:
     description: Работа с документами кандидатов
   - name: кандидаты
     description: Работа с кандидатами (создание, просмотр, обновление, деперсонализация)
+  - name: резюме
+    description: Добавление резюме кандидата — параметрами или файлом
   - name: кандидаты на вакансии
     description: Действия с кандидатом в рамках вакансии (перевод по этапам, смена статуса, отклонение, оценка, офферы, анкеты СБ)
+  - name: работные сайты
+    description: Приём информации об откликах с внешних работных сайтов
+  - name: события
+    description: Работа с событиями по кандидату
+  - name: финалисты
+    description: Работа с финалистами в рамках функциональности Передача финалиста
   - name: организационно-штатная структура
     description: Работа с организационно-штатной структурой компании. Только для клиентов, которые используют функциональность ОШС
   - name: пользователи
     description: Список и информация о пользователях компании
   - name: потребности
     description: Работа с функциональностью Потребности
-  - name: работные сайты
-    description: Приём информации об откликах с внешних работных сайтов
-  - name: резюме
-    description: Добавление резюме кандидата — параметрами или файлом
   - name: справочники
     description: Работа со справочниками системы
-  - name: финалисты
-    description: Работа с финалистами в рамках функциональности Передача финалиста
-  - name: события
-    description: Работа с событиями по кандидату
