@@ -3743,6 +3743,261 @@ paths:
                     applicant_name: null
                     errors:
                       - Internal server error    
+  '/applicants/{applicant_id}/personal_data_agreement.json':
+    parameters:
+      - schema:
+          type: integer
+          example: 123
+        name: applicant_id
+        in: path
+        required: true
+        description: ID кандидата
+    post:
+      summary: Фиксация согласия кандидата на обработку ПДн
+      tags:
+        - кандидаты
+      operationId: post-api-v3-applicants-applicant_id-personal_data_agreement.json
+      description: |-
+        Фиксирует согласие (или отказ) кандидата на обработку персональных данных, полученное на стороннем ресурсе, например на карьерном сайте компании.
+
+        **Порядок вызова:**
+        1. Создайте кандидата методом `POST /api/v3/applicants` — кандидат появится со статусом ПДн «Не отправлено».
+        2. Возьмите ID кандидата из ответа.
+        3. Вызовите этот метод и передайте согласия кандидата.
+
+        За один вызов передаются согласия одного кандидата: общее согласие на кадровый резерв (`reserve`), согласия под конкретные вакансии (`vacancy`) или оба типа сразу.
+
+        **Результат:**
+        - для каждого элемента массива создаётся запись о согласии;
+        - статус согласия кандидата в интерфейсе — «Согласен» / «Не согласен»;
+        - для согласия типа `reserve` в «Всех действиях» кандидата создаётся событие с датой из `filled_at`;
+        - если передан `pda_text`, в карточке кандидата доступен PDF-файл согласия.
+
+        **Особенности:**
+        - Метод только создаёт согласия. Если у кандидата уже есть согласие того же типа (для `vacancy` — по той же вакансии), вернётся ошибка 422. Обновить согласие этим методом нельзя.
+        - Запрос атомарный: при ошибке в любом элементе ничего не сохраняется.
+        - Для деперсонализированного кандидата согласие зафиксировать нельзя (ошибка 422). Архивному кандидату согласие фиксируется штатно.
+        - Подтверждающие метки (`sign_metadata`) сохраняются как переданы и не проверяются. За факт получения согласия и достоверность меток отвечает компания — оператор ПДн.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - personal_data_agreements
+              properties:
+                personal_data_agreements:
+                  type: array
+                  minItems: 1
+                  description: Согласия кандидата, минимум одно. Не более одного согласия `reserve` и одного согласия `vacancy` на каждую вакансию.
+                  items:
+                    type: object
+                    required:
+                      - consent_type
+                      - state_id
+                      - filled_at
+                      - expired_at
+                      - sign_metadata
+                    properties:
+                      consent_type:
+                        type: string
+                        enum:
+                          - reserve
+                          - vacancy
+                        description: 'Тип согласия: `reserve` — общее согласие на кадровый резерв без привязки к вакансии; `vacancy` — согласие под конкретную вакансию'
+                      job_id:
+                        type:
+                          - integer
+                          - 'null'
+                        description: ID вакансии. Обязателен для `vacancy`, для `reserve` не передаётся. Вакансия должна принадлежать компании токена.
+                      state_id:
+                        type: string
+                        enum:
+                          - accepted
+                          - declined
+                        description: 'Решение кандидата: `accepted` — согласие, `declined` — отказ'
+                      filled_at:
+                        type: string
+                        format: date-time
+                        description: Дата и время дачи согласия в формате ISO 8601. Не может быть в будущем.
+                      expired_at:
+                        type: string
+                        format: date-time
+                        description: Срок действия согласия в формате ISO 8601. Не может быть в прошлом.
+                      pda_text:
+                        type:
+                          - string
+                          - 'null'
+                        description: Текст согласия (HTML), с которым ознакомился кандидат. Нужен для PDF-файла согласия — без текста файл не формируется. Активное содержимое (скрипты и т.п.) удаляется.
+                      sign_metadata:
+                        type: object
+                        description: Подтверждающие метки согласия. Сохраняются как переданы и выводятся в PDF-файле согласия.
+                        required:
+                          - source
+                        properties:
+                          source:
+                            type: string
+                            description: Источник согласия, например «Карьерный сайт». Обязательное поле.
+                          source_url:
+                            type: string
+                            description: Ссылка на страницу или документ согласия на стороне компании
+                          fingerprint:
+                            type: string
+                            description: Отпечаток браузера кандидата в момент подтверждения согласия
+                          ip:
+                            type: string
+                            description: IP-адрес, с которого кандидат подтвердил согласие
+                          user_agent:
+                            type: string
+                            description: User-agent браузера кандидата в момент подтверждения согласия
+            examples:
+              Пример запроса:
+                value:
+                  personal_data_agreements:
+                    - consent_type: reserve
+                      state_id: accepted
+                      filled_at: '2026-03-05T11:37:54.844+03:00'
+                      expired_at: '2031-03-05T11:37:54.844+03:00'
+                      pda_text: '<h3>СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ</h3>'
+                      sign_metadata:
+                        source: Карьерный сайт
+                        source_url: 'https://example.com/consent/12345'
+                        fingerprint: d8bd5dce02ba4c7414b181019012939f
+                        ip: 91.203.238.30
+                        user_agent: Mozilla/5.0
+                    - consent_type: vacancy
+                      job_id: 884412
+                      state_id: accepted
+                      filled_at: '2026-03-05T11:37:54.844+03:00'
+                      expired_at: '2031-03-05T11:37:54.844+03:00'
+                      sign_metadata:
+                        source: Карьерный сайт
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applicant_id:
+                    type: integer
+                    description: ID кандидата
+                  personal_data_agreements:
+                    type: array
+                    description: Созданные записи о согласии — по одной на каждый элемент запроса
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID записи о согласии
+                        consent_type:
+                          type: string
+                          enum:
+                            - reserve
+                            - vacancy
+                          description: Тип согласия
+                        job_id:
+                          type:
+                            - integer
+                            - 'null'
+                          description: ID вакансии; `null` для `reserve`
+                        state_id:
+                          type: string
+                          enum:
+                            - accepted
+                            - declined
+                          description: Статус согласия
+                        filled_at:
+                          type: string
+                          format: date-time
+                          description: Дата получения согласия
+                        expired_at:
+                          type: string
+                          format: date-time
+                          description: Срок действия согласия
+              examples:
+                Пример ответа:
+                  value:
+                    applicant_id: 123
+                    personal_data_agreements:
+                      - id: 778812
+                        consent_type: reserve
+                        job_id: null
+                        state_id: accepted
+                        filled_at: '2026-03-05T11:37:54.844+03:00'
+                        expired_at: '2031-03-05T11:37:54.844+03:00'
+                      - id: 778813
+                        consent_type: vacancy
+                        job_id: 884412
+                        state_id: accepted
+                        filled_at: '2026-03-05T11:37:54.844+03:00'
+                        expired_at: '2031-03-05T11:37:54.844+03:00'
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Пример ответа:
+                  value:
+                    error: Unauthorized
+        '404':
+          description: not_found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                Пример ответа:
+                  value:
+                    error: Not Found
+        '422':
+          description: |-
+            unprocessable_entity
+
+            Ошибка валидации. В `errors` ключ — путь к полю (с номером элемента массива), значение — список сообщений.
+
+            Возникает, если:
+            - массив `personal_data_agreements` пустой;
+            - неизвестное значение `consent_type` или `state_id`;
+            - не передан `job_id` для `vacancy` или передан для `reserve`;
+            - вакансия `job_id` не принадлежит компании;
+            - `filled_at` в будущем;
+            - `expired_at` не передан или в прошлом;
+            - не передан `sign_metadata.source`;
+            - в запросе больше одного `reserve` или повторяется `job_id`;
+            - у кандидата уже есть согласие такого типа;
+            - кандидат деперсонализирован.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+              examples:
+                Пример ответа:
+                  value:
+                    errors:
+                      'personal_data_agreements[1].job_id':
+                        - обязателен для согласия на вакансию
+                      'personal_data_agreements[0].filled_at':
+                        - не может быть в будущем
+  
   '/ajs_joins/{ajs_join_id}/assessment_items.json':
     parameters:
       - schema:
