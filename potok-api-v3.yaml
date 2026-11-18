@@ -2398,7 +2398,10 @@ paths:
                       emails:
                         - имеет неверное значение
       operationId: post-api-v3-applicants.json
-      description: 'Создание кандидата по заданным параметрам. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.'
+      description: |-
+        Создание кандидата по заданным параметрам. Метод возвращает статические поля, а также все динамические поля, набор которых зависит от настроек формы вакансии. Описание приведено для стандартной формы, в случае ее изменения метод может возвращать другой набор параметров.
+
+        Согласие на обработку персональных данных при создании не передаётся — кандидат создаётся со статусом «Запрос на обработку ПДн ещё не отправлен». Проставить согласие можно отдельным методом `POST /applicants/{applicant_id}/personal_data_agreement.json` или отправить запрос кандидату через интерфейс системы.
       requestBody:
         content:
           application/json:
@@ -2534,11 +2537,9 @@ paths:
                           business_trip_readiness:
                             id: ready
                             name: готов к командировкам
-                    workflows:
-                      personal_data_agreement: personal_data_depersonalization
                     events:
-                      body: комментарий
-                      type: 'Event::Comment'
+                      - body: комментарий
+                        type: 'Event::Comment'
                     ajs_joins:
                       - job_id: 220694
                         employee_ext_id: 12345
@@ -3243,7 +3244,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Applicant_request'
+              $ref: '#/components/schemas/Applicant_update_request'
             examples:
               Пример запроса:
                 value:
@@ -3266,122 +3267,6 @@ paths:
                     accounts:
                       - url: 'https://www.t.me/account'
                         icon_id: telegram
-                    resumes:
-                      - cv_params:
-                          title: желаемая должность
-                          salary:
-                            amount: '90000'
-                            currency: RUR
-                          specialization:
-                            - id: '1.420'
-                              name: Администратор баз данных
-                          schedule:
-                            - id: fullDay
-                              name: Полный день
-                          employment:
-                            - id: full
-                              name: Полная занятость
-                          experience:
-                            - start: '2020-06-25'
-                              end: '2020-06-25'
-                              now: false
-                              company: организация
-                              area:
-                                id: '1'
-                                name: Москва
-                              company_url: 'https://yandex.ru/maps'
-                              position: должность в опыте работы
-                              description: описание опыта работы
-                          awards:
-                            - date: '1961-04-12'
-                              name: Лётчик-космонавт СССР
-                              organization: СССР
-                              description: 'Первый человек в мировой истории, совершивший полёт в космическое пространство'
-                          projects:
-                            - start: '2020-06-25'
-                              end: '2020-06-28'
-                              name: название проекта
-                              description: описание проекта
-                          skill_set:
-                            - Git
-                            - SQL
-                            - 1С программирование
-                            - Деловая коммуникация
-                          education:
-                            level:
-                              id: master
-                              name: Магистр
-                              parent: Высшее
-                            primary:
-                              - name: учебное заведение
-                                organization: факультет
-                                result: специализация
-                                course:
-                                  id: graduate
-                                  value: Выпускник/выпускница
-                                form:
-                                  id: full_time
-                                  value: Очная
-                                year: '2020'
-                                average_degree:
-                                  id: 4+
-                                  value: 'От 4 до 4,49'
-                            attestation:
-                              - name: название теста
-                                organization: Проводившая организация
-                                result: Специализация
-                                year: Год сдачи
-                            additional:
-                              - name: название курса
-                                year: год
-                                organization: Организация
-                                result: Результат
-                          certificate:
-                            - title: сертификат
-                              url: ссылка
-                              company: Организация
-                              achieved_at: '2020-06-28'
-                          about_me: обо мне
-                          skills: доп информация
-                          recommendation:
-                            - name: имя рекомендации
-                              contact: Контакт
-                              position: Должность
-                              organization: Организация
-                          languages:
-                            - id: eng
-                              name: Английский
-                              level:
-                                id: a1
-                                name: A1 — Начальный
-                          travel_time:
-                            id: less_than_hour
-                            name: Не более часа
-                          citizenship:
-                            - id: '113'
-                              name: Россия
-                          work_ticket:
-                            - id: '40'
-                              name: Казахстан
-                          relocation:
-                            area:
-                              - id: '1'
-                                name: Москва
-                            type:
-                              id: no_relocation
-                              name: не готов к переезду
-                          business_trip_readiness:
-                            id: ready
-                            name: готов к командировкам
-                    workflows:
-                      personal_data_agreement: personal_data_depersonalization
-                    events:
-                      body: комментарий
-                      type: 'Event::Comment'
-                    ajs_joins:
-                      - job_id: 220694
-                        employee_ext_id: 12345
-                        responsible_user_id: 54321
           multipart/form-data:
             schema:
               type: object
@@ -9083,16 +8968,28 @@ paths:
           description: 'Фильтр по ID автора события. События с `author: null` (автоматические) в выборку не попадают'
         - schema:
             type: string
-            example: '2026-03-01T00:00:00%2B03:00'
+            format: date-time
+            example: '2026-03-01T00:00:00+03:00'
           in: query
           name: date_from
-          description: 'Начало временного периода (включительно)'
+          description: |
+            Начало временного периода (включительно). Формат [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601): `YYYY-MM-DDThh:mm:ss±hh:mm`.
+
+            Фильтрация выполняется по внутреннему времени события. Как правило, оно совпадает с `created_at` из ответа, но в отдельных случаях может отличаться — поэтому событие с `created_at` внутри запрошенного периода иногда может не попасть в выборку (и наоборот).
+
+            ⚠️ Символ `+` в часовом поясе нужно передавать URL-кодированным как `%2B`, иначе он будет прочитан как пробел.
         - schema:
             type: string
-            example: '2026-04-01T23:59:59%2B03:00'
+            format: date-time
+            example: '2026-04-01T23:59:59+03:00'
           in: query
           name: date_to
-          description: 'Конец временного периода (включительно)'
+          description: |
+            Конец временного периода (включительно). Формат [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601): `YYYY-MM-DDThh:mm:ss±hh:mm`.
+
+            Фильтрация выполняется по внутреннему времени события. Как правило, оно совпадает с `created_at` из ответа, но в отдельных случаях может отличаться — поэтому событие с `created_at` внутри запрошенного периода иногда может не попасть в выборку (и наоборот).
+
+            ⚠️ Символ `+` в часовом поясе нужно передавать URL-кодированным как `%2B`, иначе он будет прочитан как пробел.
       responses:
         '200':
           description: OK
@@ -11905,8 +11802,6 @@ components:
                   skills: string
                   ext_id: string
                   ext_source: string
-            workflows:
-              personal_data_agreement: string
             ajs_joins:
               - job_id: integer
                 employee_ext_id: integer
@@ -12038,11 +11933,9 @@ components:
                   business_trip_readiness:
                     id: ready
                     name: готов к командировкам
-            workflows:
-              personal_data_agreement: personal_data_depersonalization
             events:
-              body: комментарий
-              type: 'Event::Comment'
+              - body: комментарий
+                type: 'Event::Comment'
             ajs_joins:
               - job_id: 220694
                 employee_ext_id: 12345
@@ -12121,33 +12014,23 @@ components:
               description: Все резюме кандидата
               items:
                 $ref: '#/components/schemas/cv_params_request'
-            workflows:
-              type: object
-              description: Статус запроса согласия на обработку персональных данных
-              properties:
-                personal_data_agreement:
-                  type: string
-                  description: |-
-                    Запрос на обработку персональных данных
-
-                    Если кандидат уже дал согласие на обработку ПДн. Необходимо передавать в данном поле `accepted` - "Дал согласие на обработку ПДн"
-
-                    Если поле пустое, то в Potok будет отображаться "Запрос на обработку ПДн еще не отправлен"
             events:
-              type: object
-              description: События
-              properties:
-                body:
-                  type: string
-                  description: Тело события
-                type:
-                  type: string
-                  description: |-
-                    Тип события
+              type: array
+              description: 'События. Передаётся массивом объектов с ключами `type` и `body`'
+              items:
+                type: object
+                properties:
+                  body:
+                    type: string
+                    description: Тело события
+                  type:
+                    type: string
+                    description: |-
+                      Тип события
 
-                    `Event::Comment` - Комментарий по кандидату
-                    `Event::Response` - Кандидат прислал письмо
-                    `Event::CoverLetter` - Сопроводительное письмо
+                      `Event::Comment` - Комментарий по кандидату
+                      `Event::Response` - Кандидат прислал письмо
+                      `Event::CoverLetter` - Сопроводительное письмо
             ajs_joins:
               type: array
               description: Связи кандидата с вакансией
@@ -12163,6 +12046,73 @@ components:
                   responsible_user_id:
                     type: integer
                     description: 'ID ответственного за кандидата на вакансии. Является частью функциональности `Массовый подбор`. Будет пустым, если функциональность не подключена'
+    Applicant_update_request:
+      type: object
+      properties:
+        applicant:
+          type: object
+          description: Информация о кандидате
+          properties:
+            first_name:
+              type: string
+              description: Имя
+            last_name:
+              type: string
+              description: Фамилия
+            middle_name:
+              type: string
+              description: Отчество
+            emails:
+              type: array
+              description: Почты кандидата
+              items:
+                type: string
+            phones:
+              type: array
+              description: Телефоны кандидата `Обязательно передавать с кодом страны`
+              items:
+                type: string
+            born:
+              type: string
+              description: Дата рождения (в формате `YYYY-MM-DD`)
+            source_type:
+              type: string
+              description: 'Тип источника:
+
+
+                - `sourced` - добавлен;
+
+                - `applied` - откликнулся'
+            source_url:
+              type: string
+              description: "URL источника кандидата (в формате `http://` или `https://`). \n\nURL источника берется из поля `Адрес сайта` справочника `Источники кандидатов` в настройках компании в системе. \n\nЕсли в справочнике нет указанного URL, то проставится источник `Другие` в карточке кандидата и в поле `source_name` в ответе на запрос."
+            salary:
+              type: integer
+              description: Ожидаемая ЗП
+            salary_currency:
+              type: string
+              description: ID Валюты (словарь - `currency_type`)
+            skype:
+              type: string
+              description: Ссылка на аккаунт skype
+            gender:
+              type: string
+              description: Пол (словарь - `genders`)
+            city:
+              type: string
+              description: ID Города проживания (словарь - `cities`)
+            accounts:
+              type: array
+              description: Аккаунты в социальных сетях
+              items:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: URL аккаунта кандидата в социальной сети
+                  icon_id:
+                    type: string
+                    description: Название социальной сети (используется для отображения иконки)
     Applicant_response:
       type: object
       x-examples:
